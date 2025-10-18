@@ -94,8 +94,16 @@
           [disabled]="isUploadingImage">
           <span *ngIf="!imagePreview && !isUploadingImage">📁 Bild auswählen</span>
           <span *ngIf="imagePreview && !isUploadingImage">🔄 Anderes Bild wählen</span>
-          <span *ngIf="isUploadingImage">⏳ Wird komprimiert...</span>
+          <span *ngIf="isUploadingImage">⏳ Wird bearbeitet...</span>
         </button>
+        
+        <!-- Indicateur de progression -->
+        <div *ngIf="isUploadingImage" class="upload-progress">
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <small>Bild wird komprimiert und vorbereitet...</small>
+        </div>
         
         <!-- Preview de l'image -->
         <div *ngIf="imagePreview" class="image-preview-container">

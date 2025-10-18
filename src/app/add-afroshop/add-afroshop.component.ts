@@ -97,10 +97,14 @@ export class AddAfroshopComponent implements OnInit {
   // Gestion de la sélection d'image
   async onFileSelected(event: any): Promise<void> {
     const file = event.target.files[0];
+    this.errorMessage = ''; // Clear previous errors
+    
     if (file) {
+      console.log('📁 Fichier sélectionné:', file.name, `${(file.size / 1024).toFixed(0)}KB`);
+      
       // Vérifier le type de fichier
       if (!file.type.startsWith('image/')) {
-        this.errorMessage = 'Bitte wählen Sie eine Bilddatei';
+        this.errorMessage = 'Bitte wählen Sie eine Bilddatei (JPG, PNG, GIF)';
         return;
       }
 
@@ -110,16 +114,30 @@ export class AddAfroshopComponent implements OnInit {
         return;
       }
 
-      // Compresser l'image automatiquement
-      const compressedFile = await this.compressImage(file);
-      this.selectedFile = compressedFile;
-      
-      // Créer une preview
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imagePreview = e.target.result;
-      };
-      reader.readAsDataURL(compressedFile);
+      try {
+        this.isUploadingImage = true;
+        console.log('🗜️ Début compression...');
+        
+        // Compresser l'image automatiquement
+        const compressedFile = await this.compressImage(file);
+        this.selectedFile = compressedFile;
+        
+        console.log('✅ Compression terminée');
+        
+        // Créer une preview
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imagePreview = e.target.result;
+          console.log('👁️ Preview créé');
+        };
+        reader.readAsDataURL(compressedFile);
+        
+      } catch (error) {
+        console.error('❌ Erreur compression:', error);
+        this.errorMessage = 'Fehler bei der Bildkomprimierung';
+      } finally {
+        this.isUploadingImage = false;
+      }
     }
   }
 
@@ -185,18 +203,37 @@ export class AddAfroshopComponent implements OnInit {
   // Upload de l'image vers Firebase Storage
   async uploadImage(): Promise<string> {
     if (!this.selectedFile) {
+      console.log('📝 Aucune nouvelle image, garde l\'existante');
       return this.afroshop.image; // Garder l'image existante
     }
 
     this.isUploadingImage = true;
     console.log(`📤 Upload en cours... Taille: ${(this.selectedFile.size / 1024).toFixed(0)}KB`);
+    console.log('📁 Fichier:', this.selectedFile.name, this.selectedFile.type);
     
     try {
+      // Vérifier que Firebase est bien configuré
+      console.log('🔥 Service Firebase:', this.firebaseService);
+      
       const imageUrl = await this.firebaseService.uploadImage(this.selectedFile);
-      console.log('✅ Upload réussi!', imageUrl);
+      console.log('✅ Upload réussi! URL:', imageUrl);
+      
+      // Mettre à jour l'aperçu avec l'URL Firebase
+      this.afroshop.image = imageUrl;
+      
       return imageUrl;
     } catch (error) {
-      console.error('❌ Fehler beim Hochladen des Bildes:', error);
+      console.error('❌ Erreur détaillée upload:', error);
+      console.error('❌ Type erreur:', typeof error);
+      console.error('❌ Message:', error instanceof Error ? error.message : 'Erreur inconnue');
+      
+      // Afficher une erreur plus spécifique
+      if (error instanceof Error) {
+        this.errorMessage = `Upload-Fehler: ${error.message}`;
+      } else {
+        this.errorMessage = 'Unbekannter Upload-Fehler';
+      }
+      
       throw error;
     } finally {
       this.isUploadingImage = false;

@@ -221,20 +221,44 @@ export class FirebaseAfroshopService {
   // Upload d'image vers Firebase Storage
   async uploadImage(file: File): Promise<string> {
     try {
+      console.log('🔥 Firebase Storage upload démarré...');
+      console.log('📁 Fichier à upload:', file.name, `${(file.size / 1024).toFixed(0)}KB`);
+      
+      // Vérifier que le storage est initialisé
+      if (!this.storage) {
+        throw new Error('Firebase Storage non initialisé');
+      }
+      
       // Créer un nom unique pour le fichier
       const timestamp = Date.now();
-      const fileName = `afroshops/${timestamp}_${file.name}`;
+      const cleanFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const fileName = `afroshops/${timestamp}_${cleanFileName}`;
+      console.log('📝 Nom du fichier:', fileName);
+      
       const storageRef = ref(this.storage, fileName);
+      console.log('📍 Référence créée:', storageRef);
       
       // Upload du fichier
+      console.log('⬆️ Upload en cours...');
       const snapshot = await uploadBytes(storageRef, file);
+      console.log('✅ Upload terminé, snapshot:', snapshot);
       
       // Récupérer l'URL de téléchargement
+      console.log('🔗 Récupération URL...');
       const downloadURL = await getDownloadURL(snapshot.ref);
+      console.log('✅ URL obtenue:', downloadURL);
+      
       return downloadURL;
     } catch (error) {
-      console.error('Fehler beim Hochladen des Bildes:', error);
-      throw new Error('Fehler beim Hochladen des Bildes');
+      console.error('❌ Erreur Firebase Storage:', error);
+      console.error('❌ Type d\'erreur:', typeof error);
+      console.error('❌ Stack:', error instanceof Error ? error.stack : 'Pas de stack');
+      
+      if (error instanceof Error) {
+        throw new Error(`Firebase Storage Fehler: ${error.message}`);
+      } else {
+        throw new Error('Unbekannter Firebase Storage Fehler');
+      }
     }
   }
 }
