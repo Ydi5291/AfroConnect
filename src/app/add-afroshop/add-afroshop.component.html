@@ -1,0 +1,199 @@
+<div class="add-afroshop-container">
+  <div class="form-header">
+    <h2>🏪 Neuen Afroshop hinzufügen</h2>
+    <p>Teilen Sie Ihren Lieblings-Afroshop mit der Community!</p>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="afroshop-form">
+    
+    <!-- Import automatique depuis URL -->
+    <div class="auto-import-section">
+      <h3>🔗 Schnell hinzufügen</h3>
+      <p>Fügen Sie einen Link ein, um Informationen automatisch zu laden</p>
+      
+      <div class="form-group">
+        <label for="importUrl">Google Maps, Facebook, Nextdoor oder Website URL</label>
+        <div class="url-input-group">
+          <input 
+            type="url" 
+            id="importUrl"
+            [(ngModel)]="importUrl"
+            name="importUrl"
+            placeholder="https://www.facebook.com/business... oder https://www.google.com/maps/place/..."
+            class="form-input url-input">
+          <button 
+            type="button"
+            (click)="importFromUrl()"
+            [disabled]="!importUrl || isImporting"
+            class="import-btn">
+            <span *ngIf="!isImporting">📥 Importieren</span>
+            <span *ngIf="isImporting">⏳ Lädt...</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="divider">
+        <span>oder manuell eingeben</span>
+      </div>
+    </div>
+    
+    <!-- Messages -->
+    <div class="message success" *ngIf="successMessage">
+      ✅ {{ successMessage }}
+    </div>
+    <div class="message error" *ngIf="errorMessage">
+      ❌ {{ errorMessage }}
+    </div>
+
+    <!-- Nom du commerce -->
+    <div class="form-group">
+      <label for="name">Name des Geschäfts *</label>
+      <input 
+        type="text" 
+        id="name"
+        [(ngModel)]="afroshop.name"
+        name="name"
+        placeholder="z.B. Mama Afrika Restaurant"
+        required
+        class="form-input">
+    </div>
+
+    <!-- Type -->
+    <div class="form-group">
+      <label for="type">Typ *</label>
+      <select 
+        id="type"
+        [(ngModel)]="afroshop.type"
+        name="type"
+        required
+        class="form-select">
+        <option value="restaurant">🍽️ Restaurant</option>
+        <option value="epicerie">🛒 Lebensmittelgeschäft</option>
+        <option value="coiffeur">✂️ Friseur</option>
+        <option value="vetement">👗 Mode</option>
+        <option value="services">🏦 Dienstleistungen</option>
+      </select>
+    </div>
+
+    <!-- Adresse -->
+    <div class="form-group">
+      <label for="address">Adresse *</label>
+      <input 
+        type="text" 
+        id="address"
+        [(ngModel)]="afroshop.address"
+        name="address"
+        placeholder="z.B. Müllerstraße 123, 13349 Berlin"
+        required
+        class="form-input">
+      <small>Bitte geben Sie die vollständige Adresse mit Stadt an</small>
+    </div>
+
+    <!-- Telefon -->
+    <div class="form-group">
+      <label for="phone">Telefon *</label>
+      <input 
+        type="tel" 
+        id="phone"
+        [(ngModel)]="afroshop.phone"
+        name="phone"
+        placeholder="+49 30 12345678"
+        required
+        class="form-input">
+    </div>
+
+    <!-- Beschreibung -->
+    <div class="form-group">
+      <label for="description">Beschreibung *</label>
+      <textarea 
+        id="description"
+        [(ngModel)]="afroshop.description"
+        name="description"
+        placeholder="Beschreiben Sie das Geschäft, Spezialitäten, Atmosphäre..."
+        required
+        rows="4"
+        class="form-textarea"></textarea>
+    </div>
+
+    <!-- Cuisine (nur für Restaurants) -->
+    <div class="form-group" *ngIf="afroshop.type === 'restaurant'">
+      <label for="cuisine">Küche</label>
+      <input 
+        type="text" 
+        id="cuisine"
+        [(ngModel)]="afroshop.cuisine"
+        name="cuisine"
+        placeholder="z.B. Westafrikanische, Äthiopische"
+        class="form-input">
+    </div>
+
+    <!-- Öffnungszeiten -->
+    <div class="form-group">
+      <label for="hours">Öffnungszeiten</label>
+      <input 
+        type="text" 
+        id="hours"
+        [(ngModel)]="afroshop.hours"
+        name="hours"
+        placeholder="z.B. Mo-So: 12:00-22:00"
+        class="form-input">
+    </div>
+
+    <!-- Website -->
+    <div class="form-group">
+      <label for="website">Website</label>
+      <input 
+        type="url" 
+        id="website"
+        [(ngModel)]="afroshop.website"
+        name="website"
+        placeholder="https://example.com"
+        class="form-input">
+    </div>
+
+    <!-- Preisstufe -->
+    <div class="form-group">
+      <label for="priceLevel">Preisstufe</label>
+      <select 
+        id="priceLevel"
+        [(ngModel)]="afroshop.priceLevel"
+        name="priceLevel"
+        class="form-select">
+        <option value="1">€ - Günstig</option>
+        <option value="2">€€ - Moderat</option>
+        <option value="3">€€€ - Gehoben</option>
+        <option value="4">€€€€ - Hochpreisig</option>
+      </select>
+    </div>
+
+    <!-- Image URL -->
+    <div class="form-group">
+      <label for="image">Bild URL</label>
+      <input 
+        type="url" 
+        id="image"
+        [(ngModel)]="afroshop.image"
+        name="image"
+        placeholder="https://beispiel.com/bild.jpg"
+        class="form-input">
+      <small>Optional: Link zu einem Bild des Geschäfts</small>
+    </div>
+
+    <!-- Buttons -->
+    <div class="form-actions">
+      <button 
+        type="button" 
+        (click)="goBack()"
+        class="btn-secondary">
+        Abbrechen
+      </button>
+      <button 
+        type="submit" 
+        [disabled]="isSubmitting"
+        class="btn-primary">
+        <span *ngIf="isSubmitting">Wird hinzugefügt...</span>
+        <span *ngIf="!isSubmitting">Afroshop hinzufügen</span>
+      </button>
+    </div>
+  </form>
+</div>

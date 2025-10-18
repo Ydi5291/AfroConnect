@@ -1,0 +1,146 @@
+<div class="gallery-container">
+  <div class="gallery-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h2>🌍 Afroshops in deiner Nähe</h2>
+        <p>Entdecke {{ filteredAfroshops.length }} afrikanische Geschäfte in Deutschland</p>
+      </div>
+
+      <!-- Bouton d'ajout visible seulement si connecté -->
+      <div class="header-actions" *ngIf="user$ | async as user">
+        <button class="add-afroshop-btn" (click)="goToAddAfroshop()" title="Neuen Afroshop hinzufügen">
+          ➕ Afroshop hinzufügen
+        </button>
+      </div>
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="search-container">
+      <div class="search-wrapper">
+        <div class="search-icon">🔍</div>
+        <input type="text" placeholder="Suche nach Name, Küche, Typ..." [(ngModel)]="searchTerm"
+          (input)="onSearchChange()" class="search-input" />
+        <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-button" title="Suche löschen">
+          ✕
+        </button>
+      </div>
+      <div class="search-results" *ngIf="searchTerm || selectedType">
+        {{ filteredAfroshops.length }} Geschäft(e) gefunden
+      </div>
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="action-buttons">
+      <button (click)="toggleMapView()" class="map-toggle-btn" [class.active]="showMap">
+        <span class="icon">{{ showMap ? '📋' : '🗺️' }}</span>
+        {{ showMap ? 'Liste anzeigen' : 'Karte anzeigen' }}
+      </button>
+
+      <button (click)="addNewAfroshop()" class="add-afroshop-btn" title="Neuen Afroshop hinzufügen">
+        <span class="icon">➕</span>
+        Afroshop hinzufügen
+      </button>
+    </div>
+
+    <!-- Filter nach Typ -->
+    <div class="filter-container">
+      <label for="type-filter">Nach Typ filtern:</label>
+      <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="type-filter">
+        <option value="">Alle Typen</option>
+        <option value="restaurant">🍽️ Restaurants</option>
+        <option value="epicerie">🛒 Lebensmittelgeschäfte</option>
+        <option value="coiffeur">✂️ Friseure</option>
+        <option value="vetement">👗 Mode</option>
+        <option value="services">🏦 Dienstleistungen</option>
+      </select>
+    </div>
+
+    <!-- Sélecteur de ville -->
+    <div class="location-container">
+      <label for="city-selector">📍 Deine Stadt:</label>
+      <div class="location-controls">
+        <select id="city-selector" [(ngModel)]="selectedCity" (change)="onCityChange()" class="city-selector">
+          <option value="">Automatische Erkennung</option>
+          <option value="berlin">Berlin</option>
+          <option value="hamburg">Hamburg</option>
+          <option value="münchen">München</option>
+          <option value="köln">Köln</option>
+          <option value="frankfurt">Frankfurt am Main</option>
+          <option value="stuttgart">Stuttgart</option>
+          <option value="düsseldorf">Düsseldorf</option>
+          <option value="dortmund">Dortmund</option>
+          <option value="essen">Essen</option>
+          <option value="leipzig">Leipzig</option>
+          <option value="bremen">Bremen</option>
+          <option value="dresden">Dresden</option>
+          <option value="hannover">Hannover</option>
+          <option value="nürnberg">Nürnberg</option>
+          <option value="mainz">Mainz</option>
+          <option value="karlsruhe">Karlsruhe</option>
+          <option value="mannheim">Mannheim</option>
+          <option value="nürnberg">Nürnberg</option>
+          <option value="mainz">Mainz</option>
+          <option value="werl">Werl</option>
+          <option value="lippstadt">Lippstadt</option>
+        </select>
+        <button (click)="useCurrentLocation()" class="location-btn" title="Meinen Standort verwenden">
+          📡 Mein Standort
+        </button>
+      </div>
+
+      <!-- Indication du rayon de recherche -->
+      <div class="radius-info" *ngIf="userLocation && (selectedCity || filteredAfroshops.length < allAfroshops.length)">
+        <div class="radius-indicator">
+          🎯 Suche in 50km Umkreis
+          <span *ngIf="selectedCity" class="city-name">um {{ getSelectedCityName() }}</span>
+          <span *ngIf="!selectedCity" class="current-location">um deinen Standort</span>
+        </div>
+        <div class="results-count">
+          {{ filteredAfroshops.length }} von {{ allAfroshops.length }} Afroshops angezeigt
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue Carte -->
+  <div class="map-view" *ngIf="showMap && filteredAfroshops.length > 0">
+    <app-map [afroshops]="filteredAfroshops" [userLocation]="userLocation"
+      (shopSelected)="viewAfroshopDetail($event)"></app-map>
+  </div>
+
+  <!-- Grille des Afroshops -->
+  <div class="gallery-grid" *ngIf="!showMap && filteredAfroshops.length > 0">
+    <div *ngFor="let shop of filteredAfroshops" class="shop-card" (click)="viewAfroshopDetail(shop.id)">
+      <div class="image-wrapper">
+        <img [src]="shop.image || getDefaultImage(shop.type)" [alt]="shop.name" class="gallery-image"
+          (error)="onImageError($event, shop.type)" />
+        <div class="type-badge" [class]="shop.type">
+          {{ getTypeIcon(shop.type) }}
+        </div>
+        <div class="image-overlay">
+          <h3>{{ shop.name }}</h3>
+          <p>{{ shop.type | titlecase }} • {{ getLocationDisplay(shop.address) }}</p>
+          <div class="rating">
+            ⭐ {{ shop.rating }} • {{ getPriceLevel(shop.priceLevel) }}
+          </div>
+          <div class="distance" *ngIf="userLocation">
+            📍 {{ getDistanceFromUser(shop) }}
+          </div>
+          <span class="click-hint">📍 Details ansehen</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message quand aucun résultat -->
+  <div class="no-results" *ngIf="filteredAfroshops.length === 0 && (searchTerm || selectedType)">
+    <div class="no-results-content">
+      <div class="no-results-icon">🔍</div>
+      <h3>Kein Geschäft gefunden</h3>
+      <p>Kein Afroshop entspricht deinen Suchkriterien</p>
+      <button (click)="clearSearch()" class="btn-clear-search">
+        Alle Geschäfte anzeigen
+      </button>
+    </div>
+  </div>
+</div>

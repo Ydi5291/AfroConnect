@@ -1,0 +1,85 @@
+<div class="detail-container" *ngIf="afroshop">
+  <div class="detail-header">
+    <button class="back-button" (click)="goBack()">
+      ← Zurück zur Übersicht
+    </button>
+  </div>
+
+  <div class="detail-content">
+    <div class="image-section">
+      <img 
+        [src]="afroshop.image" 
+        [alt]="afroshop.name"
+        class="detail-image"
+      />
+      
+      <!-- Badge de type -->
+      <div class="type-badge-large" [class]="afroshop.type">
+        {{ getTypeIcon(afroshop.type) }} {{ afroshop.type | titlecase }}
+      </div>
+    </div>
+    
+    <div class="info-section">
+      <h1>{{ afroshop.name }}</h1>
+      
+      <!-- Info rapides -->
+      <div class="quick-info">
+        <div class="rating-info">
+          ⭐ {{ afroshop.rating }}/5 • {{ getPriceLevel(afroshop.priceLevel) }}
+        </div>
+        <div class="cuisine-info" *ngIf="afroshop.cuisine">
+          🍽️ {{ afroshop.cuisine }} Küche
+        </div>
+      </div>
+
+      <!-- Kontakt und Standort -->
+      <div class="contact-section">
+        <div class="contact-item">
+          <strong>📍 Adresse:</strong>
+          <p>{{ afroshop.address }}</p>
+        </div>
+        
+        <div class="contact-item">
+          <strong>📞 Telefon:</strong>
+          <p>
+            <a href="tel:{{ afroshop.phone }}" class="phone-link">
+              {{ afroshop.phone }}
+            </a>
+          </p>
+        </div>
+        
+        <div class="contact-item">
+          <strong>🕒 Öffnungszeiten:</strong>
+          <p>{{ afroshop.hours }}</p>
+        </div>
+      </div>
+      
+      <!-- Beschreibung -->
+      <div class="description">
+        <h3>Über uns</h3>
+        <p>{{ afroshop.description }}</p>
+      </div>
+      
+      <!-- Aktionen -->
+      <div class="actions">
+        <button class="action-btn call" (click)="callPhone(afroshop.phone)">
+          📞 Anrufen
+        </button>
+        <button class="action-btn maps" (click)="openInMaps()">
+          🗺️ Auf Karte anzeigen
+        </button>
+        <button class="action-btn secondary" (click)="goBack()">
+          ← Zurück
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="error-container" *ngIf="!afroshop">
+  <h2>❌ Geschäft nicht gefunden</h2>
+  <p>Das gesuchte Geschäft existiert nicht.</p>
+  <button class="back-button" (click)="goBack()">
+    ← Zurück zur Übersicht
+  </button>
+</div>

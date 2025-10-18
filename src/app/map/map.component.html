@@ -1,0 +1,78 @@
+<div class="map-container">
+  <div class="map-header">
+    <h3>🗺️ Karte der Afroshops</h3>
+    <p *ngIf="userLocation" class="location-info">
+      📍 Deine Position wird angezeigt
+    </p>
+    <p *ngIf="!userLocation" class="no-location-info">
+      ⚠️ Standort nicht verfügbar - Zentrum Berlin angezeigt
+    </p>
+  </div>
+
+  <!-- Google Maps Komponente -->
+  <google-map
+    [options]="mapOptions"
+    [width]="'100%'"
+    [height]="'400px'"
+    class="google-map">
+    
+    <!-- Marqueurs für alle Afroshops -->
+    <map-marker
+      *ngFor="let marker of markers"
+      [position]="marker.position"
+      [title]="marker.title"
+      [options]="getMarkerOptions(marker)"
+      (mapClick)="onMarkerClick(marker)">
+      
+      <!-- Info Window für Details -->
+      <map-info-window>
+        <div class="info-window" *ngIf="marker.shop">
+          <h4>{{ marker.shop.name }}</h4>
+          <p><strong>{{ marker.shop.type | titlecase }}</strong></p>
+          <p>📍 {{ marker.shop.address.split(',')[0] }}</p>
+          <p>⭐ {{ marker.shop.rating }}/5</p>
+          <button 
+            class="directions-btn" 
+            (click)="getDirections(marker.shop)">
+            🚗 Route berechnen
+          </button>
+        </div>
+        <div class="info-window" *ngIf="marker.isUserLocation">
+          <h4>📍 Deine Position</h4>
+          <p>Du bist hier</p>
+        </div>
+      </map-info-window>
+    </map-marker>
+  </google-map>
+
+  <!-- Légende des types d'Afroshops -->
+  <div class="map-legend">
+    <h4>Legende</h4>
+    <div class="legend-items">
+      <div class="legend-item">
+        <span class="legend-icon restaurant">🍽️</span>
+        <span>Restaurants</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon epicerie">🛒</span>
+        <span>Lebensmittel</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon coiffeur">✂️</span>
+        <span>Friseure</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon vetement">👗</span>
+        <span>Mode</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon services">🏦</span>
+        <span>Services</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon user">📍</span>
+        <span>Deine Position</span>
+      </div>
+    </div>
+  </div>
+</div>

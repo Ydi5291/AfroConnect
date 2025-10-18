@@ -1,0 +1,40 @@
+<!-- Main container -->
+<div class="app-container">
+  
+  <!-- Header section -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>🌍 AfroConnect</h1>
+        <p class="welcome-message">Finde die besten Afroshops in deiner Nähe</p>
+      </div>
+      
+      <div class="header-right">
+        <!-- Utilisateur connecté -->
+        <div *ngIf="user$ | async as user" class="user-menu">
+          <span class="user-greeting">Hallo, {{ user.displayName || user.email }}!</span>
+          <button (click)="logout()" class="logout-btn">
+            🚪 Abmelden
+          </button>
+        </div>
+        
+        <!-- Utilisateur non connecté -->
+        <div *ngIf="!(user$ | async)" class="auth-buttons">
+          <a routerLink="/login" class="auth-link login-link">🔐 Anmelden</a>
+          <a routerLink="/register" class="auth-link register-link">📝 Registrieren</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content - Ici s'afficheront les différentes pages -->
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>&copy; 2024 AfroConnect - Verbinde dich mit deiner Community</p>
+  </footer>
+
+</div>
