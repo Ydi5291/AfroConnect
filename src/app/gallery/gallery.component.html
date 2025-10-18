@@ -2,7 +2,7 @@
   <div class="gallery-header">
     <div class="header-content">
       <div class="header-text">
-        <h2>🌍 Afroshops in deiner Nähe</h2>
+        <h2>🌍 Afroshops & Restaurants in deiner Nähe</h2>
         <p>Entdecke {{ filteredAfroshops.length }} afrikanische Geschäfte in Deutschland</p>
       </div>
 
@@ -110,13 +110,23 @@
 
   <!-- Grille des Afroshops -->
   <div class="gallery-grid" *ngIf="!showMap && filteredAfroshops.length > 0">
-    <div *ngFor="let shop of filteredAfroshops" class="shop-card" (click)="viewAfroshopDetail(shop.id)">
-      <div class="image-wrapper">
+    <div *ngFor="let shop of filteredAfroshops" class="shop-card">
+      <div class="image-wrapper" (click)="viewAfroshopDetail(shop.id)">
         <img [src]="shop.image || getDefaultImage(shop.type)" [alt]="shop.name" class="gallery-image"
           (error)="onImageError($event, shop.type)" />
         <div class="type-badge" [class]="shop.type">
           {{ getTypeIcon(shop.type) }}
         </div>
+        
+        <!-- Bouton Modifier (visible seulement pour le créateur) -->
+        <button 
+          *ngIf="canEditAfroshop(shop)" 
+          (click)="editAfroshop($event, shop.id)" 
+          class="edit-btn"
+          title="Bearbeiten">
+          ✏️
+        </button>
+        
         <div class="image-overlay">
           <h3>{{ shop.name }}</h3>
           <p>{{ shop.type | titlecase }} • {{ getLocationDisplay(shop.address) }}</p>

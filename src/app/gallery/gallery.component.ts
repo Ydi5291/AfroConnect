@@ -251,6 +251,21 @@ export class GalleryComponent implements OnInit {
     this.router.navigate(['/add-afroshop']);
   }
 
+  // Vérifier si l'utilisateur peut éditer cet Afroshop
+  canEditAfroshop(shop: any): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return false;
+    
+    // Vérifier si l'utilisateur est le créateur
+    return shop.createdBy === currentUser.uid;
+  }
+
+  // Éditer un Afroshop
+  editAfroshop(event: Event, shopId: number | string): void {
+    event.stopPropagation(); // Empêcher la navigation vers les détails
+    this.router.navigate(['/edit-afroshop', shopId]);
+  }
+
   // Filtrer les Afroshops dans un rayon donné (en km)
   filterAfroshopsByRadius(radiusKm: number): void {
     if (!this.userLocation) {

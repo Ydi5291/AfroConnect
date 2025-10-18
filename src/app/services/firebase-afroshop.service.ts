@@ -11,8 +11,15 @@ import {
   where, 
   orderBy,
   getDocs,
+  getDoc,
   limit
 } from '@angular/fire/firestore';
+import { 
+  Storage, 
+  ref, 
+  uploadBytes, 
+  getDownloadURL 
+} from '@angular/fire/storage';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AfroshopData } from './image.service';
@@ -31,7 +38,10 @@ export interface FirebaseAfroshop extends Omit<AfroshopData, 'id'> {
 })
 export class FirebaseAfroshopService {
 
-  constructor(private firestore: Firestore) { }
+  constructor(
+    private firestore: Firestore,
+    private storage: Storage
+  ) { }
 
   // Obtenir tous les Afroshops
   getAllAfroshops(): Observable<AfroshopData[]> {
@@ -112,12 +122,21 @@ export class FirebaseAfroshopService {
     return collectionData(q, { idField: 'id' }) as Observable<AfroshopData[]>;
   }
 
-  // Obtenir un Afroshop par ID - version simplifiée (temporairement désactivée)
-  getAfroshopById(id: string): Observable<AfroshopData | undefined> {
-    // Temporairement désactivé à cause des erreurs de type
-    return this.getAllAfroshops().pipe(
-      map(afroshops => afroshops.find(shop => shop.id.toString() === id))
-    );
+  // Obtenir un Afroshop par ID
+  async getAfroshopById(id: string): Promise<AfroshopData | undefined> {
+    try {
+      const afroshopRef = doc(this.firestore, 'afroshops', id);
+      const docSnap = await getDoc(afroshopRef);
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        return this.mapFirebaseDocToAfroshopData({ ...data, id: docSnap.id });
+      }
+      return undefined;
+    } catch (error) {
+      console.error('Fehler beim Laden des Afroshops:', error);
+      return undefined;
+    }
   }
 
   // Ajouter un nouvel Afroshop
@@ -189,6 +208,26 @@ export class FirebaseAfroshopService {
       });
     } catch (error) {
       console.error('Erreur lors de l\'incrémentation des vues:', error);
+    }
+  }
+
+  // Upload d'image vers Firebase Storage
+  async uploadImage(file: File): Promise<string> {
+    try {
+      // Créer un nom unique pour le fichier
+      const timestamp = Date.now();
+      const fileName = `afroshops/${timestamp}_${file.name}`;
+      const storageRef = ref(this.storage, fileName);
+      
+      // Upload du fichier
+      const snapshot = await uploadBytes(storageRef, file);
+      
+      // Récupérer l'URL de téléchargement
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
+    } catch (error) {
+      console.error('Fehler beim Hochladen des Bildes:', error);
+      throw new Error('Fehler beim Hochladen des Bildes');
     }
   }
 }

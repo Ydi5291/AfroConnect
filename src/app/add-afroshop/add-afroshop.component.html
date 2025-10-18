@@ -1,7 +1,7 @@
 <div class="add-afroshop-container">
   <div class="form-header">
-    <h2>🏪 Neuen Afroshop hinzufügen</h2>
-    <p>Teilen Sie Ihren Lieblings-Afroshop mit der Community!</p>
+    <h2>{{ isEditMode ? '✏️ Afroshop bearbeiten' : '🏪 Neuen Afroshop hinzufügen' }}</h2>
+    <p>{{ isEditMode ? 'Aktualisieren Sie die Informationen' : 'Teilen Sie Ihren Lieblings-Afroshop mit der Community!' }}</p>
   </div>
 
   <form (ngSubmit)="onSubmit()" class="afroshop-form">
@@ -73,6 +73,42 @@
         <option value="vetement">👗 Mode</option>
         <option value="services">🏦 Dienstleistungen</option>
       </select>
+    </div>
+
+    <!-- Upload d'image -->
+    <div class="form-group">
+      <label for="image">📸 Bild hochladen</label>
+      <div class="image-upload-section">
+        <input 
+          type="file" 
+          id="image"
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          class="file-input"
+          #fileInput>
+        
+        <button 
+          type="button" 
+          (click)="fileInput.click()" 
+          class="upload-btn">
+          <span *ngIf="!imagePreview">📁 Bild auswählen</span>
+          <span *ngIf="imagePreview">🔄 Anderes Bild wählen</span>
+        </button>
+        
+        <!-- Preview de l'image -->
+        <div *ngIf="imagePreview" class="image-preview-container">
+          <img [src]="imagePreview" alt="Preview" class="image-preview">
+          <button 
+            type="button" 
+            (click)="imagePreview = null; selectedFile = null; fileInput.value = ''" 
+            class="remove-image-btn"
+            title="Bild entfernen">
+            ✕
+          </button>
+        </div>
+        
+        <small class="form-hint">Max. 5MB - JPG, PNG oder GIF</small>
+      </div>
     </div>
 
     <!-- Adresse -->

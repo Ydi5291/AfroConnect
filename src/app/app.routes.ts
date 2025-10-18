@@ -15,6 +15,11 @@ export const routes: Routes = [
     component: AddAfroshopComponent,
     canActivate: [AuthGuard] // 🔒 Route protégée !
   },
+  { 
+    path: 'edit-afroshop/:id', 
+    component: AddAfroshopComponent,
+    canActivate: [AuthGuard] // 🔒 Route protégée !
+  },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '**', redirectTo: '/gallery' } // Route wildcard pour les erreurs 404

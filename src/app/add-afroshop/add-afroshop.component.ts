@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
 import { AfroshopData } from '../services/image.service';
@@ -12,7 +12,7 @@ import { AfroshopData } from '../services/image.service';
   templateUrl: './add-afroshop.component.html',
   styleUrl: './add-afroshop.component.css'
 })
-export class AddAfroshopComponent {
+export class AddAfroshopComponent implements OnInit {
   
   afroshop = {
     name: '',
@@ -29,6 +29,15 @@ export class AddAfroshopComponent {
     website: ''
   };
 
+  // Mode édition
+  isEditMode = false;
+  editingId: string | null = null;
+
+  // Upload d'image
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
+  isUploadingImage = false;
+
   // Import automatique
   importUrl = '';
   isImporting = false;
@@ -40,8 +49,83 @@ export class AddAfroshopComponent {
   constructor(
     private firebaseService: FirebaseAfroshopService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
+
+  ngOnInit(): void {
+    // Vérifier si on est en mode édition
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.editingId = id;
+      this.loadAfroshopForEdit(id);
+    }
+  }
+
+  // Charger l'Afroshop pour édition
+  async loadAfroshopForEdit(id: string): Promise<void> {
+    try {
+      const afroshop = await this.firebaseService.getAfroshopById(id);
+      if (afroshop) {
+        this.afroshop = { ...afroshop };
+        this.imagePreview = afroshop.image || null;
+      } else {
+        this.errorMessage = 'Afroshop nicht gefunden';
+        setTimeout(() => this.router.navigate(['/']), 2000);
+      }
+    } catch (error) {
+      console.error('Fehler beim Laden:', error);
+      this.errorMessage = 'Fehler beim Laden des Afroshops';
+    }
+  }
+
+  // Gestion de la sélection d'image
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Vérifier le type de fichier
+      if (!file.type.startsWith('image/')) {
+        this.errorMessage = 'Bitte wählen Sie eine Bilddatei';
+        return;
+      }
+
+      // Vérifier la taille (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.errorMessage = 'Bild ist zu groß (max 5MB)';
+        return;
+      }
+
+      this.selectedFile = file;
+      
+      // Créer une preview
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Upload de l'image vers Firebase Storage
+  async uploadImage(): Promise<string> {
+    if (!this.selectedFile) {
+      return this.afroshop.image; // Garder l'image existante
+    }
+
+    this.isUploadingImage = true;
+    try {
+      // TODO: Implémenter l'upload Firebase Storage
+      // Pour l'instant, on utilise une URL placeholder
+      const imageUrl = await this.firebaseService.uploadImage(this.selectedFile);
+      return imageUrl;
+    } catch (error) {
+      console.error('Fehler beim Hochladen des Bildes:', error);
+      throw error;
+    } finally {
+      this.isUploadingImage = false;
+    }
+  }
 
   // Soumettre le formulaire
   async onSubmit(): Promise<void> {
@@ -54,24 +138,44 @@ export class AddAfroshopComponent {
     try {
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser) {
-        this.errorMessage = 'Sie müssen angemeldet sein, um einen Afroshop hinzuzufügen';
+        this.errorMessage = 'Sie müssen angemeldet sein';
         return;
+      }
+
+      // Upload de l'image si une nouvelle image est sélectionnée
+      if (this.selectedFile) {
+        this.afroshop.image = await this.uploadImage();
       }
 
       const city = this.extractCityFromAddress(this.afroshop.address);
       
-      const newAfroshop = {
-        ...this.afroshop,
-        verified: false,
-        city: city,
-        createdBy: currentUser.uid,
-        createdByName: currentUser.displayName || currentUser.email,
-        createdAt: new Date()
-      };
+      if (this.isEditMode && this.editingId) {
+        // Mode édition : mettre à jour l'Afroshop existant
+        const updateData = {
+          ...this.afroshop,
+          city: city,
+          updatedBy: currentUser.uid,
+          updatedByName: currentUser.displayName || currentUser.email,
+          updatedAt: new Date()
+        };
 
-      const docId = await this.firebaseService.addAfroshop(newAfroshop);
+        await this.firebaseService.updateAfroshop(this.editingId, updateData);
+        this.successMessage = '✅ Afroshop erfolgreich aktualisiert!';
+      } else {
+        // Mode ajout : créer un nouvel Afroshop
+        const newAfroshop = {
+          ...this.afroshop,
+          verified: false,
+          city: city,
+          createdBy: currentUser.uid,
+          createdByName: currentUser.displayName || currentUser.email,
+          createdAt: new Date()
+        };
+
+        const docId = await this.firebaseService.addAfroshop(newAfroshop);
+        this.successMessage = '✅ Afroshop erfolgreich hinzugefügt! ID: ' + docId;
+      }
       
-      this.successMessage = 'Afroshop erfolgreich hinzugefügt! ID: ' + docId;
       this.resetForm();
       
       setTimeout(() => {
@@ -79,8 +183,10 @@ export class AddAfroshopComponent {
       }, 2000);
       
     } catch (error) {
-      console.error('Erreur lors de l\'ajout:', error);
-      this.errorMessage = 'Fehler beim Hinzufügen des Afroshops.';
+      console.error('Fehler:', error);
+      this.errorMessage = this.isEditMode ? 
+        'Fehler beim Aktualisieren des Afroshops' : 
+        'Fehler beim Hinzufügen des Afroshops';
     } finally {
       this.isSubmitting = false;
     }
