@@ -25,17 +25,17 @@ export class RegisterComponent {
 
   async onSubmit(): Promise<void> {
     if (!this.email || !this.password || !this.confirmPassword || !this.displayName) {
-      this.errorMessage = 'Veuillez remplir tous les champs';
+      this.errorMessage = 'Bitte füllen Sie alle Felder aus';
       return;
     }
 
     if (this.password !== this.confirmPassword) {
-      this.errorMessage = 'Les mots de passe ne correspondent pas';
+      this.errorMessage = 'Die Passwörter stimmen nicht überein';
       return;
     }
 
     if (this.password.length < 6) {
-      this.errorMessage = 'Le mot de passe doit contenir au moins 6 caractères';
+      this.errorMessage = 'Das Passwort muss mindestens 6 Zeichen enthalten';
       return;
     }
 

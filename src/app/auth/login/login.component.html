@@ -1,26 +1,26 @@
 <div class="auth-container">
   <div class="auth-card">
     <div class="auth-header">
-      <h2>🔐 Connexion</h2>
-      <p>Connectez-vous à votre compte AfroConnect</p>
+      <h2>🔐 Anmeldung</h2>
+      <p>Melden Sie sich bei Ihrem AfroConnect-Konto an</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
-        <label for="email">Adresse email</label>
+        <label for="email">E-Mail-Adresse</label>
         <input
           type="email"
           id="email"
           [(ngModel)]="email"
           name="email"
-          placeholder="votre@email.com"
+          placeholder="ihre@email.com"
           required
           [disabled]="isLoading"
         />
       </div>
 
       <div class="form-group">
-        <label for="password">Mot de passe</label>
+        <label for="password">Passwort</label>
         <input
           type="password"
           id="password"
@@ -40,26 +40,26 @@
         type="submit" 
         class="auth-btn"
         [disabled]="isLoading || !email || !password">
-        <span *ngIf="!isLoading">Se connecter</span>
-        <span *ngIf="isLoading">⏳ Connexion...</span>
+        <span *ngIf="!isLoading">Anmelden</span>
+        <span *ngIf="isLoading">⏳ Anmeldung...</span>
       </button>
     </form>
 
     <div class="divider">
-      <span>ou</span>
+      <span>oder</span>
     </div>
 
     <button 
       (click)="loginWithGoogle()" 
       class="google-btn"
       [disabled]="isLoading">
-      <span *ngIf="!isLoading">🔍 Continuer avec Google</span>
-      <span *ngIf="isLoading">⏳ Connexion Google...</span>
+      <span *ngIf="!isLoading">🔍 Mit Google fortfahren</span>
+      <span *ngIf="isLoading">⏳ Google-Anmeldung...</span>
     </button>
 
     <div class="auth-footer">
-      <p>Pas encore de compte ? 
-        <a routerLink="/register" class="auth-link">S'inscrire</a>
+      <p>Noch kein Konto? 
+        <a routerLink="/register" class="auth-link">Registrieren</a>
       </p>
     </div>
   </div>

@@ -45,7 +45,7 @@
       ❌ {{ errorMessage }}
     </div>
 
-    <!-- Nom du commerce -->
+    <!-- Geschäftsname -->
     <div class="form-group">
       <label for="name">Name des Geschäfts *</label>
       <input 
@@ -105,7 +105,7 @@
           <small>Bild wird komprimiert und vorbereitet...</small>
         </div>
         
-        <!-- Preview de l'image -->
+        <!-- Bildvorschau -->
         <div *ngIf="imagePreview" class="image-preview-container">
           <img [src]="imagePreview" alt="Preview" class="image-preview">
           <button 

@@ -24,7 +24,7 @@ export class LoginComponent {
 
   async onSubmit(): Promise<void> {
     if (!this.email || !this.password) {
-      this.errorMessage = 'Veuillez remplir tous les champs';
+      this.errorMessage = 'Bitte füllen Sie alle Felder aus';
       return;
     }
 

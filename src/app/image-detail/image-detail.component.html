@@ -4,7 +4,7 @@
       ← Zurück zur Übersicht
     </button>
     
-    <!-- Bouton Modifier (visible uniquement pour le créateur) -->
+    <!-- Bearbeiten-Button (nur für Ersteller sichtbar) -->
     <button *ngIf="canEdit()" class="edit-button" (click)="editAfroshop()" title="Bearbeiten">
       ✏️ Bearbeiten
     </button>
@@ -18,7 +18,7 @@
         class="detail-image"
       />
       
-      <!-- Badge de type -->
+      <!-- Typ-Badge -->
       <div class="type-badge-large" [class]="afroshop.type">
         {{ getTypeIcon(afroshop.type) }} {{ afroshop.type | titlecase }}
       </div>
@@ -27,7 +27,7 @@
     <div class="info-section">
       <h1>{{ afroshop.name }}</h1>
       
-      <!-- Info rapides -->
+      <!-- Schnellinfos -->
       <div class="quick-info">
         <div class="rating-info">
           ⭐ {{ afroshop.rating }}/5 • {{ getPriceLevel(afroshop.priceLevel) }}

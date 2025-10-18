@@ -1,39 +1,39 @@
 <div class="auth-container">
   <div class="auth-card">
     <div class="auth-header">
-      <h2>📝 Inscription</h2>
-      <p>Créez votre compte AfroConnect</p>
+      <h2>📝 Registrierung</h2>
+      <p>Erstellen Sie Ihr AfroConnect-Konto</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
-        <label for="displayName">Nom d'affichage</label>
+        <label for="displayName">Anzeigename</label>
         <input
           type="text"
           id="displayName"
           [(ngModel)]="displayName"
           name="displayName"
-          placeholder="Votre nom"
+          placeholder="Ihr Name"
           required
           [disabled]="isLoading"
         />
       </div>
 
       <div class="form-group">
-        <label for="email">Adresse email</label>
+        <label for="email">E-Mail-Adresse</label>
         <input
           type="email"
           id="email"
           [(ngModel)]="email"
           name="email"
-          placeholder="votre@email.com"
+          placeholder="ihre@email.com"
           required
           [disabled]="isLoading"
         />
       </div>
 
       <div class="form-group">
-        <label for="password">Mot de passe</label>
+        <label for="password">Passwort</label>
         <input
           type="password"
           id="password"
@@ -46,7 +46,7 @@
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <label for="confirmPassword">Passwort bestätigen</label>
         <input
           type="password"
           id="confirmPassword"
@@ -66,26 +66,26 @@
         type="submit" 
         class="auth-btn"
         [disabled]="isLoading || !email || !password || !confirmPassword || !displayName">
-        <span *ngIf="!isLoading">S'inscrire</span>
-        <span *ngIf="isLoading">⏳ Inscription...</span>
+        <span *ngIf="!isLoading">Registrieren</span>
+        <span *ngIf="isLoading">⏳ Registrierung...</span>
       </button>
     </form>
 
     <div class="divider">
-      <span>ou</span>
+      <span>oder</span>
     </div>
 
     <button 
       (click)="loginWithGoogle()" 
       class="google-btn"
       [disabled]="isLoading">
-      <span *ngIf="!isLoading">🔍 Continuer avec Google</span>
-      <span *ngIf="isLoading">⏳ Connexion Google...</span>
+      <span *ngIf="!isLoading">🔍 Mit Google fortfahren</span>
+      <span *ngIf="isLoading">⏳ Google-Anmeldung...</span>
     </button>
 
     <div class="auth-footer">
-      <p>Déjà un compte ? 
-        <a routerLink="/login" class="auth-link">Se connecter</a>
+      <p>Bereits ein Konto? 
+        <a routerLink="/login" class="auth-link">Anmelden</a>
       </p>
     </div>
   </div>
