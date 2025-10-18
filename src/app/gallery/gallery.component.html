@@ -107,14 +107,6 @@
         </button>
         
         <div class="image-overlay">
-          <h3>{{ shop.name }}</h3>
-          <p>{{ shop.type | titlecase }} • {{ getLocationDisplay(shop.address) }}</p>
-          <div class="rating">
-            ⭐ {{ shop.rating }} • {{ getPriceLevel(shop.priceLevel) }}
-          </div>
-          <div class="distance" *ngIf="userLocation">
-            📍 {{ getDistanceFromUser(shop) }}
-          </div>
           <span class="click-hint">📍 Details ansehen</span>
         </div>
       </div>
@@ -127,6 +119,9 @@
           <span class="rating">⭐ {{ shop.rating }}</span>
           <span class="price">{{ getPriceLevel(shop.priceLevel) }}</span>
           <span class="type">{{ shop.type | titlecase }}</span>
+        </div>
+        <div class="distance" *ngIf="userLocation">
+          🎯 {{ getDistanceFromUser(shop) }}
         </div>
       </div>
     </div>

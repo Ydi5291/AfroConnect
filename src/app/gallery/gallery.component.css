@@ -452,10 +452,28 @@
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: var(--spacing-lg);
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Responsive de la grille */
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+    padding: 0 var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+    padding: 0 var(--spacing-xs);
+  }
 }
 
 .image-card, .shop-card {
@@ -533,55 +551,119 @@
 
 .image-overlay {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
   color: white;
-  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.image-card:hover .image-overlay {
-  transform: translateY(0);
-}
-
-.image-overlay h3 {
-  font-size: 1.3rem;
-  margin-bottom: var(--spacing-xs);
-  font-weight: 600;
-}
-
-.image-overlay p {
-  margin-bottom: var(--spacing-sm);
-  opacity: 0.9;
+.image-card:hover .image-overlay, .shop-card:hover .image-overlay {
+  opacity: 1;
 }
 
 .click-hint {
-  display: inline-block;
   background: var(--primary-color);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .gallery-grid {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
-  }
-  
+.image-overlay:hover .click-hint {
+  transform: scale(1.05);
+}
+
+/* Responsive design complet */
+@media (max-width: 1024px) {
   .gallery-container {
     padding: var(--spacing-md);
   }
   
-  .gallery-header h2 {
-    font-size: 2rem;
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-container {
+    padding: var(--spacing-sm);
   }
   
+  .gallery-header h2 {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  
+  .gallery-header p {
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  /* Simplifier les overlays sur mobile */
+  .image-overlay {
+    position: static;
+    transform: none;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+    margin-top: -60px;
+    z-index: 2;
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+  }
+  
+  .image-card:hover .image-overlay {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-container {
+    padding: var(--spacing-xs);
+  }
+  
+  .gallery-header h2 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  
+  .gallery-header p {
+    font-size: 0.9rem;
+  }
+  
+  /* Cartes en pleine largeur sur très petits écrans */
+  .image-card, .shop-card {
+    margin: 0 var(--spacing-xs);
+  }
+  
+  .image-overlay h3 {
+    font-size: 1.1rem;
+  }
+  
+  .image-overlay p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile très spécifique */
+@media (max-width: 360px) {
+  .gallery-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .image-wrapper {
+    height: 200px;
+  }
+}
+
+/* Section responsive existante */  
+@media (max-width: 768px) {
   .image-wrapper {
     height: 250px;
   }
