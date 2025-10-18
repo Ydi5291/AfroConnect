@@ -139,6 +139,17 @@
           <span class="click-hint">📍 Details ansehen</span>
         </div>
       </div>
+      
+      <!-- Informations toujours visibles -->
+      <div class="card-info">
+        <h3 class="shop-name">{{ shop.name }}</h3>
+        <p class="shop-location">📍 {{ getLocationDisplay(shop.address) }}</p>
+        <div class="shop-meta">
+          <span class="rating">⭐ {{ shop.rating }}</span>
+          <span class="price">{{ getPriceLevel(shop.priceLevel) }}</span>
+          <span class="type">{{ shop.type | titlecase }}</span>
+        </div>
+      </div>
     </div>
   </div>
 
