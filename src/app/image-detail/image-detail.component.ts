@@ -43,6 +43,8 @@ export class ImageDetailComponent implements OnInit {
           
           if (this.afroshop) {
             console.log('✅ Afroshop trouvé:', this.afroshop.name);
+            console.log('🖼️ URL de l\'image:', this.afroshop.image);
+            console.log('📦 Données complètes:', this.afroshop);
           } else {
             console.log('❌ Afroshop non trouvé avec ID:', id);
             console.log('❌ Types des IDs:', afroshops.map(a => `${a.id} (${typeof a.id})`));
@@ -61,6 +63,12 @@ export class ImageDetailComponent implements OnInit {
   // Retour à la galerie
   goBack(): void {
     this.router.navigate(['/gallery']);
+  }
+
+  // Gestion d'erreur de chargement d'image
+  onImageError(event: any): void {
+    console.error('❌ Erreur chargement image:', event);
+    console.error('❌ URL qui a échoué:', event.target?.src);
   }
 
   // Appeler le numéro

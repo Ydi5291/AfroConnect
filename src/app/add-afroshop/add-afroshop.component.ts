@@ -141,6 +141,57 @@ export class AddAfroshopComponent implements OnInit {
     }
   }
 
+  // Test de connexion Firebase Storage
+  async testFirebaseConnection(): Promise<void> {
+    console.log('🔥 Test Firebase Storage...');
+    try {
+      console.log('🔍 Storage service:', this.firebaseService);
+      console.log('🔍 Storage instance:', (this.firebaseService as any).storage);
+      
+      // Test avec une vraie image pour éviter problèmes CORS
+      const canvas = document.createElement('canvas');
+      canvas.width = 100;
+      canvas.height = 100;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#FF6B6B';
+        ctx.fillRect(0, 0, 100, 100);
+        ctx.fillStyle = 'white';
+        ctx.font = '16px Arial';
+        ctx.fillText('Test', 30, 55);
+      }
+      
+      // Convertir en blob image
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob!), 'image/jpeg', 0.8);
+      });
+      
+      const testFile = new File([blob], 'test-image.jpg', { type: 'image/jpeg' });
+      console.log('🧪 Test upload avec image générée...', testFile.size, 'bytes');
+      
+      const url = await this.firebaseService.uploadImage(testFile);
+      console.log('✅ Test réussi! URL:', url);
+      this.successMessage = 'Firebase Storage fonctionne correctement! Image uploadée.';
+    } catch (error) {
+      console.error('❌ Test échoué:', error);
+      
+      // Messages d'erreur plus spécifiques
+      if (error instanceof Error) {
+        if (error.message.includes('CORS')) {
+          this.errorMessage = 'Erreur CORS: Vérifiez les règles Firebase Storage et l\'authentification.';
+        } else if (error.message.includes('permission-denied')) {
+          this.errorMessage = 'Permission refusée: Connectez-vous et vérifiez les règles Firebase.';
+        } else if (error.message.includes('network')) {
+          this.errorMessage = 'Erreur réseau: Vérifiez votre connexion internet.';
+        } else {
+          this.errorMessage = `Erreur Firebase: ${error.message}`;
+        }
+      } else {
+        this.errorMessage = 'Erreur inconnue lors du test Firebase Storage.';
+      }
+    }
+  }
+
   // Compresser l'image avant upload
   private compressImage(file: File): Promise<File> {
     return new Promise((resolve, reject) => {

@@ -182,6 +182,8 @@ export class GalleryComponent implements OnInit {
 
   // Utiliser la géolocalisation automatique
   useCurrentLocation(): void {
+    console.log('🗺️ Demande de géolocalisation...');
+    
     this.geolocationService.getCurrentPosition()
       .subscribe({
         next: (position) => {
@@ -194,23 +196,50 @@ export class GalleryComponent implements OnInit {
             // Filtrer par rayon de 50km autour de la position actuelle
             this.filterAfroshopsByRadius(50);
             this.sortAfroshopsByDistance();
-            console.log('Position détectée:', this.userLocation);
+            console.log('✅ Position détectée:', this.userLocation);
           } else {
-            this.fallbackToDefaultLocation();
+            this.fallbackToDefaultLocation('Position non disponible');
           }
         },
         error: (error) => {
-          console.error('Erreur de géolocalisation:', error);
-          this.fallbackToDefaultLocation();
+          console.error('❌ Erreur de géolocalisation:', error);
+          this.handleGeolocationError(error);
         }
       });
   }
 
+  // Gestion spécifique des erreurs de géolocalisation
+  private handleGeolocationError(error: any): void {
+    let message = '';
+    
+    if (error.code) {
+      switch (error.code) {
+        case 1: // PERMISSION_DENIED
+          message = 'Standort-Berechtigung verweigert. Bitte aktivieren Sie die Standortfreigabe in Ihren Browser-Einstellungen.';
+          break;
+        case 2: // POSITION_UNAVAILABLE
+          message = 'Standort nicht verfügbar. Überprüfen Sie Ihre GPS-Einstellungen.';
+          break;
+        case 3: // TIMEOUT
+          message = 'Standort-Anfrage zeitüberschreitung. Versuchen Sie es erneut.';
+          break;
+        default:
+          message = 'Unbekannter Standort-Fehler.';
+      }
+    } else {
+      message = 'Standort-Service nicht verfügbar. HTTPS erforderlich für mobile Geräte.';
+    }
+    
+    this.fallbackToDefaultLocation(message);
+  }
+
   // Fallback vers une localisation par défaut
-  private fallbackToDefaultLocation(): void {
+  private fallbackToDefaultLocation(reason: string): void {
     this.userLocation = this.cityCoordinates['berlin'];
     this.selectedCity = 'berlin';
-    alert('Position non détectée. Berlin sélectionné par défaut.');
+    
+    // Message plus informatif
+    alert(`🗺️ Standort-Problem: ${reason}\n\n📍 Berlin wurde als Standard-Standort gewählt.\n\n💡 Tipp: Für die Standort-Funktion aktivieren Sie GPS und verwenden Sie HTTPS.`);
   }
 
   // Trier les Afroshops par distance
