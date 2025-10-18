@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AfroshopService, AfroshopData } from '../services/image.service';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-image-detail',
@@ -19,7 +20,8 @@ export class ImageDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private afroshopService: AfroshopService,
-    private firebaseService: FirebaseAfroshopService
+    private firebaseService: FirebaseAfroshopService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -89,5 +91,21 @@ export class ImageDetailComponent implements OnInit {
   // Convertir le niveau de prix en symboles
   getPriceLevel(level: number): string {
     return '€'.repeat(level);
+  }
+
+  // Vérifier si l'utilisateur peut éditer cet Afroshop
+  canEdit(): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !this.afroshop) return false;
+    
+    // Vérifier si l'utilisateur est le créateur
+    return (this.afroshop as any).createdBy === currentUser.uid;
+  }
+
+  // Éditer l'Afroshop
+  editAfroshop(): void {
+    if (this.canEdit()) {
+      this.router.navigate(['/edit-afroshop', this.shopId]);
+    }
   }
 }

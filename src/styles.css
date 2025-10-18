@@ -9,18 +9,20 @@
 
 /* Variables CSS globales */
 :root {
-  /* Couleurs principales - Thème africain moderne */
-  --primary-color: #E63946;
-  --primary-dark: #C5303D;
-  --secondary-color: #F4A261;
-  --accent-color: #2A9D8F;
-  --accent-light: #48BFB0;
+  /* Couleurs principales - Bleu ciel apaisant avec accents africains */
+  --primary-color: #4A90E2;
+  --primary-dark: #357ABD;
+  --secondary-color: #50C9CE;
+  --accent-color: #F4A261;
+  --accent-light: #FFB84D;
+  --success-color: #2A9D8F;
+  --danger-color: #E63946;
   
   /* Couleurs neutres */
-  --text-dark: #1D3557;
-  --text-light: #457B9D;
-  --text-muted: #A8DADC;
-  --background-light: #F1FAEE;
+  --text-dark: #2C3E50;
+  --text-light: #7F8C8D;
+  --text-muted: #BDC3C7;
+  --background-light: #F8F9FA;
   --background-white: #FFFFFF;
   --overlay-dark: rgba(0, 0, 0, 0.5);
   

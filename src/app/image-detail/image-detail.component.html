@@ -3,6 +3,11 @@
     <button class="back-button" (click)="goBack()">
       ← Zurück zur Übersicht
     </button>
+    
+    <!-- Bouton Modifier (visible uniquement pour le créateur) -->
+    <button *ngIf="canEdit()" class="edit-button" (click)="editAfroshop()" title="Bearbeiten">
+      ✏️ Bearbeiten
+    </button>
   </div>
 
   <div class="detail-content">
