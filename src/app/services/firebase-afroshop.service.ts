@@ -78,7 +78,7 @@ export class FirebaseAfroshopService {
   private mapFirebaseDocToAfroshopData(doc: any): AfroshopData {
     console.log('🔥 Mapping document:', doc.name, doc);
     
-    const result: AfroshopData = {
+    const result: any = {
       id: doc.id, // Garder comme string pour les IDs Firebase
       name: doc.name || '',
       type: doc.type || 'services',
@@ -94,10 +94,16 @@ export class FirebaseAfroshopService {
       cuisine: doc.cuisine || '',
       priceLevel: doc.priceLevel || 2,
       hours: doc.hours || '',
-      website: doc.website || ''
+      website: doc.website || '',
+      // Champs additionnels Firebase
+      createdBy: doc.createdBy,
+      createdByName: doc.createdByName,
+      createdAt: doc.createdAt,
+      verified: doc.verified
     };
     
     console.log('🔥 Résultat mapping:', result.name, result);
+    console.log('🔥 CreatedBy dans mapping:', result.createdBy);
     return result;
   }
 

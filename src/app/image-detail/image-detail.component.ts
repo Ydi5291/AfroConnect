@@ -96,10 +96,23 @@ export class ImageDetailComponent implements OnInit {
   // Vérifier si l'utilisateur peut éditer cet Afroshop
   canEdit(): boolean {
     const currentUser = this.authService.getCurrentUser();
-    if (!currentUser || !this.afroshop) return false;
+    
+    console.log('🔍 Debug canEdit:');
+    console.log('  - User connecté:', currentUser?.uid);
+    console.log('  - User email:', currentUser?.email);
+    console.log('  - Afroshop:', this.afroshop);
+    console.log('  - CreatedBy:', (this.afroshop as any)?.createdBy);
+    
+    if (!currentUser || !this.afroshop) {
+      console.log('  ❌ Pas de user ou pas d\'afroshop');
+      return false;
+    }
     
     // Vérifier si l'utilisateur est le créateur
-    return (this.afroshop as any).createdBy === currentUser.uid;
+    const canEdit = (this.afroshop as any).createdBy === currentUser.uid;
+    console.log('  ✅ Peut éditer:', canEdit);
+    
+    return canEdit;
   }
 
   // Éditer l'Afroshop
