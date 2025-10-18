@@ -95,7 +95,7 @@ export class AddAfroshopComponent implements OnInit {
   }
 
   // Gestion de la sélection d'image
-  onFileSelected(event: any): void {
+  async onFileSelected(event: any): Promise<void> {
     const file = event.target.files[0];
     if (file) {
       // Vérifier le type de fichier
@@ -110,15 +110,76 @@ export class AddAfroshopComponent implements OnInit {
         return;
       }
 
-      this.selectedFile = file;
+      // Compresser l'image automatiquement
+      const compressedFile = await this.compressImage(file);
+      this.selectedFile = compressedFile;
       
       // Créer une preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
     }
+  }
+
+  // Compresser l'image avant upload
+  private compressImage(file: File): Promise<File> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event: any) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Définir la taille maximale (1200px de largeur)
+          const MAX_WIDTH = 1200;
+          const MAX_HEIGHT = 1200;
+          let width = img.width;
+          let height = img.height;
+
+          // Calculer les nouvelles dimensions en gardant le ratio
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Convertir en Blob avec compression (qualité 0.8)
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now(),
+                });
+                console.log(`✅ Image compressée: ${(file.size / 1024).toFixed(0)}KB → ${(compressedFile.size / 1024).toFixed(0)}KB`);
+                resolve(compressedFile);
+              } else {
+                reject(new Error('Compression échouée'));
+              }
+            },
+            'image/jpeg',
+            0.8
+          );
+        };
+        img.onerror = () => reject(new Error('Erreur de chargement de l\'image'));
+      };
+      reader.onerror = () => reject(new Error('Erreur de lecture du fichier'));
+    });
   }
 
   // Upload de l'image vers Firebase Storage
@@ -128,13 +189,14 @@ export class AddAfroshopComponent implements OnInit {
     }
 
     this.isUploadingImage = true;
+    console.log(`📤 Upload en cours... Taille: ${(this.selectedFile.size / 1024).toFixed(0)}KB`);
+    
     try {
-      // TODO: Implémenter l'upload Firebase Storage
-      // Pour l'instant, on utilise une URL placeholder
       const imageUrl = await this.firebaseService.uploadImage(this.selectedFile);
+      console.log('✅ Upload réussi!', imageUrl);
       return imageUrl;
     } catch (error) {
-      console.error('Fehler beim Hochladen des Bildes:', error);
+      console.error('❌ Fehler beim Hochladen des Bildes:', error);
       throw error;
     } finally {
       this.isUploadingImage = false;

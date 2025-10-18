@@ -90,9 +90,11 @@
         <button 
           type="button" 
           (click)="fileInput.click()" 
-          class="upload-btn">
-          <span *ngIf="!imagePreview">📁 Bild auswählen</span>
-          <span *ngIf="imagePreview">🔄 Anderes Bild wählen</span>
+          class="upload-btn"
+          [disabled]="isUploadingImage">
+          <span *ngIf="!imagePreview && !isUploadingImage">📁 Bild auswählen</span>
+          <span *ngIf="imagePreview && !isUploadingImage">🔄 Anderes Bild wählen</span>
+          <span *ngIf="isUploadingImage">⏳ Wird komprimiert...</span>
         </button>
         
         <!-- Preview de l'image -->
@@ -107,7 +109,7 @@
           </button>
         </div>
         
-        <small class="form-hint">Max. 5MB - JPG, PNG oder GIF</small>
+        <small class="form-hint">Max. 5MB - Wird automatisch komprimiert und optimiert</small>
       </div>
     </div>
 
@@ -220,15 +222,17 @@
       <button 
         type="button" 
         (click)="goBack()"
-        class="btn-secondary">
+        class="btn-secondary"
+        [disabled]="isSubmitting || isUploadingImage">
         Abbrechen
       </button>
       <button 
         type="submit" 
-        [disabled]="isSubmitting"
+        [disabled]="isSubmitting || isUploadingImage"
         class="btn-primary">
-        <span *ngIf="isSubmitting">Wird hinzugefügt...</span>
-        <span *ngIf="!isSubmitting">Afroshop hinzufügen</span>
+        <span *ngIf="isSubmitting && !isUploadingImage">{{ isEditMode ? '⏳ Wird aktualisiert...' : '⏳ Wird hinzugefügt...' }}</span>
+        <span *ngIf="isUploadingImage">📤 Bild wird hochgeladen...</span>
+        <span *ngIf="!isSubmitting && !isUploadingImage">{{ isEditMode ? '✅ Speichern' : '✅ Afroshop hinzufügen' }}</span>
       </button>
     </div>
   </form>
