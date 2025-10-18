@@ -8,8 +8,15 @@
 
       <!-- Bouton d'ajout visible seulement si connecté -->
       <div class="header-actions" *ngIf="user$ | async as user">
-        <button class="add-afroshop-btn" (click)="goToAddAfroshop()" title="Neuen Afroshop hinzufügen">
+        <button class="add-afroshop-btn primary" (click)="goToAddAfroshop()" title="Neuen Afroshop hinzufügen">
           ➕ Afroshop hinzufügen
+        </button>
+      </div>
+      
+      <!-- Message si non connecté -->
+      <div class="header-actions" *ngIf="!(user$ | async)">
+        <button class="add-afroshop-btn disabled" (click)="addNewAfroshop()" title="Anmelden um einen Afroshop hinzuzufügen">
+          🔐 Anmelden zum Hinzufügen
         </button>
       </div>
     </div>
@@ -34,11 +41,6 @@
       <button (click)="toggleMapView()" class="map-toggle-btn" [class.active]="showMap">
         <span class="icon">{{ showMap ? '📋' : '🗺️' }}</span>
         {{ showMap ? 'Liste anzeigen' : 'Karte anzeigen' }}
-      </button>
-
-      <button (click)="addNewAfroshop()" class="add-afroshop-btn" title="Neuen Afroshop hinzufügen">
-        <span class="icon">➕</span>
-        Afroshop hinzufügen
       </button>
     </div>
 
