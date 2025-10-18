@@ -68,7 +68,21 @@ export class AddAfroshopComponent implements OnInit {
     try {
       const afroshop = await this.firebaseService.getAfroshopById(id);
       if (afroshop) {
-        this.afroshop = { ...afroshop };
+        // Assurer que toutes les propriétés sont présentes
+        this.afroshop = {
+          name: afroshop.name || '',
+          type: afroshop.type || 'restaurant',
+          address: afroshop.address || '',
+          coordinates: afroshop.coordinates || { lat: 0, lng: 0 },
+          phone: afroshop.phone || '',
+          description: afroshop.description || '',
+          rating: afroshop.rating || 4.0,
+          image: afroshop.image || '',
+          cuisine: afroshop.cuisine || '',
+          priceLevel: afroshop.priceLevel || 2,
+          hours: afroshop.hours || '',
+          website: afroshop.website || ''
+        };
         this.imagePreview = afroshop.image || null;
       } else {
         this.errorMessage = 'Afroshop nicht gefunden';

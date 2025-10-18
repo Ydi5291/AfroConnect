@@ -16,6 +16,7 @@ export interface AfroshopData {
   cuisine?: string; // Pour les restaurants
   priceLevel: number; // 1-4 (€ à €€€€)
   hours: string;
+  website?: string; // Site web optionnel
   distance?: number; // Sera calculée dynamiquement
 }
 

@@ -93,7 +93,8 @@ export class FirebaseAfroshopService {
       image: doc.image || '',
       cuisine: doc.cuisine || '',
       priceLevel: doc.priceLevel || 2,
-      hours: doc.hours || ''
+      hours: doc.hours || '',
+      website: doc.website || ''
     };
     
     console.log('🔥 Résultat mapping:', result.name, result);

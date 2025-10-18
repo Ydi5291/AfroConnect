@@ -248,21 +248,45 @@ export class GalleryComponent implements OnInit {
 
   // Naviguer vers le formulaire d'ajout d'Afroshop
   addNewAfroshop(): void {
+    const currentUser = this.authService.getCurrentUser();
+    
+    // Vérifier si l'utilisateur est connecté
+    if (!currentUser) {
+      alert('Bitte melden Sie sich an, um einen Afroshop hinzuzufügen.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
     this.router.navigate(['/add-afroshop']);
   }
 
   // Vérifier si l'utilisateur peut éditer cet Afroshop
   canEditAfroshop(shop: any): boolean {
     const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) return false;
     
-    // Vérifier si l'utilisateur est le créateur
+    // L'utilisateur doit être connecté
+    if (!currentUser) {
+      return false;
+    }
+    
+    // L'utilisateur doit être le créateur de cet Afroshop
     return shop.createdBy === currentUser.uid;
   }
 
   // Éditer un Afroshop
   editAfroshop(event: Event, shopId: number | string): void {
     event.stopPropagation(); // Empêcher la navigation vers les détails
+    
+    // Double vérification : l'utilisateur doit être connecté
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      // Rediriger vers la page de connexion
+      alert('Bitte melden Sie sich an, um fortzufahren.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
+    // Naviguer vers la page d'édition
     this.router.navigate(['/edit-afroshop', shopId]);
   }
 
@@ -335,7 +359,8 @@ export class GalleryComponent implements OnInit {
 
   // Navigation vers ajout d'Afroshop
   goToAddAfroshop(): void {
-    this.router.navigate(['/add-afroshop']);
+    // Utilise la même logique que addNewAfroshop
+    this.addNewAfroshop();
   }
 
   // Obtenir le nom formaté de la ville sélectionnée
