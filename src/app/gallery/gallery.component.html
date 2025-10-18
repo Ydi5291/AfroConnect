@@ -21,29 +21,6 @@
       </div>
     </div>
 
-    <!-- Barre de recherche -->
-    <div class="search-container">
-      <div class="search-wrapper">
-        <div class="search-icon">🔍</div>
-        <input type="text" placeholder="Suche nach Name, Küche, Typ..." [(ngModel)]="searchTerm"
-          (input)="onSearchChange()" class="search-input" />
-        <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-button" title="Suche löschen">
-          ✕
-        </button>
-      </div>
-      <div class="search-results" *ngIf="searchTerm || selectedType">
-        {{ filteredAfroshops.length }} Geschäft(e) gefunden
-      </div>
-    </div>
-
-    <!-- Boutons d'action -->
-    <div class="action-buttons">
-      <button (click)="toggleMapView()" class="map-toggle-btn" [class.active]="showMap">
-        <span class="icon">{{ showMap ? '📋' : '🗺️' }}</span>
-        {{ showMap ? 'Liste anzeigen' : 'Karte anzeigen' }}
-      </button>
-    </div>
-
     <!-- Filter nach Typ -->
     <div class="filter-container">
       <label for="type-filter">Nach Typ filtern:</label>
