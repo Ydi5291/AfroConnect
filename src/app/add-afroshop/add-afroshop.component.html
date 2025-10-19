@@ -455,17 +455,18 @@
       <button 
         type="button" 
         (click)="goBack()"
-        class="btn-secondary"
+        class="btn btn-secondary"
         [disabled]="isSubmitting || isUploadingImage">
-        Abbrechen
+        <span *ngIf="!isSubmitting && !isUploadingImage">❌ Abbrechen</span>
+        <span *ngIf="isSubmitting || isUploadingImage">⏳ Warten...</span>
       </button>
       <button 
         type="submit" 
         [disabled]="isSubmitting || isUploadingImage"
-        class="btn-primary">
+        class="btn btn-primary">
         <span *ngIf="isSubmitting && !isUploadingImage">{{ isEditMode ? '⏳ Wird aktualisiert...' : '⏳ Wird hinzugefügt...' }}</span>
         <span *ngIf="isUploadingImage">📤 Bild wird hochgeladen...</span>
-        <span *ngIf="!isSubmitting && !isUploadingImage">{{ isEditMode ? '✅ Speichern' : '✅ Afroshop hinzufügen' }}</span>
+        <span *ngIf="!isSubmitting && !isUploadingImage">{{ isEditMode ? '💾 Änderungen speichern' : '🏪 Afroshop hinzufügen' }}</span>
       </button>
     </div>
   </form>
