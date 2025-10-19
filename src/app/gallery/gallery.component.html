@@ -20,81 +20,88 @@
       </div>
     </div>
 
-    <!-- Filter nach Typ -->
-    <div class="filter-container unified-control-group">
-      <label for="type-filter" class="unified-label">Nach Typ filtern:</label>
-      <div class="unified-input-group">
-        <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="unified-select">
-          <option value="">Alle Typen</option>
-          <option value="restaurant">🍽️ Restaurants</option>
-          <option value="epicerie">🛒 Lebensmittelgeschäfte</option>
-          <option value="coiffeur">✂️ Friseure</option>
-          <option value="vetement">👗 Mode</option>
-          <option value="services">🏦 Dienstleistungen</option>
-        </select>
-        <div class="unified-spacer"></div>
-      </div>
-    </div>
-
-    <!-- Stadtauswahl -->
-    <div class="location-container">
-      <label for="city-input" class="unified-label">📍 Deine Stadt:</label>
-      
-      <!-- Freie Stadteingabe -->
-      <div class="city-search-controls unified-control-group">
+    <!-- Controls Desktop Layout -->
+    <div class="controls-desktop-layout">
+      <!-- Filter nach Typ -->
+      <div class="filter-container unified-control-group">
+        <label for="type-filter" class="unified-label">Nach Typ filtern:</label>
         <div class="unified-input-group">
-          <input 
-            type="text" 
-            id="city-input"
-            [(ngModel)]="customCityName"
-            name="cityInput"
-            placeholder="Jede deutsche Stadt, z.B. Aachen, Regensburg, Freiburg..."
-            class="unified-input"
-            (keyup.enter)="searchCity()"
-          />
-          <button 
-            (click)="searchCity()" 
-            class="unified-btn"
-            [disabled]="!customCityName || !customCityName.trim()"
-            title="Stadt suchen">
-            🔍 Suchen
-          </button>
-        </div>
-      </div>
-        
-      <!-- Oder Dropdown für häufige Städte -->
-      <div class="quick-cities unified-control-group">
-        <label class="unified-label">Oder wählen:</label>
-        <div class="unified-input-group">
-          <select [(ngModel)]="selectedCity" class="unified-select">
-            <option value="">Bitte Stadt wählen</option>
-            <option value="berlin">Berlin</option>
-            <option value="hamburg">Hamburg</option>
-            <option value="münchen">München</option>
-            <option value="köln">Köln</option>
-            <option value="frankfurt">Frankfurt am Main</option>
-            <option value="stuttgart">Stuttgart</option>
-            <option value="düsseldorf">Düsseldorf</option>
-            <option value="dortmund">Dortmund</option>
-            <option value="essen">Essen</option>
-            <option value="leipzig">Leipzig</option>
+          <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="unified-select">
+            <option value="">Alle Typen</option>
+            <option value="restaurant">🍽️ Restaurants</option>
+            <option value="epicerie">🛒 Lebensmittelgeschäfte</option>
+            <option value="coiffeur">✂️ Friseure</option>
+            <option value="vetement">👗 Mode</option>
+            <option value="services">🏦 Dienstleistungen</option>
           </select>
-          <button 
-            (click)="onCityChange()" 
-            class="unified-btn"
-            [disabled]="!selectedCity"
-            title="Ausgewählte Stadt bestätigen">
-            ✓ Bestätigen
-          </button>
+          <div class="unified-spacer"></div>
         </div>
       </div>
+
+      <!-- Stadtauswahl Gruppe -->
+      <div class="location-container">
+        <label for="city-input" class="unified-label">📍 Deine Stadt:</label>
         
-      <!-- Standort-Button -->
-      <div class="location-actions">
-        <button (click)="useCurrentLocation()" class="location-btn" title="GPS aktivieren und Standort verwenden">
-          📡 GPS aktivieren
-        </button>
-        <small class="location-hint">
+        <!-- Desktop: Controls in einer Zeile -->
+        <div class="desktop-city-controls">
+          <!-- Freie Stadteingabe -->
+          <div class="city-search-controls unified-control-group">
+            <div class="unified-input-group">
+              <input 
+                type="text" 
+                id="city-input"
+                [(ngModel)]="customCityName"
+                name="cityInput"
+                placeholder="Jede deutsche Stadt..."
+                class="unified-input city-input-compact"
+                (keyup.enter)="searchCity()"
+              />
+              <button 
+                (click)="searchCity()" 
+                class="unified-btn"
+                [disabled]="!customCityName || !customCityName.trim()"
+                title="Stadt suchen">
+                🔍 Suchen
+              </button>
+            </div>
+          </div>
+            
+          <!-- Oder Dropdown für häufige Städte -->
+          <div class="quick-cities unified-control-group">
+            <div class="unified-input-group">
+              <select [(ngModel)]="selectedCity" class="unified-select city-select-compact">
+                <option value="">Beliebte Städte...</option>
+                <option value="berlin">Berlin</option>
+                <option value="hamburg">Hamburg</option>
+                <option value="münchen">München</option>
+                <option value="köln">Köln</option>
+                <option value="frankfurt">Frankfurt am Main</option>
+                <option value="stuttgart">Stuttgart</option>
+                <option value="düsseldorf">Düsseldorf</option>
+                <option value="dortmund">Dortmund</option>
+                <option value="essen">Essen</option>
+                <option value="leipzig">Leipzig</option>
+              </select>
+              <button 
+                (click)="onCityChange()" 
+                class="unified-btn"
+                [disabled]="!selectedCity"
+                title="Ausgewählte Stadt bestätigen">
+                ✓ Bestätigen
+              </button>
+            </div>
+          </div>
+            
+          <!-- Standort-Button -->
+          <div class="location-actions">
+            <button (click)="useCurrentLocation()" class="location-btn gps-btn-desktop" title="GPS aktivieren und Standort verwenden">
+              📡 GPS aktivieren
+            </button>
+          </div>
+        </div>
+        
+        <!-- GPS Hint nur für mobile -->
+        <small class="location-hint mobile-only">
           🎯 Findet automatisch Afroshops in deiner Nähe
         </small>
       </div>

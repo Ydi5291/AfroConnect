@@ -181,6 +181,125 @@
   visibility: hidden;
 }
 
+/* ===== LAYOUT DESKTOP PREMIUM ===== */
+.controls-desktop-layout {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+/* Desktop: Grid layout pour les contrôles */
+@media (min-width: 1024px) {
+  .controls-desktop-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  
+  .filter-container {
+    margin: 0;
+    text-align: left;
+  }
+  
+  .location-container {
+    margin: 0;
+  }
+  
+  .desktop-city-controls {
+    display: grid;
+    grid-template-columns: 1fr 200px auto;
+    gap: 16px;
+    align-items: end;
+  }
+  
+  .city-input-compact {
+    min-width: 250px;
+  }
+  
+  .city-select-compact {
+    min-width: 180px;
+  }
+  
+  .gps-btn-desktop {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    white-space: nowrap;
+  }
+  
+  .gps-btn-desktop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+  }
+  
+  .mobile-only {
+    display: none;
+  }
+  
+  /* Suppression des labels redondants sur desktop */
+  .quick-cities .unified-label {
+    display: none;
+  }
+}
+
+/* Tablette: Layout semi-desktop */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .controls-desktop-layout {
+    padding: 20px;
+  }
+  
+  .desktop-city-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: end;
+  }
+  
+  .city-search-controls,
+  .quick-cities {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .location-actions {
+    flex-shrink: 0;
+  }
+}
+
+/* Mobile: Retour au layout vertical */
+@media (max-width: 767px) {
+  .controls-desktop-layout {
+    background: none;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+  }
+  
+  .desktop-city-controls {
+    display: block;
+  }
+  
+  .gps-btn-desktop {
+    background: var(--primary-color);
+    width: 100%;
+    margin-top: 12px;
+  }
+  
+  .mobile-only {
+    display: block;
+  }
+}
+
 /* ===== ANCIENS STYLES (pour compatibilité) ===== */
 
 /* Styles pour la barre de recherche */
