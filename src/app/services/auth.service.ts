@@ -77,6 +77,9 @@ export class AuthService {
         prompt: 'select_account'
       });
       
+      // Vérifier si les popups sont autorisées avant d'essayer
+      this.checkPopupSupport();
+      
       const credential = await signInWithPopup(this.auth, provider);
       return {
         uid: credential.user.uid,
@@ -87,6 +90,20 @@ export class AuthService {
     } catch (error) {
       console.error('Erreur lors de la connexion Google:', error);
       throw this.handleAuthError(error);
+    }
+  }
+
+  // Vérifier le support des popups
+  private checkPopupSupport(): void {
+    try {
+      const testPopup = window.open('', '_blank', 'width=1,height=1');
+      if (testPopup) {
+        testPopup.close();
+      } else {
+        throw new Error('popup-blocked');
+      }
+    } catch (error) {
+      throw new Error('popup-blocked');
     }
   }
 
@@ -144,7 +161,10 @@ export class AuthService {
           message = 'Connexion annulée par l\'utilisateur';
           break;
         case 'auth/popup-blocked':
-          message = 'Popup bloquée par le navigateur. Veuillez autoriser les popups';
+          message = 'Popup bloquée par le navigateur. Veuillez autoriser les popups pour AfroConnect';
+          break;
+        case 'popup-blocked':
+          message = 'Popups bloquées. Autorisez les popups pour vous connecter avec Google';
           break;
         case 'auth/cancelled-popup-request':
           message = 'Demande de connexion annulée';

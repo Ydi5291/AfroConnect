@@ -51,9 +51,56 @@ export class LoginComponent {
       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/gallery';
       this.router.navigate([returnUrl]);
     } catch (error) {
-      this.errorMessage = (error as Error).message;
+      const errorMsg = (error as Error).message;
+      
+      // Gestion spéciale pour popup fermée ou bloquée
+      if (errorMsg.includes('annulée') || errorMsg.includes('Connexion annulée')) {
+        this.showGoogleLoginDialog();
+      } else if (errorMsg.includes('bloquée') || errorMsg.includes('popup')) {
+        this.showPopupBlockedDialog();
+      } else {
+        this.errorMessage = errorMsg;
+      }
     } finally {
       this.isLoading = false;
+    }
+  }
+
+  private showGoogleLoginDialog(): void {
+    if (confirm(
+      '🔐 Connexion Google interrompue\n\n' +
+      '• La popup de connexion a été fermée avant la fin\n' +
+      '• Souhaitez-vous réessayer?\n\n' +
+      'Conseils:\n' +
+      '✓ Gardez la popup ouverte pendant la connexion\n' +
+      '✓ Vérifiez que les popups ne sont pas bloquées\n' +
+      '✓ Utilisez votre compte Google habituel\n\n' +
+      'Réessayer maintenant?'
+    )) {
+      // Petit délai pour éviter les conflits
+      setTimeout(() => {
+        this.loginWithGoogle();
+      }, 500);
+    }
+  }
+
+  private showPopupBlockedDialog(): void {
+    if (confirm(
+      '🚫 Popups bloquées par le navigateur\n\n' +
+      '• Votre navigateur bloque les popups d\'AfroConnect\n' +
+      '• Pour vous connecter avec Google, vous devez:\n\n' +
+      'Instructions:\n' +
+      '1. Cliquez sur l\'icône 🛡️ dans la barre d\'adresse\n' +
+      '2. Autorisez les popups pour ce site\n' +
+      '3. Rechargez la page si nécessaire\n\n' +
+      'Réessayer maintenant?'
+    )) {
+      // Petit délai pour laisser le temps d\'autoriser
+      setTimeout(() => {
+        this.loginWithGoogle();
+      }, 1000);
+    } else {
+      this.errorMessage = 'Utilisez la connexion par email/mot de passe en attendant';
     }
   }
 }
