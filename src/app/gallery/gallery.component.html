@@ -45,7 +45,7 @@
         <!-- Desktop: Controls in einer Zeile -->
         <div class="desktop-city-controls">
           <!-- Freie Stadteingabe -->
-          <div class="city-search-controls unified-control-group">
+          <div class="city-search-group">
             <div class="unified-input-group">
               <input 
                 type="text" 
@@ -58,7 +58,7 @@
               />
               <button 
                 (click)="searchCity()" 
-                class="unified-btn"
+                class="unified-btn search-btn"
                 [disabled]="!customCityName || !customCityName.trim()"
                 title="Stadt suchen">
                 🔍 Suchen
@@ -67,7 +67,7 @@
           </div>
             
           <!-- Oder Dropdown für häufige Städte -->
-          <div class="quick-cities unified-control-group">
+          <div class="quick-cities-group">
             <div class="unified-input-group">
               <select [(ngModel)]="selectedCity" class="unified-select city-select-compact">
                 <option value="">Beliebte Städte...</option>
@@ -84,7 +84,7 @@
               </select>
               <button 
                 (click)="onCityChange()" 
-                class="unified-btn"
+                class="unified-btn confirm-btn"
                 [disabled]="!selectedCity"
                 title="Ausgewählte Stadt bestätigen">
                 ✓ Bestätigen
@@ -93,7 +93,7 @@
           </div>
             
           <!-- Standort-Button -->
-          <div class="location-actions">
+          <div class="gps-group">
             <button (click)="useCurrentLocation()" class="location-btn gps-btn-desktop" title="GPS aktivieren und Standort verwenden">
               📡 GPS aktivieren
             </button>

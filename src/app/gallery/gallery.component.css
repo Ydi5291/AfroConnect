@@ -195,8 +195,8 @@
 @media (min-width: 1024px) {
   .controls-desktop-layout {
     display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 32px;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
     align-items: start;
   }
   
@@ -209,32 +209,62 @@
     margin: 0;
   }
   
+  /* Layout horizontal pour les contrôles de ville */
   .desktop-city-controls {
     display: grid;
-    grid-template-columns: 1fr 200px auto;
-    gap: 16px;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap: 20px;
     align-items: end;
+    width: 100%;
   }
   
+  /* Groupes de contrôles */
+  .city-search-group,
+  .quick-cities-group,
+  .gps-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  /* Inputs et boutons dans chaque groupe */
+  .city-search-group .unified-input-group,
+  .quick-cities-group .unified-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  /* Tailles spécifiques */
   .city-input-compact {
-    min-width: 250px;
+    min-width: 200px;
+    flex: 1;
   }
   
   .city-select-compact {
-    min-width: 180px;
+    min-width: 150px;
+    flex: 1;
+  }
+  
+  .search-btn,
+  .confirm-btn {
+    min-width: 90px;
+    flex-shrink: 0;
   }
   
   .gps-btn-desktop {
     background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 12px 16px;
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
     white-space: nowrap;
+    width: 100%;
+    min-height: 48px;
   }
   
   .gps-btn-desktop:hover {
@@ -260,19 +290,40 @@
   
   .desktop-city-controls {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .city-search-group,
+  .quick-cities-group {
+    width: 100%;
+  }
+  
+  .city-search-group .unified-input-group,
+  .quick-cities-group .unified-input-group {
+    display: flex;
     gap: 12px;
-    align-items: end;
+    width: 100%;
   }
   
-  .city-search-controls,
-  .quick-cities {
+  .city-input-compact,
+  .city-select-compact {
     flex: 1;
-    min-width: 200px;
   }
   
-  .location-actions {
+  .search-btn,
+  .confirm-btn {
+    min-width: 100px;
     flex-shrink: 0;
+  }
+  
+  .gps-group {
+    width: 100%;
+  }
+  
+  .gps-btn-desktop {
+    width: 100%;
+    padding: 14px;
   }
 }
 
@@ -289,10 +340,17 @@
     display: block;
   }
   
+  .city-search-group,
+  .quick-cities-group,
+  .gps-group {
+    margin-bottom: 16px;
+  }
+  
   .gps-btn-desktop {
     background: var(--primary-color);
     width: 100%;
-    margin-top: 12px;
+    margin-top: 0;
+    padding: 14px;
   }
   
   .mobile-only {
