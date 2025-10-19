@@ -47,19 +47,32 @@ export class LoginComponent {
     this.errorMessage = '';
 
     try {
-      await this.authService.loginWithGoogle();
+      console.log('🔐 Tentative de connexion Google...');
+      const userProfile = await this.authService.loginWithGoogle();
+      console.log('✅ Connexion Google réussie:', userProfile);
+      
       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/gallery';
       this.router.navigate([returnUrl]);
     } catch (error) {
+      console.error('❌ Erreur connexion Google:', error);
       const errorMsg = (error as Error).message;
       
+      // Diagnostic détaillé
+      if (error instanceof Error) {
+        console.log('Type d\'erreur:', error.name);
+        console.log('Code d\'erreur:', (error as any).code);
+        console.log('Message complet:', error.message);
+      }
+      
       // Gestion spéciale pour popup fermée ou bloquée
-      if (errorMsg.includes('annulée') || errorMsg.includes('Connexion annulée')) {
+      if (errorMsg.includes('annulée') || errorMsg.includes('Connexion annulée') || 
+          errorMsg.includes('popup-closed-by-user') || errorMsg.includes('cancelled')) {
         this.showGoogleLoginDialog();
-      } else if (errorMsg.includes('bloquée') || errorMsg.includes('popup')) {
+      } else if (errorMsg.includes('bloquée') || errorMsg.includes('popup') || 
+                 errorMsg.includes('popup-blocked')) {
         this.showPopupBlockedDialog();
       } else {
-        this.errorMessage = errorMsg;
+        this.errorMessage = `Erreur de connexion: ${errorMsg}`;
       }
     } finally {
       this.isLoading = false;

@@ -67,11 +67,10 @@
         name="type"
         required
         class="form-select">
-        <option value="restaurant">🍽️ Restaurant</option>
-        <option value="epicerie">🛒 Lebensmittelgeschäft</option>
-        <option value="coiffeur">✂️ Friseur</option>
-        <option value="vetement">👗 Mode</option>
-        <option value="services">🏦 Dienstleistungen</option>
+        <option value="">Typ auswählen</option>
+        <option *ngFor="let type of getAllBusinessTypes()" [value]="type.value">
+          {{type.icon}} {{type.label}}
+        </option>
       </select>
     </div>
 

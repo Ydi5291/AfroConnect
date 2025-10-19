@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
+import { TranslationService } from '../services/translation.service';
 import { AfroshopData } from '../services/image.service';
 
 @Component({
@@ -60,6 +61,7 @@ export class AddAfroshopComponent implements OnInit {
   constructor(
     private firebaseService: FirebaseAfroshopService,
     private authService: AuthService,
+    private translationService: TranslationService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -709,5 +711,14 @@ export class AddAfroshopComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/']);
+  }
+
+  // 🇩🇪 Méthodes de traduction pour les templates
+  getAllBusinessTypes() {
+    return this.translationService.getAllBusinessTypes();
+  }
+
+  getBusinessTypeName(type: AfroshopData['type']): string {
+    return this.translationService.getBusinessTypeName(type);
   }
 }

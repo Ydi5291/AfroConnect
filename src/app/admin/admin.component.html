@@ -1,0 +1,75 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>🔧 AfroConnect - Administration</h1>
+    <p>Outils pour gérer la base de données d'Afroshops</p>
+  </div>
+
+  <div class="admin-panel" *ngIf="isAuthenticated">
+    <div class="seeding-section">
+      <div class="section-header">
+        <h2>🌱 Peuplement de la base de données</h2>
+        <p>Ajouter des Afroshops dans toute l'Allemagne pour donner vie à l'application</p>
+      </div>
+
+      <div class="data-info">
+        <h3>📊 Données incluses:</h3>
+        <ul>
+          <li>🏙️ <strong>Grandes villes:</strong> Berlin, Hamburg, München, Köln, Frankfurt, Stuttgart, Düsseldorf, Dortmund, Essen</li>
+          <li>🏘️ <strong>Villes moyennes:</strong> Leipzig, Bremen, Dresden, Hannover, Nürnberg</li>
+          <li>🏡 <strong>Petites villes & Kreise:</strong> Soest, Werl (Kreis Soest) et autres</li>
+          <li>🍽️ <strong>Types:</strong> Restaurants, Friseure, Lebensmittelgeschäfte, Mode, Services</li>
+          <li>🌍 <strong>Cuisines:</strong> Westafrikanische, Äthiopische, Senegalesische, Kamerunische, Nigerianische, etc.</li>
+        </ul>
+      </div>
+
+      <div class="action-section">
+        <!-- Bouton de peuplement -->
+        <button 
+          (click)="seedDatabase()" 
+          [disabled]="isSeeding || isCleaning"
+          class="seed-btn">
+          <span *ngIf="!isSeeding">🚀 Datenbank mit Afroshops füllen</span>
+          <span *ngIf="isSeeding">⏳ Import läuft...</span>
+        </button>
+
+        <!-- Bouton de nettoyage -->
+        <button 
+          (click)="cleanDuplicates()" 
+          [disabled]="isCleaning || isSeeding"
+          class="clean-btn">
+          <span *ngIf="!isCleaning">🧹 Doublons entfernen</span>
+          <span *ngIf="isCleaning">⏳ Nettoyage läuft...</span>
+        </button>
+
+        <div class="progress-indicator" *ngIf="isSeeding">
+          <div class="spinner"></div>
+          <p>Afroshops werden hinzugefügt... Bitte warten.</p>
+        </div>
+
+        <div class="progress-indicator" *ngIf="isCleaning">
+          <div class="spinner"></div>
+          <p>Doublons werden entfernt... Bitte warten.</p>
+        </div>
+      </div>
+
+      <div class="message" [class]="seedingMessage.includes('❌') ? 'error' : 'success'" *ngIf="seedingMessage">
+        {{ seedingMessage }}
+      </div>
+
+      <div class="message" [class]="cleaningMessage.includes('❌') ? 'error' : 'success'" *ngIf="cleaningMessage">
+        {{ cleaningMessage }}
+      </div>
+    </div>
+
+    <div class="navigation-section">
+      <button (click)="goToGallery()" class="nav-btn">
+        🏪 Voir la galerie
+      </button>
+    </div>
+  </div>
+
+  <div class="auth-required" *ngIf="!isAuthenticated">
+    <h2>🔐 Authentification requise</h2>
+    <p>Vous devez être connecté pour accéder aux outils d'administration.</p>
+  </div>
+</div>

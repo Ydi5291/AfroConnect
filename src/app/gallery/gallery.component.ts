@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AfroshopService, AfroshopData } from '../services/image.service';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
+import { TranslationService } from '../services/translation.service';
 import { MapComponent } from '../map/map.component';
 import { GeolocationService } from '../services/geolocation.service';
 import { Observable } from 'rxjs';
@@ -49,6 +50,7 @@ export class GalleryComponent implements OnInit {
     private afroshopService: AfroshopService,
     private firebaseService: FirebaseAfroshopService,
     private authService: AuthService,
+    private translationService: TranslationService,
     private router: Router,
     private geolocationService: GeolocationService
   ) {
@@ -415,6 +417,40 @@ export class GalleryComponent implements OnInit {
 
   goToAddAfroshop(): void {
     this.addNewAfroshop();
+  }
+
+  // 🔐 Méthodes pour l'administration
+  isAdminUser(user: User): boolean {
+    if (!user || !user.email) return false;
+    
+    const adminEmails = [
+      'youssoufdiamaldiallo@gmail.com', // Ton email personnel actuel
+      'admin@afroconnect.de',           // Email professionnel futur
+      'contact@afroconnect.de'          // Email support futur
+    ];
+    
+    return adminEmails.includes(user.email);
+  }
+
+  goToAdmin(): void {
+    this.router.navigate(['/admin']);
+  }
+
+  // 🇩🇪 Méthodes de traduction pour les templates
+  getBusinessTypeName(type: AfroshopData['type']): string {
+    return this.translationService.getBusinessTypeName(type);
+  }
+
+  getBusinessTypeDisplay(type: AfroshopData['type']): string {
+    return this.translationService.getBusinessTypeDisplay(type);
+  }
+
+  getBusinessTypeIcon(type: AfroshopData['type']): string {
+    return this.translationService.getBusinessTypeIcon(type);
+  }
+
+  getAllBusinessTypes() {
+    return this.translationService.getAllBusinessTypes();
   }
 
   getSelectedCityName(): string {

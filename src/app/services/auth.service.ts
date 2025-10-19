@@ -11,6 +11,7 @@ import {
   updateProfile
 } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
+import { TranslationService } from './translation.service';
 
 export interface UserProfile {
   uid: string;
@@ -26,7 +27,7 @@ export class AuthService {
   // Observable de l'état d'authentification
   user$: Observable<User | null>;
 
-  constructor(private auth: Auth) {
+  constructor(private auth: Auth, private translationService: TranslationService) {
     this.user$ = authState(this.auth);
   }
 
@@ -71,24 +72,46 @@ export class AuthService {
   // Connexion avec Google
   async loginWithGoogle(): Promise<UserProfile> {
     try {
+      console.log('🚀 Initialisation du provider Google...');
+      
       const provider = new GoogleAuthProvider();
       // Forcer la sélection du compte à chaque fois
       provider.setCustomParameters({
         prompt: 'select_account'
       });
       
+      console.log('🔍 Vérification du support des popups...');
       // Vérifier si les popups sont autorisées avant d'essayer
       this.checkPopupSupport();
       
+      console.log('🔐 Tentative de connexion avec popup...');
       const credential = await signInWithPopup(this.auth, provider);
+      
+      console.log('✅ Connexion réussie, utilisateur:', credential.user.email);
+      
       return {
         uid: credential.user.uid,
         email: credential.user.email,
         displayName: credential.user.displayName,
         photoURL: credential.user.photoURL
       };
-    } catch (error) {
-      console.error('Erreur lors de la connexion Google:', error);
+    } catch (error: any) {
+      console.error('❌ Erreur détaillée:', {
+        name: error.name,
+        code: error.code,
+        message: error.message,
+        customData: error.customData
+      });
+      
+      // Diagnostics spécifiques Firebase
+      if (error.code === 'auth/popup-blocked') {
+        console.log('🚫 Popup bloquée détectée');
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        console.log('👋 Popup fermée par l\'utilisateur');
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        console.log('🔄 Requête popup annulée');
+      }
+      
       throw this.handleAuthError(error);
     }
   }
@@ -127,50 +150,50 @@ export class AuthService {
     return this.getCurrentUser() !== null;
   }
 
-  // Gestion des erreurs d'authentification
+  // Gestion des erreurs d'authentification en allemand
   private handleAuthError(error: any): Error {
-    let message = 'Une erreur est survenue';
+    let message = 'Ein Fehler ist aufgetreten';
 
     if (error.code) {
       switch (error.code) {
         case 'auth/email-already-in-use':
-          message = 'Cette adresse email est déjà utilisée';
+          message = this.translationService.getErrorMessage('auth/email-already-in-use');
           break;
         case 'auth/weak-password':
-          message = 'Le mot de passe doit contenir au moins 6 caractères';
+          message = this.translationService.getErrorMessage('auth/weak-password');
           break;
         case 'auth/invalid-email':
-          message = 'Adresse email invalide';
+          message = this.translationService.getErrorMessage('auth/invalid-email');
           break;
         case 'auth/user-not-found':
-          message = 'Aucun compte associé à cette adresse email';
+          message = this.translationService.getErrorMessage('auth/user-not-found');
           break;
         case 'auth/wrong-password':
-          message = 'Mot de passe incorrect';
+          message = this.translationService.getErrorMessage('auth/wrong-password');
           break;
         case 'auth/too-many-requests':
-          message = 'Trop de tentatives. Veuillez réessayer plus tard';
+          message = 'Zu viele Versuche. Bitte versuchen Sie es später erneut';
           break;
         case 'auth/user-disabled':
-          message = 'Ce compte a été désactivé';
+          message = 'Dieses Konto wurde deaktiviert';
           break;
         case 'auth/operation-not-allowed':
-          message = 'Cette opération n\'est pas autorisée';
+          message = 'Diese Operation ist nicht erlaubt';
           break;
         case 'auth/popup-closed-by-user':
-          message = 'Connexion annulée par l\'utilisateur';
+          message = this.translationService.getErrorMessage('auth/popup-closed-by-user');
           break;
         case 'auth/popup-blocked':
-          message = 'Popup bloquée par le navigateur. Veuillez autoriser les popups pour AfroConnect';
+          message = this.translationService.getErrorMessage('auth/popup-blocked');
           break;
         case 'popup-blocked':
-          message = 'Popups bloquées. Autorisez les popups pour vous connecter avec Google';
+          message = this.translationService.getErrorMessage('popup-blocked');
           break;
         case 'auth/cancelled-popup-request':
-          message = 'Demande de connexion annulée';
+          message = this.translationService.getErrorMessage('auth/cancelled-popup-request');
           break;
         default:
-          message = error.message || 'Erreur d\'authentification';
+          message = this.translationService.getErrorMessage('general-error');
       }
     }
 

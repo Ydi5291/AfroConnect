@@ -10,6 +10,11 @@
         <button class="add-afroshop-btn primary" (click)="goToAddAfroshop()" title="Neuen Afroshop hinzufügen">
           ➕ Afroshop hinzufügen
         </button>
+        
+        <!-- Lien admin discret pour les administrateurs -->
+        <button class="admin-link-btn" (click)="goToAdmin()" title="Administration" *ngIf="isAdminUser(user)">
+          ⚙️
+        </button>
       </div>
       
       <!-- Nachricht wenn nicht angemeldet -->
@@ -28,11 +33,9 @@
         <div class="unified-input-group">
           <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="unified-select">
             <option value="">Alle Typen</option>
-            <option value="restaurant">🍽️ Restaurants</option>
-            <option value="epicerie">🛒 Lebensmittelgeschäfte</option>
-            <option value="coiffeur">✂️ Friseure</option>
-            <option value="vetement">👗 Mode</option>
-            <option value="services">🏦 Dienstleistungen</option>
+            <option *ngFor="let type of getAllBusinessTypes()" [value]="type.value">
+              {{type.icon}} {{type.label}}
+            </option>
           </select>
           <div class="unified-spacer"></div>
         </div>
@@ -134,7 +137,7 @@
         <img [src]="shop.image || getDefaultImage(shop.type)" [alt]="shop.name" class="gallery-image"
           (error)="onImageError($event, shop.type)" />
         <div class="type-badge" [class]="shop.type">
-          {{ getTypeIcon(shop.type) }}
+          {{ getBusinessTypeDisplay(shop.type) }}
         </div>
         
         <!-- Bearbeiten-Button (nur für Ersteller sichtbar) -->
