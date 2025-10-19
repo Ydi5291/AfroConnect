@@ -24,7 +24,7 @@ export class AddAfroshopComponent implements OnInit {
     rating: 4.0,
     image: '',
     cuisine: '',
-    priceLevel: 2,
+    priceLevel: 0, // Commencer vide pour forcer la sélection
     hours: '',
     website: ''
   };
@@ -311,6 +311,16 @@ export class AddAfroshopComponent implements OnInit {
         this.afroshop.image = await this.uploadImage();
       }
 
+      // Valeurs par défaut
+      if (!this.afroshop.priceLevel || this.afroshop.priceLevel === 0) {
+        this.afroshop.priceLevel = 2; // Par défaut modéré
+      }
+      
+      // Nettoyer les champs optionnels
+      this.afroshop.website = this.afroshop.website?.trim() || '';
+      this.afroshop.cuisine = this.afroshop.cuisine?.trim() || '';
+      this.afroshop.hours = this.afroshop.hours?.trim() || '';
+
       const city = this.extractCityFromAddress(this.afroshop.address);
       
       if (this.isEditMode && this.editingId) {
@@ -360,6 +370,30 @@ export class AddAfroshopComponent implements OnInit {
     if (!this.afroshop.name.trim()) {
       this.errorMessage = 'Name ist erforderlich';
       return false;
+    }
+    
+    if (!this.afroshop.address.trim()) {
+      this.errorMessage = 'Adresse ist erforderlich';
+      return false;
+    }
+    
+    if (!this.afroshop.phone.trim()) {
+      this.errorMessage = 'Telefonnummer ist erforderlich';
+      return false;
+    }
+    
+    if (!this.afroshop.description.trim()) {
+      this.errorMessage = 'Beschreibung ist erforderlich';
+      return false;
+    }
+    
+    // Validation du website si fourni
+    if (this.afroshop.website && this.afroshop.website.trim()) {
+      const urlPattern = /^https?:\/\/.+/;
+      if (!urlPattern.test(this.afroshop.website)) {
+        this.errorMessage = 'Website URL muss mit http:// oder https:// beginnen';
+        return false;
+      }
     }
     
     // Auto-définir les coordonnées si l'adresse contient une ville connue
