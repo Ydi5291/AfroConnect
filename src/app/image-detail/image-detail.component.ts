@@ -84,6 +84,15 @@ export class ImageDetailComponent implements OnInit {
     }
   }
 
+  // Obtenir l'itinéraire vers l'Afroshop
+  getDirections(): void {
+    if (this.afroshop) {
+      // Ouvrir Google Maps avec l'itinéraire
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`;
+      window.open(url, '_blank');
+    }
+  }
+
   // Obtenir l'icône selon le type
   getTypeIcon(type: AfroshopData['type']): string {
     const icons = {

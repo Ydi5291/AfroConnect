@@ -209,6 +209,17 @@
   box-shadow: var(--shadow-md);
 }
 
+.action-btn.route {
+  background: #e67e22;
+  color: white;
+}
+
+.action-btn.route:hover {
+  background: #d35400;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
 .action-btn.secondary {
   background: var(--text-light);
   color: white;

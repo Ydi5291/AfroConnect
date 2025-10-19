@@ -2,8 +2,7 @@
   <div class="gallery-header">
     <div class="header-content">
       <div class="header-text">
-        <h2>🌍 Afroshops & Restaurants in deiner Nähe</h2>
-        <p>Entdecke {{ filteredAfroshops.length }} afrikanische Geschäfte in Deutschland</p>
+        <h2>🌍 Entdecke {{ filteredAfroshops.length }} afrikanische Geschäfte in deiner Nähe</h2>
       </div>
 
       <!-- Hinzufügen-Button nur für angemeldete Benutzer sichtbar -->
@@ -22,53 +21,84 @@
     </div>
 
     <!-- Filter nach Typ -->
-    <div class="filter-container">
-      <label for="type-filter">Nach Typ filtern:</label>
-      <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="type-filter">
-        <option value="">Alle Typen</option>
-        <option value="restaurant">🍽️ Restaurants</option>
-        <option value="epicerie">🛒 Lebensmittelgeschäfte</option>
-        <option value="coiffeur">✂️ Friseure</option>
-        <option value="vetement">👗 Mode</option>
-        <option value="services">🏦 Dienstleistungen</option>
-      </select>
+    <div class="filter-container unified-control-group">
+      <label for="type-filter" class="unified-label">Nach Typ filtern:</label>
+      <div class="unified-input-group">
+        <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="unified-select">
+          <option value="">Alle Typen</option>
+          <option value="restaurant">🍽️ Restaurants</option>
+          <option value="epicerie">🛒 Lebensmittelgeschäfte</option>
+          <option value="coiffeur">✂️ Friseure</option>
+          <option value="vetement">👗 Mode</option>
+          <option value="services">🏦 Dienstleistungen</option>
+        </select>
+        <div class="unified-spacer"></div>
+      </div>
     </div>
 
     <!-- Stadtauswahl -->
     <div class="location-container">
-      <label for="city-selector">📍 Deine Stadt:</label>
-      <div class="location-controls">
-        <select id="city-selector" [(ngModel)]="selectedCity" (change)="onCityChange()" class="city-selector">
-          <option value="">Automatische Erkennung</option>
-          <option value="berlin">Berlin</option>
-          <option value="hamburg">Hamburg</option>
-          <option value="münchen">München</option>
-          <option value="köln">Köln</option>
-          <option value="frankfurt">Frankfurt am Main</option>
-          <option value="stuttgart">Stuttgart</option>
-          <option value="düsseldorf">Düsseldorf</option>
-          <option value="dortmund">Dortmund</option>
-          <option value="essen">Essen</option>
-          <option value="leipzig">Leipzig</option>
-          <option value="bremen">Bremen</option>
-          <option value="dresden">Dresden</option>
-          <option value="hannover">Hannover</option>
-          <option value="nürnberg">Nürnberg</option>
-          <option value="mainz">Mainz</option>
-          <option value="karlsruhe">Karlsruhe</option>
-          <option value="mannheim">Mannheim</option>
-          <option value="nürnberg">Nürnberg</option>
-          <option value="mainz">Mainz</option>
-          <option value="werl">Werl</option>
-          <option value="lippstadt">Lippstadt</option>
-        </select>
+      <label for="city-input" class="unified-label">📍 Deine Stadt:</label>
+      
+      <!-- Freie Stadteingabe -->
+      <div class="city-search-controls unified-control-group">
+        <div class="unified-input-group">
+          <input 
+            type="text" 
+            id="city-input"
+            [(ngModel)]="customCityName"
+            name="cityInput"
+            placeholder="Jede deutsche Stadt, z.B. Aachen, Regensburg, Freiburg..."
+            class="unified-input"
+            (keyup.enter)="searchCity()"
+          />
+          <button 
+            (click)="searchCity()" 
+            class="unified-btn"
+            [disabled]="!customCityName || !customCityName.trim()"
+            title="Stadt suchen">
+            🔍 Suchen
+          </button>
+        </div>
+      </div>
+        
+      <!-- Oder Dropdown für häufige Städte -->
+      <div class="quick-cities unified-control-group">
+        <label class="unified-label">Oder wählen:</label>
+        <div class="unified-input-group">
+          <select [(ngModel)]="selectedCity" class="unified-select">
+            <option value="">Bitte Stadt wählen</option>
+            <option value="berlin">Berlin</option>
+            <option value="hamburg">Hamburg</option>
+            <option value="münchen">München</option>
+            <option value="köln">Köln</option>
+            <option value="frankfurt">Frankfurt am Main</option>
+            <option value="stuttgart">Stuttgart</option>
+            <option value="düsseldorf">Düsseldorf</option>
+            <option value="dortmund">Dortmund</option>
+            <option value="essen">Essen</option>
+            <option value="leipzig">Leipzig</option>
+          </select>
+          <button 
+            (click)="onCityChange()" 
+            class="unified-btn"
+            [disabled]="!selectedCity"
+            title="Ausgewählte Stadt bestätigen">
+            ✓ Bestätigen
+          </button>
+        </div>
+      </div>
+        
+      <!-- Standort-Button -->
+      <div class="location-actions">
         <button (click)="useCurrentLocation()" class="location-btn" title="Meinen Standort verwenden">
           📡 Mein Standort
         </button>
-        <small style="display: block; color: #666; font-size: 0.8em; margin-top: 0.25rem;">
+        <small class="location-hint">
           📱 Mobile: Standort-Berechtigung erforderlich
         </small>
       </div>
+    </div>
 
       <!-- Suchradius-Anzeige -->
       <div class="radius-info" *ngIf="userLocation && (selectedCity || filteredAfroshops.length < allAfroshops.length)">
@@ -141,4 +171,3 @@
       </button>
     </div>
   </div>
-</div>

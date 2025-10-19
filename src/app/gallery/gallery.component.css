@@ -75,6 +75,114 @@
   }
 }
 
+/* ===== SYSTÈME UNIFIÉ POUR TOUS LES CONTRÔLES ===== */
+
+/* Groupes de contrôles unifiés */
+.unified-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-width: 500px;
+  margin: 0 auto var(--spacing-md) auto;
+  width: 100%;
+}
+
+/* Labels unifiés */
+.unified-label {
+  color: var(--text-dark);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  text-align: center;
+}
+
+/* Groupes d'input unifiés */
+.unified-input-group {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: stretch;
+  width: 100%;
+  height: 50px; /* Hauteur fixe pour tous */
+}
+
+/* Inputs et selects unifiés */
+.unified-input,
+.unified-select {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid #e0e0e0;
+  border-radius: var(--border-radius);
+  background: var(--background-white);
+  font-size: 1rem;
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.unified-input:focus,
+.unified-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.unified-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Boutons unifiés */
+.unified-btn {
+  background: linear-gradient(135deg, var(--primary-color), #2980b9);
+  color: white;
+  border: none;
+  padding: 0 var(--spacing-md);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.unified-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9, var(--primary-color));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.unified-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+/* Styles spéciaux pour le filtre type (sans bouton) */
+.filter-container.unified-control-group .unified-input-group {
+  justify-content: center;
+}
+
+.filter-container.unified-control-group .unified-select {
+  /* Même largeur que les autres inputs */
+  flex: 1;
+  max-width: none;
+  margin: 0;
+}
+
+/* Espaceur invisible pour équilibrer avec les boutons */
+.unified-spacer {
+  width: 120px;
+  min-width: 120px;
+  visibility: hidden;
+}
+
+/* ===== ANCIENS STYLES (pour compatibilité) ===== */
+
 /* Styles pour la barre de recherche */
 .search-container {
   max-width: 500px;
@@ -294,9 +402,9 @@
   box-shadow: var(--shadow);
 }
 
-/* Sélecteur de localisation */
+/* Sélecteur de localisation amélioré */
 .location-container {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto var(--spacing-lg) auto;
   text-align: center;
 }
@@ -305,32 +413,119 @@
   display: block;
   color: var(--text-dark);
   font-weight: 500;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  font-size: 1.1rem;
 }
 
-.location-controls {
+/* Contrôles de recherche de ville */
+.city-search-controls {
   display: flex;
-  gap: var(--spacing-sm);
-  justify-content: center;
+  flex-direction: column;
+  gap: var(--spacing-md);
   align-items: center;
 }
 
-.city-selector {
+/* Groupe d'entrée de ville */
+.city-input-group {
+  display: flex;
+  gap: var(--spacing-sm);
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.city-input {
   flex: 1;
-  max-width: 300px;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
   border: 2px solid #e0e0e0;
   border-radius: var(--border-radius);
   background: var(--background-white);
   font-size: 1rem;
   color: var(--text-dark);
-  cursor: pointer;
   transition: border-color 0.3s ease;
 }
 
-.city-selector:focus {
+.city-input:focus {
   outline: none;
   border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.city-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.search-btn {
+  background: linear-gradient(135deg, var(--primary-color), #2980b9);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.search-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9, var(--primary-color));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Villes rapides */
+.quick-cities {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.quick-label {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.city-selector-compact {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 2px solid #e0e0e0;
+  border-radius: var(--border-radius);
+  background: var(--background-white);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  min-width: 180px;
+}
+
+.city-selector-compact:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Actions de localisation */
+.location-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
 .location-btn {
@@ -348,6 +543,13 @@
 .location-btn:hover {
   background: #e67e22;
   transform: translateY(-1px);
+}
+
+.location-hint {
+  color: #666;
+  font-size: 0.8em;
+  text-align: center;
+  max-width: 250px;
 }
 
 /* Indication du rayon de recherche */
@@ -389,15 +591,68 @@
   margin-top: var(--spacing-xs);
 }
 
-/* Responsive */
+/* Responsive pour la recherche de ville */
 @media (max-width: 600px) {
-  .location-controls {
+  /* Styles unifiés responsive */
+  .unified-control-group {
+    max-width: 100%;
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .unified-input-group {
+    flex-direction: column;
+    height: auto;
+    gap: var(--spacing-xs);
+  }
+  
+  .unified-input,
+  .unified-select,
+  .unified-btn {
+    height: 50px;
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .filter-container.unified-control-group .unified-select {
+    max-width: 100%;
+  }
+  
+  /* Anciens styles pour compatibilité */
+  .city-input-group {
     flex-direction: column;
     gap: var(--spacing-xs);
   }
   
-  .city-selector {
+  .search-btn {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .quick-cities {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    max-width: 100%;
+  }
+  
+  .quick-label {
+    min-width: auto;
+    text-align: center;
+  }
+  
+  .city-dropdown-group {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .city-selector-compact {
+    min-width: auto;
+    width: 100%;
     max-width: none;
+  }
+  
+  .location-container {
+    max-width: 100%;
+    padding: 0 var(--spacing-md);
   }
 }
 
@@ -776,4 +1031,57 @@
   border-radius: var(--border-radius-sm);
   font-size: 0.85rem;
   font-weight: 500;
+}
+
+/* Groupe dropdown avec bouton de validation */
+.city-dropdown-group {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: stretch;
+  flex: 1;
+}
+
+.city-dropdown-group .city-selector-compact {
+  flex: 1;
+  min-width: 180px;
+}
+
+.validate-city-btn {
+  background: linear-gradient(135deg, var(--success-color), #27ae60);
+  color: white;
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  min-width: 90px;
+}
+
+.validate-city-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #27ae60, var(--success-color));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.validate-city-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .city-dropdown-group {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .validate-city-btn {
+    min-width: auto;
+    padding: var(--spacing-sm);
+  }
 }
