@@ -29,6 +29,17 @@ export class AddAfroshopComponent implements OnInit {
     website: ''
   };
 
+  // Structure pour les heures d'ouverture
+  openingHours = {
+    monday: { isOpen: false, open: '09:00', close: '18:00' },
+    tuesday: { isOpen: false, open: '09:00', close: '18:00' },
+    wednesday: { isOpen: false, open: '09:00', close: '18:00' },
+    thursday: { isOpen: false, open: '09:00', close: '18:00' },
+    friday: { isOpen: false, open: '09:00', close: '18:00' },
+    saturday: { isOpen: false, open: '10:00', close: '16:00' },
+    sunday: { isOpen: false, open: '12:00', close: '16:00' }
+  };
+
   // Mode édition
   isEditMode = false;
   editingId: string | null = null;
@@ -84,6 +95,9 @@ export class AddAfroshopComponent implements OnInit {
           website: afroshop.website || ''
         };
         this.imagePreview = afroshop.image || null;
+        
+        // Parser les heures d'ouverture pour l'interface
+        this.parseOpeningHoursFromString(afroshop.hours || '');
       } else {
         this.errorMessage = 'Afroshop nicht gefunden';
         setTimeout(() => this.router.navigate(['/']), 2000);
@@ -319,7 +333,9 @@ export class AddAfroshopComponent implements OnInit {
       // Nettoyer les champs optionnels
       this.afroshop.website = this.afroshop.website?.trim() || '';
       this.afroshop.cuisine = this.afroshop.cuisine?.trim() || '';
-      this.afroshop.hours = this.afroshop.hours?.trim() || '';
+      
+      // Convertir les heures d'ouverture en string
+      this.afroshop.hours = this.convertOpeningHoursToString();
 
       const city = this.extractCityFromAddress(this.afroshop.address);
       
@@ -614,6 +630,81 @@ export class AddAfroshopComponent implements OnInit {
     return str.split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
+  }
+
+  // Convertir les heures d'ouverture en string pour sauvegarde
+  private convertOpeningHoursToString(): string {
+    const days = [
+      { key: 'monday' as const, name: 'Mo' },
+      { key: 'tuesday' as const, name: 'Di' },
+      { key: 'wednesday' as const, name: 'Mi' },
+      { key: 'thursday' as const, name: 'Do' },
+      { key: 'friday' as const, name: 'Fr' },
+      { key: 'saturday' as const, name: 'Sa' },
+      { key: 'sunday' as const, name: 'So' }
+    ];
+
+    const openDays: string[] = [];
+    
+    days.forEach(day => {
+      const dayData = this.openingHours[day.key];
+      if (dayData.isOpen) {
+        openDays.push(`${day.name}: ${dayData.open}-${dayData.close}`);
+      }
+    });
+
+    return openDays.length > 0 ? openDays.join(', ') : 'Öffnungszeiten nicht angegeben';
+  }
+
+  // Convertir string en structure d'heures pour édition
+  private parseOpeningHoursFromString(hoursString: string): void {
+    if (!hoursString || hoursString === 'Öffnungszeiten nicht angegeben') {
+      return;
+    }
+
+    // Reset all days
+    this.openingHours.monday.isOpen = false;
+    this.openingHours.tuesday.isOpen = false;
+    this.openingHours.wednesday.isOpen = false;
+    this.openingHours.thursday.isOpen = false;
+    this.openingHours.friday.isOpen = false;
+    this.openingHours.saturday.isOpen = false;
+    this.openingHours.sunday.isOpen = false;
+
+    const dayEntries = hoursString.split(',');
+    
+    dayEntries.forEach(entry => {
+      const trimmed = entry.trim();
+      const match = trimmed.match(/^(\w+):\s*(\d{2}:\d{2})-(\d{2}:\d{2})$/);
+      
+      if (match) {
+        const [, dayAbbr, openTime, closeTime] = match;
+        
+        switch(dayAbbr.toLowerCase()) {
+          case 'mo':
+            this.openingHours.monday = { isOpen: true, open: openTime, close: closeTime };
+            break;
+          case 'di':
+            this.openingHours.tuesday = { isOpen: true, open: openTime, close: closeTime };
+            break;
+          case 'mi':
+            this.openingHours.wednesday = { isOpen: true, open: openTime, close: closeTime };
+            break;
+          case 'do':
+            this.openingHours.thursday = { isOpen: true, open: openTime, close: closeTime };
+            break;
+          case 'fr':
+            this.openingHours.friday = { isOpen: true, open: openTime, close: closeTime };
+            break;
+          case 'sa':
+            this.openingHours.saturday = { isOpen: true, open: openTime, close: closeTime };
+            break;
+          case 'so':
+            this.openingHours.sunday = { isOpen: true, open: openTime, close: closeTime };
+            break;
+        }
+      }
+    });
   }
 
   goBack(): void {
