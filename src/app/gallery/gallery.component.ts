@@ -170,6 +170,30 @@ export class GalleryComponent implements OnInit {
   }
 
   useCurrentLocation(): void {
+    // Préparation de l'utilisateur avant la demande GPS
+    const userWantsGPS = confirm(
+      `📍 GPS Standort aktivieren?\n\n` +
+      `AfroConnect möchte deinen Standort nutzen um:\n` +
+      `🎯 Afroshops in deiner Nähe zu finden\n` +
+      `📏 Entfernungen genau zu berechnen\n` +
+      `🗺️ Dir die beste Route zu zeigen\n\n` +
+      `Dein Standort wird NICHT gespeichert und bleibt privat.\n\n` +
+      `GPS jetzt aktivieren?`
+    );
+
+    if (!userWantsGPS) {
+      // L'utilisateur a refusé
+      alert(
+        `👍 Kein Problem!\n\n` +
+        `Du kannst jederzeit:\n` +
+        `• Eine Stadt manuell eingeben\n` +
+        `• Aus der Liste wählen\n` +
+        `• GPS später aktivieren`
+      );
+      return;
+    }
+
+    // L'utilisateur a accepté, procéder à la géolocalisation
     this.geolocationService.getCurrentPosition()
       .subscribe({
         next: (position) => {
@@ -181,8 +205,15 @@ export class GalleryComponent implements OnInit {
             this.selectedCity = '';
             this.applyFilters();
             this.sortAfroshopsByDistance();
+            
+            // Message de succès
+            alert(
+              `✅ Standort erfolgreich ermittelt!\n\n` +
+              `🎯 Afroshops werden jetzt nach Entfernung sortiert.\n` +
+              `📏 Du siehst die genauen Distanzen zu jedem Geschäft.`
+            );
           } else {
-            this.fallbackToDefaultLocation('Position non disponible');
+            this.fallbackToDefaultLocationWithChoice();
           }
         },
         error: (error) => {
@@ -192,34 +223,128 @@ export class GalleryComponent implements OnInit {
   }
 
   private handleGeolocationError(error: any): void {
-    let message = '';
-    
     if (error.code) {
       switch (error.code) {
-        case 1:
-          message = 'Standort-Berechtigung verweigert. Bitte aktivieren Sie die Standortfreigabe in Ihren Browser-Einstellungen.';
+        case 1: // Permission denied
+          this.showGPSActivationDialog();
           break;
-        case 2:
-          message = 'Standort nicht verfügbar. Überprüfen Sie Ihre GPS-Einstellungen.';
+        case 2: // Position unavailable
+          this.showGPSUnavailableDialog();
           break;
-        case 3:
-          message = 'Standort-Anfrage zeitüberschreitung. Versuchen Sie es erneut.';
+        case 3: // Timeout
+          this.showGPSTimeoutDialog();
           break;
         default:
-          message = 'Unbekannter Standort-Fehler.';
+          this.showGenericGPSError();
       }
     } else {
-      message = 'Standort-Service nicht verfügbar. HTTPS erforderlich für mobile Geräte.';
+      this.showHTTPSRequiredDialog();
     }
-    
-    this.fallbackToDefaultLocation(message);
   }
 
-  private fallbackToDefaultLocation(reason: string): void {
+  private showGPSActivationDialog(): void {
+    const userConfirmed = confirm(
+      `📍 Standort-Zugriff erforderlich\n\n` +
+      `Um Afroshops in deiner Nähe zu finden, benötigt AfroConnect Zugriff auf deinen Standort.\n\n` +
+      `✅ Schritte:\n` +
+      `1. Klicke "OK" um die Berechtigung zu erteilen\n` +
+      `2. Wähle "Zulassen" wenn der Browser fragt\n` +
+      `3. Bei iOS: Einstellungen > Safari > Standort aktivieren\n\n` +
+      `Möchtest du es nochmal versuchen?`
+    );
+
+    if (userConfirmed) {
+      // Nochmaliger Versuch der Geolocation
+      this.useCurrentLocation();
+    } else {
+      this.fallbackToDefaultLocationWithChoice();
+    }
+  }
+
+  private showGPSUnavailableDialog(): void {
+    const userConfirmed = confirm(
+      `🛰️ GPS-Signal nicht verfügbar\n\n` +
+      `Dein GPS-Signal ist momentan nicht erreichbar.\n\n` +
+      `💡 Lösungen:\n` +
+      `• Gehe ins Freie oder näher zum Fenster\n` +
+      `• Aktiviere GPS in den Geräte-Einstellungen\n` +
+      `• Starte die App neu\n\n` +
+      `Nochmal versuchen?`
+    );
+
+    if (userConfirmed) {
+      this.useCurrentLocation();
+    } else {
+      this.fallbackToDefaultLocationWithChoice();
+    }
+  }
+
+  private showGPSTimeoutDialog(): void {
+    const userConfirmed = confirm(
+      `⏱️ GPS-Anfrage zu langsam\n\n` +
+      `Die Standort-Ermittlung dauert zu lange.\n\n` +
+      `💡 Tipps:\n` +
+      `• Überprüfe deine Internetverbindung\n` +
+      `• Gehe ins Freie für besseres GPS-Signal\n` +
+      `• Versuche es in ein paar Sekunden nochmal\n\n` +
+      `Erneut versuchen?`
+    );
+
+    if (userConfirmed) {
+      this.useCurrentLocation();
+    } else {
+      this.fallbackToDefaultLocationWithChoice();
+    }
+  }
+
+  private showGenericGPSError(): void {
+    alert(
+      `❌ Standort-Fehler\n\n` +
+      `Ein unbekannter Fehler ist aufgetreten.\n\n` +
+      `📍 Berlin wird als Standard verwendet.\n` +
+      `Du kannst jederzeit eine Stadt manuell auswählen.`
+    );
+    this.fallbackToDefaultLocationWithChoice();
+  }
+
+  private showHTTPSRequiredDialog(): void {
+    const isHTTPS = window.location.protocol === 'https:';
+    
+    if (isHTTPS) {
+      // Si déjà HTTPS, problème différent
+      alert(
+        `🔧 Standort-Service Problem\n\n` +
+        `Der Standort-Service ist momentan nicht verfügbar.\n\n` +
+        `📍 Berlin wird als Standard verwendet.\n` +
+        `Versuche es später nochmal oder wähle eine Stadt manuell.`
+      );
+    } else {
+      // Si HTTP, expliquer HTTPS
+      alert(
+        `🔒 HTTPS erforderlich\n\n` +
+        `Für mobile Geräte ist eine sichere HTTPS-Verbindung nötig.\n\n` +
+        `🌐 Verwende: https://ydi5291.github.io/AfroConnect/\n\n` +
+        `📍 Berlin wird als Standard verwendet.`
+      );
+    }
+    this.fallbackToDefaultLocationWithChoice();
+  }
+
+  private fallbackToDefaultLocationWithChoice(): void {
     this.userLocation = this.cityCoordinates['berlin'];
     this.selectedCity = 'berlin';
+    this.applyFilters();
+    this.sortAfroshopsByDistance();
     
-    alert(`🗺️ Standort-Problem: ${reason}\n\n📍 Berlin wurde als Standard-Standort gewählt.\n\n💡 Tipp: Für die Standort-Funktion aktivieren Sie GPS und verwenden Sie HTTPS.`);
+    // Message plus positif et actionnable
+    alert(
+      `� Standard-Standort aktiviert\n\n` +
+      `Berlin wurde als dein Standort gewählt.\n\n` +
+      `🎯 Du kannst jederzeit:\n` +
+      `• Eine andere Stadt suchen\n` +
+      `• Aus der Liste wählen\n` +
+      `• "📡 Mein Standort" nochmal probieren`
+    );
   }
 
   sortAfroshopsByDistance(): void {
