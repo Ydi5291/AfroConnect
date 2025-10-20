@@ -333,20 +333,78 @@ export class GalleryComponent implements OnInit {
   }
 
   private fallbackToDefaultLocationWithChoice(): void {
-    this.userLocation = this.cityCoordinates['berlin'];
-    this.selectedCity = 'berlin';
+    // Au lieu de forcer Berlin, proposer à l'utilisateur de choisir sa ville
+    const userChoice = prompt(
+      `📍 Standort automatisch nicht möglich\n\n` +
+      `Bitte gib deine Stadt ein für personalisierte Ergebnisse:\n\n` +
+      `Beispiele: Dortmund, Hamburg, München, Köln, Frankfurt, Stuttgart, Düsseldorf...\n\n` +
+      `Deine Stadt:`,
+      localStorage.getItem('afroconnect-user-city') || 'Dortmund' // Dortmund par défaut pour vous !
+    );
+
+    if (userChoice && userChoice.trim()) {
+      const cityKey = userChoice.toLowerCase().trim();
+      
+      // Sauvegarder le choix de l'utilisateur
+      localStorage.setItem('afroconnect-user-city', cityKey);
+      
+      // Vérifier si la ville est dans notre liste
+      if (this.cityCoordinates[cityKey]) {
+        this.userLocation = this.cityCoordinates[cityKey];
+        this.selectedCity = cityKey;
+        
+        alert(
+          `✅ Standort auf ${this.formatCityName(cityKey)} gesetzt!\n\n` +
+          `🎯 Afroshops werden nach Entfernung zu ${this.formatCityName(cityKey)} sortiert.\n` +
+          `📏 Du siehst jetzt relevante Geschäfte in deiner Nähe.`
+        );
+      } else {
+        // Ville non reconnue, utiliser les coordonnées de Dortmund par défaut
+        this.userLocation = this.cityCoordinates['dortmund'] || this.cityCoordinates['berlin'];
+        this.selectedCity = 'dortmund';
+        
+        alert(
+          `📍 Stadt "${userChoice}" nicht erkannt\n\n` +
+          `Dortmund wurde als Standard-Standort gewählt.\n\n` +
+          `Du kannst jederzeit:\n` +
+          `• Eine andere Stadt aus der Liste wählen\n` +
+          `• Eine andere Stadt eingeben\n` +
+          `• GPS nochmal versuchen`
+        );
+      }
+    } else {
+      // L'utilisateur a annulé - utiliser Dortmund par défaut pour vous
+      this.userLocation = this.cityCoordinates['dortmund'] || this.cityCoordinates['berlin'];
+      this.selectedCity = 'dortmund';
+      
+      alert(
+        `📍 Standard-Standort: Dortmund\n\n` +
+        `Du kannst jederzeit:\n` +
+        `• Eine Stadt aus der Liste wählen\n` +
+        `• Eine Stadt eingeben\n` +
+        `• GPS erneut aktivieren`
+      );
+    }
+    
     this.applyFilters();
     this.sortAfroshopsByDistance();
-    
-    // Message plus positif et actionnable
-    alert(
-      `� Standard-Standort aktiviert\n\n` +
-      `Berlin wurde als dein Standort gewählt.\n\n` +
-      `🎯 Du kannst jederzeit:\n` +
-      `• Eine andere Stadt suchen\n` +
-      `• Aus der Liste wählen\n` +
-      `• "📡 Mein Standort" nochmal probieren`
-    );
+  }
+
+  // Fonction helper pour formater les noms de ville
+  private formatCityName(cityKey: string): string {
+    const cityNames: { [key: string]: string } = {
+      'berlin': 'Berlin',
+      'hamburg': 'Hamburg', 
+      'münchen': 'München',
+      'köln': 'Köln',
+      'frankfurt': 'Frankfurt am Main',
+      'stuttgart': 'Stuttgart',
+      'düsseldorf': 'Düsseldorf',
+      'dortmund': 'Dortmund',
+      'essen': 'Essen',
+      'leipzig': 'Leipzig'
+    };
+    return cityNames[cityKey] || cityKey.charAt(0).toUpperCase() + cityKey.slice(1);
   }
 
   sortAfroshopsByDistance(): void {

@@ -187,17 +187,35 @@
   flex: 1;
   max-width: 280px; /* Largeur maximale pour éviter les débordements */
   min-width: 180px; /* Largeur minimale pour lisibilité */
-  margin: 0 0 0 8rem; /* Décalage à droite pour alignement avec GPS */
   text-align: center; /* Centrer le texte dans le select */
   padding: var(--spacing-sm) var(--spacing-lg); /* Plus de padding pour une meilleure lisibilité */
   vertical-align: middle; /* Alignement vertical pour le texte */
   padding-top: calc(var(--spacing-sm) + 2px); /* Ajustement fin du padding top */
 }
 
-/* Décalage du label pour qu'il suive le champ de sélection */
-.filter-container.unified-control-group .unified-label {
-  margin-left: 10rem; /* Même décalage que le champ de sélection */
-  text-align: left; /* Alignement à gauche au lieu du centre */
+/* Décalage du label et select pour desktop uniquement */
+@media (min-width: 1024px) {
+  .filter-container.unified-control-group .unified-select {
+    margin: 0 0 0 8rem; /* Décalage à droite pour alignement avec GPS - DESKTOP SEULEMENT */
+  }
+  
+  .filter-container.unified-control-group .unified-label {
+    margin-left: 10rem; /* Même décalage que le champ de sélection - DESKTOP SEULEMENT */
+    text-align: left; /* Alignement à gauche au lieu du centre */
+  }
+}
+
+/* Styles mobile - centré et sans décalage */
+@media (max-width: 1023px) {
+  .filter-container.unified-control-group .unified-select {
+    margin: 0; /* Pas de décalage sur mobile */
+    max-width: 100%; /* Pleine largeur sur mobile */
+  }
+  
+  .filter-container.unified-control-group .unified-label {
+    margin-left: 0; /* Pas de décalage sur mobile */
+    text-align: center; /* Centré sur mobile */
+  }
 }
 
 /* Espaceur invisible pour équilibrer avec les boutons */
