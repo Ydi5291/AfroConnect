@@ -65,7 +65,16 @@
         
         <div class="contact-item">
           <strong>🕒 Öffnungszeiten:</strong>
-          <p>{{ afroshop.hours }}</p>
+          <div class="opening-hours-display">
+            <div *ngFor="let dayInfo of formattedHours" class="day-row" 
+                 [class.closed]="!dayInfo.isOpen" 
+                 [class.open]="dayInfo.isOpen">
+              <span class="day-name">{{ dayInfo.day }}:</span>
+              <span class="day-hours" [class.closed-text]="!dayInfo.isOpen">
+                {{ dayInfo.hours }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       

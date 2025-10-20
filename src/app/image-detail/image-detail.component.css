@@ -386,3 +386,78 @@
     justify-content: center;
   }
 }
+
+/* Styles pour l'affichage des heures d'ouverture */
+.opening-hours-display {
+  margin-top: var(--spacing-sm);
+  background: var(--surface-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  border: 1px solid var(--border-color);
+}
+
+.day-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid var(--border-light);
+  transition: all var(--transition-normal);
+}
+
+.day-row:last-child {
+  border-bottom: none;
+}
+
+.day-row.open {
+  background: linear-gradient(90deg, 
+    rgba(76, 175, 80, 0.05), 
+    rgba(76, 175, 80, 0.02)
+  );
+}
+
+.day-row.closed {
+  background: linear-gradient(90deg, 
+    rgba(244, 67, 54, 0.05), 
+    rgba(244, 67, 54, 0.02)
+  );
+}
+
+.day-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 100px;
+  font-size: 0.95rem;
+}
+
+.day-hours {
+  color: #4CAF50;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-align: right;
+}
+
+.day-hours.closed-text {
+  color: #F44336;
+  font-style: italic;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+  .opening-hours-display {
+    padding: var(--spacing-sm);
+  }
+  
+  .day-row {
+    padding: var(--spacing-xs);
+  }
+  
+  .day-name {
+    min-width: 80px;
+    font-size: 0.9rem;
+  }
+  
+  .day-hours {
+    font-size: 0.9rem;
+  }
+}

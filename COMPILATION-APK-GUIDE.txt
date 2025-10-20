@@ -1,0 +1,101 @@
+📱 GUIDE PRATIQUE - Compilation APK dans Android Studio
+=========================================================
+
+❌ ATTENTION: Ne pas taper les flèches → dans PowerShell !
+✅ Ce sont des indicateurs visuels du guide seulement
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ÉTAPES RÉELLES dans Android Studio
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ OUVRIR ANDROID STUDIO
+   - Cliquer sur l'icône Android Studio
+   - Si le projet ne s'ouvre pas automatiquement:
+     * File > Open
+     * Naviguer vers: C:\Users\youss\first-angular-project\android
+     * Cliquer "OK"
+
+2️⃣ ATTENDRE LA SYNCHRONISATION
+   - Android Studio va automatiquement synchroniser
+   - Voir la barre de progression en bas
+   - Attendre "Gradle sync finished" (1-3 minutes)
+
+3️⃣ CONFIGURER LE JDK (si erreur)
+   - Menu: File > Settings
+   - Dans la liste: Build, Execution, Deployment > Build Tools > Gradle
+   - Gradle JDK: Sélectionner version 17 ou "Use default Project SDK"
+   - Cliquer "Apply" puis "OK"
+
+4️⃣ GÉNÉRER L'APK SIGNÉ
+   - Menu: Build > Generate Signed Bundle/APK...
+   - Sélectionner: "APK" (pas Bundle)
+   - Cliquer "Next"
+
+5️⃣ CRÉER LE KEYSTORE (première fois)
+   - Cliquer "Create new..."
+   - Key store path: Choisir un dossier (ex: Bureau)
+   - Password: Choisir un mot de passe sécurisé
+   - Alias: afroconnect
+   - Validity: 25 (années)
+   - Remplir les champs requis (nom, organisation, etc.)
+   - Cliquer "OK"
+
+6️⃣ CONFIGURER LA SIGNATURE
+   - Entrer le mot de passe du keystore
+   - Key alias: afroconnect
+   - Entrer le mot de passe de la clé
+   - Cliquer "Next"
+
+7️⃣ CHOISIR LA CONFIGURATION
+   - Destination Folder: Laisser par défaut
+   - Build Variants: release
+   - Signature Versions: Cocher V1 et V2
+   - Cliquer "Create"
+
+8️⃣ ATTENDRE LA COMPILATION
+   - Android Studio va compiler l'APK
+   - Voir le progress en bas
+   - Un popup "Generate Signed APK" apparaîtra quand c'est fini
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 LOCALISER L'APK GÉNÉRÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+L'APK sera ici:
+android/app/build/outputs/apk/release/app-release.apk
+
+Taille attendue: 15-30 MB
+Nom: app-release.apk
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 ERREURS COURANTES ET SOLUTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ "Project sync failed"
+   ✅ File > Invalidate Caches and Restart
+
+❌ "JDK not found" 
+   ✅ File > Settings > Gradle > Utiliser JDK intégré
+
+❌ "Build failed"
+   ✅ Build > Clean Project puis Build > Rebuild Project
+
+❌ "Missing Android SDK"
+   ✅ Tools > SDK Manager > Installer Android SDK Platform
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 APRÈS GÉNÉRATION DE L'APK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ APK prêt pour Google Play Store
+✅ Tester l'APK sur un appareil Android (optionnel)
+✅ Upload sur Google Play Console
+✅ Remplir les informations de l'app
+✅ Publier en "Internal Testing" puis "Production"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ IMPORTANT: Sauvegarder votre keystore !
+Le fichier keystore est nécessaire pour toutes les mises à jour futures.
+
+🎯 STATUT: Prêt pour la compilation APK finale !

@@ -118,6 +118,19 @@
   transition: all 0.3s ease;
   height: 100%;
   box-sizing: border-box;
+  display: flex;
+  align-items: center; /* Centre verticalement le contenu */
+  line-height: 1.2; /* Contrôle la hauteur de ligne pour un meilleur alignement */
+}
+
+/* Amélioration spécifique pour les selects */
+.unified-select {
+  appearance: none; /* Supprime le style par défaut du navigateur */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'><path fill='%23666' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 40px; /* Espace pour la flèche */
 }
 
 .unified-input:focus,
@@ -164,14 +177,27 @@
 
 /* Styles spéciaux pour le filtre type (sans bouton) */
 .filter-container.unified-control-group .unified-input-group {
-  justify-content: center;
+  justify-content: flex-start; /* Aligné à gauche comme les autres */
+  max-width: 100%; /* Éviter les débordements */
+  padding-left: 0; /* Retour à 0 pour utiliser l'alignement du container parent */
 }
 
 .filter-container.unified-control-group .unified-select {
-  /* Même largeur que les autres inputs */
+  /* Largeur plus généreuse mais contrôlée pour desktop */
   flex: 1;
-  max-width: none;
-  margin: 0;
+  max-width: 280px; /* Largeur maximale pour éviter les débordements */
+  min-width: 180px; /* Largeur minimale pour lisibilité */
+  margin: 0 0 0 8rem; /* Décalage à droite pour alignement avec GPS */
+  text-align: center; /* Centrer le texte dans le select */
+  padding: var(--spacing-sm) var(--spacing-lg); /* Plus de padding pour une meilleure lisibilité */
+  vertical-align: middle; /* Alignement vertical pour le texte */
+  padding-top: calc(var(--spacing-sm) + 2px); /* Ajustement fin du padding top */
+}
+
+/* Décalage du label pour qu'il suive le champ de sélection */
+.filter-container.unified-control-group .unified-label {
+  margin-left: 10rem; /* Même décalage que le champ de sélection */
+  text-align: left; /* Alignement à gauche au lieu du centre */
 }
 
 /* Espaceur invisible pour équilibrer avec les boutons */
@@ -191,11 +217,11 @@
   box-shadow: 0 8px 32px rgba(0,0,0,0.08);
 }
 
-/* Desktop: Grid layout pour les contrôles */
+/* Desktop: Grid layout pour les contrôles - plus flexible */
 @media (min-width: 1024px) {
   .controls-desktop-layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: minmax(250px, 300px) 1fr; /* Plus flexible */
     gap: 40px;
     align-items: start;
   }
@@ -203,6 +229,11 @@
   .filter-container {
     margin: 0;
     text-align: left;
+  }
+  
+  /* Suppression du padding supplémentaire qui créait un décalage */
+  .filter-container .unified-input-group {
+    padding-left: 0; /* Même alignement que les groupes de droite */
   }
   
   .location-container {
@@ -235,15 +266,17 @@
     align-items: stretch;
   }
   
-  /* Tailles spécifiques */
+  /* Tailles spécifiques pour desktop - ajustées plus doucement */
   .city-input-compact {
-    min-width: 200px;
+    min-width: 200px; /* Retour à une taille raisonnable */
     flex: 1;
+    max-width: 300px; /* Limitation pour éviter les débordements */
   }
   
   .city-select-compact {
-    min-width: 150px;
+    min-width: 180px; /* Juste assez pour "Beliebte Städte..." */
     flex: 1;
+    max-width: 250px; /* Limitation pour éviter les débordements */
   }
   
   .search-btn,
@@ -1291,5 +1324,28 @@
   .validate-city-btn {
     min-width: auto;
     padding: var(--spacing-sm);
+  }
+}
+
+/* ========== TRÈS GRANDS ÉCRANS (4K+) ========== */
+@media (min-width: 1400px) {
+  .filter-container.unified-control-group .unified-select {
+    max-width: 320px; /* Un peu plus d'espace sur très grands écrans */
+    min-width: 200px;
+  }
+  
+  .city-input-compact {
+    max-width: 350px;
+    min-width: 220px; 
+  }
+  
+  .city-select-compact {
+    max-width: 280px;
+    min-width: 200px;
+  }
+  
+  .search-btn,
+  .confirm-btn {
+    min-width: 100px; /* Taille raisonnable même sur grands écrans */
   }
 }

@@ -47,6 +47,34 @@
   color: #333;
 }
 
+/* Indicateurs de géocodage */
+.geocoding-indicator {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #e3f2fd;
+  color: #1976d2;
+  border-radius: 6px;
+  font-size: 0.9em;
+  border-left: 4px solid #2196f3;
+  animation: pulse 1.5s infinite;
+}
+
+.geocoding-success {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #e8f5e8;
+  color: #2e7d32;
+  border-radius: 6px;
+  font-size: 0.9em;
+  border-left: 4px solid #4caf50;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
 .import-btn {
   padding: 12px 20px;
   background: rgba(255, 255, 255, 0.2);
@@ -119,18 +147,61 @@
 }
 
 .form-header {
-  text-align: center;
   margin-bottom: var(--spacing-xl);
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-text {
+  text-align: center;
+  flex: 1;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  text-decoration: none;
+  color: white;
 }
 
 .form-header h2 {
-  color: var(--primary-color);
+  color: white;
   font-size: 2rem;
   margin-bottom: var(--spacing-sm);
 }
 
 .form-header p {
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1.1rem;
 }
 

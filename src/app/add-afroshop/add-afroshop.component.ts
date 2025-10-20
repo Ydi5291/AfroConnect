@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
 import { TranslationService } from '../services/translation.service';
 import { AfroshopData } from '../services/image.service';
+import { GeocodingService, GeocodeResult } from '../services/geocoding.service';
 
 @Component({
   selector: 'app-add-afroshop',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './add-afroshop.component.html',
   styleUrl: './add-afroshop.component.css'
 })
@@ -55,6 +56,8 @@ export class AddAfroshopComponent implements OnInit {
   isImporting = false;
 
   isSubmitting = false;
+  isGeocoding = false;
+  isAdmin = false;
   successMessage = '';
   errorMessage = '';
 
@@ -62,11 +65,17 @@ export class AddAfroshopComponent implements OnInit {
     private firebaseService: FirebaseAfroshopService,
     private authService: AuthService,
     private translationService: TranslationService,
+    private geocodingService: GeocodingService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    // Vérifier si l'utilisateur est admin
+    this.authService.user$.subscribe(user => {
+      this.isAdmin = user?.email === 'youssoufdiamaldiallo@gmail.com';
+    });
+
     // Vérifier si on est en mode édition
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -394,6 +403,13 @@ export class AddAfroshopComponent implements OnInit {
       this.errorMessage = 'Adresse ist erforderlich';
       return false;
     }
+
+    // Vérifier que les coordonnées sont valides
+    if (!this.geocodingService.isValidCoordinates(this.afroshop.coordinates.lat, this.afroshop.coordinates.lng)) {
+      this.errorMessage = 'Adresse konnte nicht georeferenziert werden. Bitte überprüfen Sie die Adresse.';
+      console.warn('❌ Coordonnées invalides:', this.afroshop.coordinates);
+      return false;
+    }
     
     if (!this.afroshop.phone.trim()) {
       this.errorMessage = 'Telefonnummer ist erforderlich';
@@ -420,34 +436,67 @@ export class AddAfroshopComponent implements OnInit {
     return true;
   }
 
-  private setCoordinatesFromAddress(): void {
-    if (this.afroshop.coordinates.lat === 0 && this.afroshop.coordinates.lng === 0) {
-      const cityCoordinates: { [key: string]: { lat: number; lng: number } } = {
-        'berlin': { lat: 52.5200, lng: 13.4050 },
-        'hamburg': { lat: 53.5511, lng: 9.9937 },
-        'münchen': { lat: 48.1351, lng: 11.5820 },
-        'köln': { lat: 50.9375, lng: 6.9603 },
-        'frankfurt': { lat: 50.1109, lng: 8.6821 },
-        'stuttgart': { lat: 48.7758, lng: 9.1829 },
-        'düsseldorf': { lat: 51.2277, lng: 6.7735 },
-        'dortmund': { lat: 51.5136, lng: 7.4653 },
-        'essen': { lat: 51.4556, lng: 7.0116 },
-        'leipzig': { lat: 51.3397, lng: 12.3731 },
-        'bremen': { lat: 53.0793, lng: 8.8017 },
-        'dresden': { lat: 51.0504, lng: 13.7373 },
-        'hannover': { lat: 52.3759, lng: 9.7320 },
-        'nürnberg': { lat: 49.4521, lng: 11.0767 }
-      };
-
-      const addressLower = this.afroshop.address.toLowerCase();
-      for (const [city, coords] of Object.entries(cityCoordinates)) {
-        if (addressLower.includes(city)) {
-          this.afroshop.coordinates = coords;
-          console.log(`Coordonnées définies automatiquement pour ${city}:`, coords);
-          break;
-        }
-      }
+  // Méthode appelée quand l'utilisateur modifie l'adresse
+  onAddressChange(): void {
+    // Débouncer les appels pour éviter trop de requêtes
+    if (this.geocodeTimeout) {
+      clearTimeout(this.geocodeTimeout);
     }
+    
+    this.geocodeTimeout = setTimeout(() => {
+      this.setCoordinatesFromAddress();
+    }, 1000); // Attendre 1 seconde après l'arrêt de la saisie
+  }
+
+  private geocodeTimeout: any = null;
+
+  private setCoordinatesFromAddress(): void {
+    if (!this.afroshop.address || this.afroshop.address.trim().length === 0) {
+      console.log('❌ Adresse vide, impossible de géocoder');
+      this.isGeocoding = false;
+      return;
+    }
+
+    // Si les coordonnées sont déjà définies et valides, ne pas les écraser
+    if (this.geocodingService.isValidCoordinates(this.afroshop.coordinates.lat, this.afroshop.coordinates.lng)) {
+      console.log('✅ Coordonnées déjà valides:', this.afroshop.coordinates);
+      this.isGeocoding = false;
+      return;
+    }
+
+    console.log('🗺️ Démarrage du géocodage pour:', this.afroshop.address);
+    this.isGeocoding = true;
+
+    this.geocodingService.geocodeAddress(this.afroshop.address).subscribe({
+      next: (result: GeocodeResult | null) => {
+        this.isGeocoding = false;
+        if (result) {
+          this.afroshop.coordinates = {
+            lat: result.lat,
+            lng: result.lng
+          };
+          console.log('✅ Géocodage réussi:', {
+            address: this.afroshop.address,
+            coordinates: this.afroshop.coordinates,
+            formatted_address: result.formatted_address
+          });
+          
+          // Mettre à jour l'adresse avec la version formatée si disponible
+          if (result.formatted_address && result.accuracy !== 'APPROXIMATE') {
+            this.afroshop.address = result.formatted_address;
+          }
+        } else {
+          console.warn('❌ Géocodage échoué pour:', this.afroshop.address);
+          // Garder les coordonnées par défaut (0,0) pour indiquer l'échec
+          this.afroshop.coordinates = { lat: 0, lng: 0 };
+        }
+      },
+      error: (error) => {
+        this.isGeocoding = false;
+        console.error('❌ Erreur lors du géocodage:', error);
+        this.afroshop.coordinates = { lat: 0, lng: 0 };
+      }
+    });
   }
 
   private resetForm(): void {

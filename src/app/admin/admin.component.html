@@ -61,6 +61,80 @@
       </div>
     </div>
 
+    <!-- Section de gestion des Afroshops -->
+    <div class="management-section">
+      <div class="section-header">
+        <h2>🗑️ Gestion des Afroshops</h2>
+        <p>Supprimer individuellement des Afroshops de la base de données</p>
+      </div>
+
+      <div class="afroshops-list" *ngIf="afroshops.length > 0">
+        <div class="list-header">
+          <h3>📋 Liste des Afroshops ({{ afroshops.length }})</h3>
+          <button (click)="loadAfroshops()" class="refresh-btn" [disabled]="isLoading">
+            <span *ngIf="!isLoading">🔄 Actualiser</span>
+            <span *ngIf="isLoading">⏳ Chargement...</span>
+          </button>
+        </div>
+
+        <div class="afroshop-item" *ngFor="let afroshop of afroshops; trackBy: trackByAfroshop">
+          <div class="afroshop-info">
+            <div class="basic-info">
+              <h4>{{ afroshop.name }}</h4>
+              <p class="type">{{ getGermanBusinessType(afroshop.type) }}</p>
+              <p class="location">📍 {{ afroshop.address }}</p>
+            </div>
+            <div class="meta-info">
+              <span class="id">ID: {{ afroshop.id }}</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button 
+              (click)="editAfroshop(afroshop)" 
+              class="edit-btn"
+              title="Afroshop bearbeiten">
+              ✏️ Bearbeiten
+            </button>
+            <button 
+              (click)="confirmDelete(afroshop)" 
+              class="delete-btn"
+              [disabled]="isDeleting"
+              title="Afroshop löschen">
+              🗑️ Löschen
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="load-button" *ngIf="afroshops.length === 0">
+        <button (click)="loadAfroshops()" class="load-btn" [disabled]="isLoading">
+          <span *ngIf="!isLoading">📋 Afroshops anzeigen</span>
+          <span *ngIf="isLoading">⏳ Wird geladen...</span>
+        </button>
+      </div>
+
+      <div class="message" [class]="deleteMessage.includes('❌') ? 'error' : 'success'" *ngIf="deleteMessage">
+        {{ deleteMessage }}
+      </div>
+    </div>
+
+    <!-- Section de diagnostic technique -->
+    <div class="diagnostic-section">
+      <div class="section-header">
+        <h2>🔧 Diagnostic Technique</h2>
+        <p>Outils de diagnostic pour résoudre les problèmes de géocodage et coordonnées</p>
+      </div>
+      
+      <div class="action-section">
+        <a routerLink="/geocoding-diagnostic" class="diagnostic-btn">
+          🗺️ Diagnostic du Géocodage
+        </a>
+        <p class="diagnostic-desc">
+          Testez le système de coordonnées, auditez les Afroshops existants et corrigez les problèmes de géolocalisation.
+        </p>
+      </div>
+    </div>
+
     <div class="navigation-section">
       <button (click)="goToGallery()" class="nav-btn">
         🏪 Voir la galerie

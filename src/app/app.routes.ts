@@ -7,6 +7,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './terms/terms.component';
 import { AdminComponent } from './admin/admin.component';
+import { GeocodingDiagnosticComponent } from './geocoding-diagnostic/geocoding-diagnostic.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -27,6 +28,11 @@ export const routes: Routes = [
     path: 'admin', 
     component: AdminComponent,
     canActivate: [AuthGuard] // 🔒 Route d'administration protégée !
+  },
+  { 
+    path: 'geocoding-diagnostic', 
+    component: GeocodingDiagnosticComponent,
+    canActivate: [AuthGuard] // 🔒 Route de diagnostic réservée aux admins !
   },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },

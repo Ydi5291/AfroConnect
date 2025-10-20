@@ -15,6 +15,7 @@ import { AuthService } from '../services/auth.service';
 export class ImageDetailComponent implements OnInit { 
   afroshop: AfroshopData | undefined;
   shopId: string | number = '';
+  formattedHours: Array<{day: string, hours: string, isOpen: boolean}> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +46,9 @@ export class ImageDetailComponent implements OnInit {
             console.log('✅ Afroshop trouvé:', this.afroshop.name);
             console.log('🖼️ URL de l\'image:', this.afroshop.image);
             console.log('📦 Données complètes:', this.afroshop);
+            
+            // Parser les heures d'ouverture pour l'affichage formaté
+            this.parseOpeningHours(this.afroshop.hours || '');
           } else {
             console.log('❌ Afroshop non trouvé avec ID:', id);
             console.log('❌ Types des IDs:', afroshops.map(a => `${a.id} (${typeof a.id})`));
@@ -130,6 +134,90 @@ export class ImageDetailComponent implements OnInit {
     console.log('  ✅ Peut éditer:', canEdit);
     
     return canEdit;
+  }
+
+  // Parse and format opening hours for display
+  private parseOpeningHours(hoursString: string): void {
+    this.formattedHours = [];
+    
+    if (!hoursString) {
+      return;
+    }
+
+    // Mapping des jours allemands
+    const dayMapping: {[key: string]: string} = {
+      'Mo': 'Montag',
+      'Di': 'Dienstag', 
+      'Mi': 'Mittwoch',
+      'Do': 'Donnerstag',
+      'Fr': 'Freitag',
+      'Sa': 'Samstag',
+      'So': 'Sonntag'
+    };
+
+    // Split par virgule pour avoir chaque période
+    const periods = hoursString.split(',').map(p => p.trim());
+    
+    // Initialiser tous les jours comme fermés
+    const weekDays = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+    const dayStatus: {[key: string]: {isOpen: boolean, hours: string}} = {};
+    
+    weekDays.forEach(day => {
+      dayStatus[day] = {isOpen: false, hours: 'Geschlossen'};
+    });
+
+    // Parser chaque période (ex: "Mo-Fr: 12:00-22:00")
+    periods.forEach(period => {
+      const colonIndex = period.indexOf(':');
+      if (colonIndex === -1) return;
+      
+      const dayPart = period.substring(0, colonIndex).trim();
+      const timePart = period.substring(colonIndex + 1).trim();
+      
+      // Gérer les plages de jours (Mo-Fr, Sa-So, etc.)
+      if (dayPart.includes('-')) {
+        const [startDay, endDay] = dayPart.split('-').map(d => d.trim());
+        const startDayName = dayMapping[startDay];
+        const endDayName = dayMapping[endDay];
+        
+        if (startDayName && endDayName) {
+          const startIndex = weekDays.indexOf(startDayName);
+          const endIndex = weekDays.indexOf(endDayName);
+          
+          if (startIndex !== -1 && endIndex !== -1) {
+            // Gérer les plages qui traversent la semaine (ex: Sa-So)
+            if (startIndex <= endIndex) {
+              for (let i = startIndex; i <= endIndex; i++) {
+                dayStatus[weekDays[i]] = {isOpen: true, hours: timePart};
+              }
+            } else {
+              // Plage qui traverse la fin de semaine
+              for (let i = startIndex; i < weekDays.length; i++) {
+                dayStatus[weekDays[i]] = {isOpen: true, hours: timePart};
+              }
+              for (let i = 0; i <= endIndex; i++) {
+                dayStatus[weekDays[i]] = {isOpen: true, hours: timePart};
+              }
+            }
+          }
+        }
+      } else {
+        // Jour unique (ex: "Sa")
+        const dayName = dayMapping[dayPart];
+        if (dayName) {
+          dayStatus[dayName] = {isOpen: true, hours: timePart};
+        }
+      }
+    });
+
+    // Convertir en array pour l'affichage
+    weekDays.forEach(day => {
+      this.formattedHours.push({
+        day: day,
+        hours: dayStatus[day].hours,
+        isOpen: dayStatus[day].isOpen
+      });
+    });
   }
 
   // Éditer l'Afroshop

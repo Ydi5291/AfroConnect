@@ -1,7 +1,19 @@
 <div class="add-afroshop-container">
   <div class="form-header">
-    <h2>{{ isEditMode ? '✏️ Afroshop bearbeiten' : '🏪 Neuen Afroshop hinzufügen' }}</h2>
-    <p>{{ isEditMode ? 'Aktualisieren Sie die Informationen' : 'Teilen Sie Ihren Lieblings-Afroshop mit der Community!' }}</p>
+    <div class="header-content">
+      <div class="header-text">
+        <h2>{{ isEditMode ? '✏️ Afroshop bearbeiten' : '🏪 Neuen Afroshop hinzufügen' }}</h2>
+        <p>{{ isEditMode ? 'Aktualisieren Sie die Informationen' : 'Teilen Sie Ihren Lieblings-Afroshop mit der Community!' }}</p>
+      </div>
+      <div class="header-actions">
+        <a routerLink="/admin" class="back-btn" *ngIf="isAdmin">
+          ← Admin
+        </a>
+        <a routerLink="/gallery" class="back-btn">
+          ← Galerie
+        </a>
+      </div>
+    </div>
   </div>
 
   <form (ngSubmit)="onSubmit()" class="afroshop-form">
@@ -127,11 +139,18 @@
         type="text" 
         id="address"
         [(ngModel)]="afroshop.address"
+        (ngModelChange)="onAddressChange()"
         name="address"
         placeholder="z.B. Müllerstraße 123, 13349 Berlin"
         required
         class="form-input">
       <small>Bitte geben Sie die vollständige Adresse mit Stadt an</small>
+      <div *ngIf="isGeocoding" class="geocoding-indicator">
+        🗺️ Adresse wird georeferenziert...
+      </div>
+      <div *ngIf="afroshop.coordinates.lat !== 0 && afroshop.coordinates.lng !== 0" class="geocoding-success">
+        ✅ Standort gefunden: {{afroshop.coordinates.lat.toFixed(4)}}, {{afroshop.coordinates.lng.toFixed(4)}}
+      </div>
     </div>
 
     <!-- Telefon -->
