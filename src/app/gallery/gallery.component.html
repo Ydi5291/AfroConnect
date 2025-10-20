@@ -1,117 +1,24 @@
-<div class="gallery-container">
-  <div class="gallery-header">
-    <div class="header-content">
-      <div class="header-text">
-    <h2><span class="rotating-globe">🌍</span> Entdecke {{ filteredAfroshops.length }} afrikanische Geschäfte in deiner Nähe</h2>
-      </div>
+<section class="intro-section">
+  <div class="intro-message">
+    🌍 Entdecke {{ allAfroshops.length }} afrikanische Geschäfte in deiner Nähe
+  </div>
+  <div class="intro-actions">
+    <button class="add-shop-btn" (click)="goToAddAfroshop()">➕ Afroshop hinzufügen</button>
+    <ng-container *ngIf="user$ | async as user">
+      <button class="settings-btn" (click)="openSettings()" *ngIf="isAdminUser(user)">⚙️</button>
+    </ng-container>
+  </div>
+</section>
 
-      <!-- Hinzufügen-Button nur für angemeldete Benutzer sichtbar -->
-      <div class="header-actions" *ngIf="user$ | async as user">
-        <button class="add-afroshop-btn primary" (click)="goToAddAfroshop()" title="Neuen Afroshop hinzufügen">
-          ➕ Afroshop hinzufügen
-        </button>
-        
-        <!-- Admin-Link für Administratoren -->
-        <button class="admin-link-btn" (click)="goToAdmin()" title="Administration" *ngIf="isAdminUser(user)">
-          ⚙️
-        </button>
-      </div>
-      
-      <!-- Nachricht wenn nicht angemeldet -->
-      <div class="header-actions" *ngIf="!(user$ | async)">
-        <button class="add-afroshop-btn disabled" (click)="addNewAfroshop()" title="Anmelden um einen Afroshop hinzuzufügen">
-          🔐 Anmelden zum Hinzufügen
+<section class="controls-section">
+  <div class="controls-main">
+    <div class="controls-row">
+      <div class="gps-group">
+        <button (click)="useCurrentLocation()" class="location-btn gps-btn-desktop" title="GPS aktivieren und Standort verwenden">
+          📡 GPS aktivieren
         </button>
       </div>
-    </div>
-
-    <!-- Controls Desktop Layout -->
-    <div class="controls-desktop-layout">
-      <!-- Filter nach Typ -->
-      <div class="filter-container unified-control-group">
-        <label for="type-filter" class="unified-label">Nach Typ filtern:</label>
-        <div class="unified-input-group">
-          <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="unified-select">
-            <option value="">Alle Typen</option>
-            <option *ngFor="let type of getAllBusinessTypes()" [value]="type.value">
-              {{type.icon}} {{type.label}}
-            </option>
-          </select>
-          <div class="unified-spacer"></div>
-        </div>
-      </div>
-
-      <!-- Stadtauswahl Gruppe -->
-      <div class="location-container">
-        <label for="city-input" class="unified-label">📍 Deine Stadt:</label>
-        
-        <!-- Desktop: Controls in einer Zeile -->
-        <div class="desktop-city-controls">
-          <!-- Freie Stadteingabe -->
-          <div class="city-search-group">
-            <div class="unified-input-group">
-              <input 
-                type="text" 
-                id="city-input"
-                [(ngModel)]="customCityName"
-                name="cityInput"
-                placeholder="Jede deutsche Stadt..."
-                class="unified-input city-input-compact"
-                (keyup.enter)="searchCity()"
-              />
-              <button 
-                (click)="searchCity()" 
-                class="unified-btn search-btn"
-                [disabled]="!customCityName || !customCityName.trim()"
-                title="Stadt suchen">
-                🔍 Suchen
-              </button>
-            </div>
-          </div>
-            
-          <!-- Oder Dropdown für häufige Städte -->
-          <div class="quick-cities-group">
-            <div class="unified-input-group">
-              <select [(ngModel)]="selectedCity" class="unified-select city-select-compact">
-                <option value="">Beliebte Städte...</option>
-                <option value="berlin">Berlin</option>
-                <option value="hamburg">Hamburg</option>
-                <option value="münchen">München</option>
-                <option value="köln">Köln</option>
-                <option value="frankfurt">Frankfurt am Main</option>
-                <option value="stuttgart">Stuttgart</option>
-                <option value="düsseldorf">Düsseldorf</option>
-                <option value="dortmund">Dortmund</option>
-                <option value="essen">Essen</option>
-                <option value="leipzig">Leipzig</option>
-              </select>
-              <button 
-                (click)="onCityChange()" 
-                class="unified-btn confirm-btn"
-                [disabled]="!selectedCity"
-                title="Ausgewählte Stadt bestätigen">
-                ✓ Bestätigen
-              </button>
-            </div>
-          </div>
-            
-          <!-- Standort-Button -->
-          <div class="gps-group">
-            <button (click)="useCurrentLocation()" class="location-btn gps-btn-desktop" title="GPS aktivieren und Standort verwenden">
-              📡 GPS aktivieren
-            </button>
-          </div>
-        </div>
-        
-        <!-- GPS Hint nur für mobile -->
-        <small class="location-hint mobile-only">
-          🎯 Findet automatisch Afroshops in deiner Nähe
-        </small>
-      </div>
-    </div>
-
-      <!-- Suchradius-Anzeige -->
-      <div class="radius-info" *ngIf="userLocation && (selectedCity || filteredAfroshops.length < allAfroshops.length)">
+      <div class="radius-info" *ngIf="userLocation || selectedCity">
         <div class="radius-indicator">
           🎯 Suche in 50km Umkreis
           <span *ngIf="selectedCity" class="city-name">um {{ getSelectedCityName() }}</span>
@@ -122,15 +29,67 @@
         </div>
       </div>
     </div>
+    <div class="controls-row">
+      <div class="location-container">
+        <label for="city-input" class="unified-label">📍 Deine Stadt:</label>
+        <div class="city-search-group">
+          <div class="unified-input-group">
+            <input 
+              type="text" 
+              id="city-input"
+              [(ngModel)]="customCityName"
+              name="cityInput"
+              placeholder="Jede deutsche Stadt..."
+              class="unified-input city-input-compact"
+              (keyup.enter)="searchCity()"
+            />
+            <button 
+              (click)="searchCity()" 
+              class="unified-btn search-btn"
+              [disabled]="!customCityName || !customCityName.trim()"
+              title="Stadt suchen">
+              🔍 Suchen
+            </button>
+          </div>
+        </div>
+        <div class="quick-cities-group">
+          <div class="unified-input-group">
+            <select [(ngModel)]="selectedCity" class="unified-select city-select-compact">
+              <option value="">Beliebte Städte...</option>
+              <option value="berlin">Berlin</option>
+              <option value="hamburg">Hamburg</option>
+              <option value="münchen">München</option>
+              <option value="köln">Köln</option>
+              <option value="frankfurt">Frankfurt am Main</option>
+              <option value="stuttgart">Stuttgart</option>
+              <option value="düsseldorf">Düsseldorf</option>
+              <option value="dortmund">Dortmund</option>
+              <option value="essen">Essen</option>
+              <option value="leipzig">Leipzig</option>
+            </select>
+            <button 
+              (click)="onCityChange()" 
+              class="unified-btn confirm-btn"
+              [disabled]="!selectedCity"
+              title="Ausgewählte Stadt bestätigen">
+              ✓ Bestätigen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <small class="location-hint mobile-only">
+      🎯 Findet automatisch Afroshops in deiner Nähe
+    </small>
   </div>
+</section>
 
-  <!-- Kartenansicht -->
+<section class="gallery-section">
   <div class="map-view" *ngIf="showMap && filteredAfroshops.length > 0">
     <app-map [afroshops]="filteredAfroshops" [userLocation]="userLocation"
       (shopSelected)="viewAfroshopDetail($event)"></app-map>
   </div>
 
-  <!-- Afroshops-Raster -->
   <div class="gallery-grid" *ngIf="!showMap && filteredAfroshops.length > 0">
     <div *ngFor="let shop of filteredAfroshops" class="shop-card">
       <div class="image-wrapper" (click)="viewAfroshopDetail(shop.id)">
@@ -139,7 +98,6 @@
         <div class="type-badge" [class]="shop.type">
           {{ getBusinessTypeDisplay(shop.type) }}
         </div>
-        
         <!-- Bearbeiten-Button (nur für Ersteller sichtbar) -->
         <button 
           *ngIf="canEditAfroshop(shop)" 
@@ -148,13 +106,11 @@
           title="Bearbeiten">
           ✏️
         </button>
-        
         <div class="image-overlay">
           <span class="click-hint">📍 Details ansehen</span>
         </div>
       </div>
-      
-      <!-- Immer sichtbare Informationen -->
+      <!-- Toujours visible -->
       <div class="card-info">
         <h3 class="shop-name">{{ shop.name }}</h3>
         <p class="shop-location">📍 {{ getLocationDisplay(shop.address) }}</p>
@@ -170,7 +126,6 @@
     </div>
   </div>
 
-  <!-- Nachricht wenn keine Ergebnisse -->
   <div class="no-results" *ngIf="filteredAfroshops.length === 0 && (searchTerm || selectedType)">
     <div class="no-results-content">
       <div class="no-results-icon">🔍</div>
@@ -181,3 +136,4 @@
       </button>
     </div>
   </div>
+</section>

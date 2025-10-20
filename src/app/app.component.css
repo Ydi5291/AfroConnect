@@ -132,6 +132,50 @@
 }
 
 /* Responsive design */
+@media (min-width: 1024px) {
+  .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    gap: 2rem;
+  }
+  .header-left h1 {
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-align: left;
+  }
+  .welcome-message {
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+    text-align: left;
+  }
+  .app-main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+    background: var(--background-light);
+    border-radius: 18px;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.07);
+  }
+  .features {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+  }
+  .feature-card {
+    padding: 2.5rem;
+    font-size: 1.1rem;
+  }
+  .app-footer {
+    font-size: 1.1rem;
+    padding: 2rem 0;
+  }
+  .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+}
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;

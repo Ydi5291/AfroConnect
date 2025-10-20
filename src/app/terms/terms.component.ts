@@ -136,33 +136,65 @@ import { Component } from '@angular/core';
       color: #2c5530;
       border-bottom: 2px solid #4CAF50;
       padding-bottom: 0.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
     }
-    
     h2 {
       color: #2c5530;
       margin-top: 2rem;
+      text-align: center;
     }
-    
     h3 {
       color: #4CAF50;
+      text-align: center;
     }
-    
     .last-updated {
       color: #666;
       font-style: italic;
       margin-bottom: 2rem;
+      text-align: center;
     }
-    
     section {
       margin-bottom: 2rem;
     }
-    
     ul {
       margin-left: 1rem;
     }
-    
     li {
       margin-bottom: 0.5rem;
+    }
+    .legal-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .legal-content {
+      width: 100%;
+      max-width: 800px;
+    }
+    @media (max-width: 600px) {
+      .legal-container {
+        padding: 0.5rem;
+        min-height: 90vh;
+      }
+      h1 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+      h2 {
+        font-size: 1.05rem;
+        margin-top: 1.2rem;
+      }
+      h3 {
+        font-size: 1rem;
+      }
+      .legal-content {
+        padding: 0.2rem;
+      }
+      section {
+        margin-bottom: 1.2rem;
+      }
     }
   `]
 })

@@ -29,6 +29,15 @@ export class GalleryComponent implements OnInit {
   userLocation: { lat: number; lng: number } | null = null;
   user$: Observable<User | null>;
 
+  addAfroshop(): void {
+    // TODO: ouvrir le formulaire d'ajout d'Afroshop
+    alert("Formulaire d'ajout Afroshop à implémenter.");
+  }
+
+  openSettings(): void {
+    this.router.navigate(['/admin']);
+  }
+
   private cityCoordinates: { [key: string]: { lat: number; lng: number } } = {
     'berlin': { lat: 52.5200, lng: 13.4050 },
     'hamburg': { lat: 53.5511, lng: 9.9937 },
