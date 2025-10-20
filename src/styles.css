@@ -329,3 +329,73 @@ input:focus, select:focus, textarea:focus {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-light);
 }
+
+/* ===== ANIMATION GLOBE ROTATIVE ===== */
+.rotating-globe {
+  display: inline-block;
+  animation: rotate-globe 4s linear infinite;
+  transform-origin: center;
+  will-change: transform; /* Optimisation GPU */
+  
+  /* Force l'affichage comme bloc pour l'animation */
+  font-style: normal;
+  line-height: 1;
+  vertical-align: middle;
+  
+  /* Support pour différents navigateurs */
+  -webkit-animation: rotate-globe 4s linear infinite;
+  -moz-animation: rotate-globe 4s linear infinite;
+  -o-animation: rotate-globe 4s linear infinite;
+  
+  /* Debug : bordure temporaire pour voir si l'élément bouge */
+  /* border: 2px solid red; */
+}
+
+@keyframes rotate-globe {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+}
+
+/* Support navigateurs anciens */
+@-webkit-keyframes rotate-globe {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@-moz-keyframes rotate-globe {
+  0% { -moz-transform: rotate(0deg); }
+  100% { -moz-transform: rotate(360deg); }
+}
+
+@-o-keyframes rotate-globe {
+  0% { -o-transform: rotate(0deg); }
+  100% { -o-transform: rotate(360deg); }
+}
+
+/* Animation plus lente au survol pour un effet subtil */
+.rotating-globe:hover {
+  animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  -moz-animation-duration: 2s;
+  -o-animation-duration: 2s;
+}
+
+/* Pause animation si l'utilisateur préfère moins d'animations */
+@media (prefers-reduced-motion: reduce) {
+  .rotating-globe {
+    animation: none;
+    -webkit-animation: none;
+    -moz-animation: none;
+    -o-animation: none;
+  }
+}
