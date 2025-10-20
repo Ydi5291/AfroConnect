@@ -100,17 +100,19 @@ import { Component } from '@angular/core';
         <section>
           <h2>§ 9 Anwendbares Recht</h2>
           <p>
-            Es gilt deutsches Recht. Gerichtsstand ist [Ihre Stadt], Deutschland.
+            Es gilt deutsches Recht. Gerichtsstand ist Werl, Deutschland.
           </p>
         </section>
 
         <section>
           <h2>§ 10 Kontakt</h2>
           <p>
-            AfroConnect<br>
-            [Ihre Adresse]<br>
-            Deutschland<br>
-            E-Mail: legal&#64;afroconnect.de
+            <strong>AfroConnect</strong><br>
+            Kapuzinerring 26<br>
+            59457 Werl<br>
+            Deutschland<br><br>
+            E-Mail: lamaid0502&#64;gmail.com<br><br>
+            Bei Fragen zu diesen AGB oder zur Nutzung der App kontaktieren Sie uns gerne über die oben genannten Kontaktdaten.
           </p>
         </section>
       </div>
