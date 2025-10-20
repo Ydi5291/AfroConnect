@@ -12,11 +12,12 @@ import { Component } from '@angular/core';
         <section>
           <h2>1. Verantwortlicher</h2>
           <p>
-            AfroConnect<br>
-            [Ihre Adresse]<br>
-            [Ihre Stadt, PLZ]<br>
-            Deutschland<br>
-            E-Mail: contact&#64;afroconnect.de
+            <strong>AfroConnect</strong><br>
+            Kapuzinerring 26<br>
+            59457 Werl<br>
+            Deutschland<br><br>
+            E-Mail: lamaid0502&#64;gmail.com<br><br>
+            Der Verantwortliche im Sinne der Datenschutz-Grundverordnung (DSGVO) und anderer nationaler Datenschutzgesetze der Mitgliedsstaaten sowie sonstiger datenschutzrechtlicher Bestimmungen ist die oben genannte Person.
           </p>
         </section>
 
@@ -100,8 +101,13 @@ import { Component } from '@angular/core';
         <section>
           <h2>8. Kontakt</h2>
           <p>
-            Bei Fragen zum Datenschutz kontaktieren Sie uns unter:<br>
-            E-Mail: privacy&#64;afroconnect.de
+            <strong>Verantwortlicher für den Datenschutz:</strong><br><br>
+            <strong>AfroConnect</strong><br>
+            Kapuzinerring 26<br>
+            59457 Werl<br>
+            Deutschland<br><br>
+            E-Mail: lamaid0502&#64;gmail.com<br><br>
+            Bei Fragen zum Datenschutz oder zur Ausübung Ihrer Rechte kontaktieren Sie uns gerne über die oben genannten Kontaktdaten.
           </p>
         </section>
       </div>
