@@ -5,9 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:prod": "ng build --configuration production --base-href /AfroConnect/",
-    "build:vercel": "ng build --configuration production",
-    "deploy": "ng build --configuration production --base-href /AfroConnect/ && npx angular-cli-ghpages --dir=dist/first-angular-project/browser",
+  "build:prod": "ng build --configuration production --base-href /AfroConnect/",
+  "build:vercel": "ng build --configuration production --base-href /",
+  "build:ghpages": "ng build --configuration production --base-href /AfroConnect/",
+  "deploy:ghpages": "npm run build:ghpages && npx angular-cli-ghpages --dir=dist/first-angular-project/browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:first-angular-project": "node dist/first-angular-project/server/server.mjs"
