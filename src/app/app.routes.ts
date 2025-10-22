@@ -6,6 +6,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './terms/terms.component';
+import { ImpressumComponent } from './impressum.component';
 import { AdminComponent } from './admin/admin.component';
 import { GeocodingDiagnosticComponent } from './geocoding-diagnostic/geocoding-diagnostic.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -38,5 +39,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'privacy', component: PrivacyComponent },
   { path: 'terms', component: TermsComponent },
+  { path: 'impressum', component: ImpressumComponent },
   { path: '**', redirectTo: '/gallery' } // Route wildcard pour les erreurs 404
 ];

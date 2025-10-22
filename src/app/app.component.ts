@@ -1,14 +1,16 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { AuthService, UserProfile } from './services/auth.service';
 import { Observable } from 'rxjs';
 import { User } from '@angular/fire/auth';
+import { CookieConsentComponent } from './cookie-consent/cookie-consent.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterModule],
+  imports: [CommonModule, RouterOutlet, RouterModule, CookieConsentComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
