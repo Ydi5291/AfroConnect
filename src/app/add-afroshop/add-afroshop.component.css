@@ -520,42 +520,53 @@
   .add-afroshop-container {
     padding: var(--spacing-md);
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  
   .afroshop-form {
     padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  
+  .form-header {
+    text-align: center;
+  }
   .form-header h2 {
     font-size: 1.8rem;
+    text-align: center;
   }
-  
+  .form-header p {
+    text-align: center;
+  }
   .url-input-group {
     flex-direction: column;
     gap: var(--spacing-sm);
+    align-items: center;
   }
-  
   .url-input {
     width: 100%;
+    margin: 0 auto;
   }
-  
   .import-btn {
     width: 100%;
     justify-content: center;
+    margin: 0 auto;
   }
-  
   .form-actions {
     flex-direction: column;
     gap: 15px;
     padding: 20px 0;
+    align-items: center;
   }
-  
   .btn-primary,
   .btn-secondary {
     width: 100%;
     font-size: 16px;
     padding: 18px 24px;
     min-width: auto;
+    margin: 0 auto;
   }
 }
 
@@ -563,49 +574,54 @@
 @media (max-width: 480px) {
   .add-afroshop-container {
     padding: var(--spacing-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  
   .afroshop-form {
     padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  
+  .form-header {
+    text-align: center;
+  }
   .form-header h2 {
     font-size: 1.5rem;
     text-align: center;
   }
-  
   .form-header p {
     font-size: 0.9rem;
     text-align: center;
   }
-  
   .auto-import-section {
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
+    text-align: center;
   }
-  
   .auto-import-section h3 {
     font-size: 1.1rem;
     text-align: center;
   }
-  
   .form-input,
   .form-textarea,
   .form-select {
     font-size: 16px; /* Évite le zoom sur iOS */
+    margin: 0 auto;
   }
-  
   .upload-btn {
     width: 100%;
     text-align: center;
+    margin: 0 auto;
   }
-  
   .image-preview-container {
     max-width: 100%;
+    margin: 0 auto;
   }
-  
   .image-preview {
     max-height: 200px;
+    margin: 0 auto;
   }
 }
 
