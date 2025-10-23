@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AfroshopService, AfroshopData } from '../services/image.service';
+import { GeocodingService } from '../services/geocoding.service';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
 import { TranslationService } from '../services/translation.service';
@@ -16,9 +17,22 @@ import { User } from '@angular/fire/auth';
   standalone: true,
   imports: [CommonModule, FormsModule, MapComponent],
   templateUrl: './gallery.component.html',
-  styleUrl: './gallery.component.css'
+  styleUrls: ['./gallery.component.css']
 })
 export class GalleryComponent implements OnInit {
+  getGoogleMapsUrl(address: string): string {
+    if (!address) return 'https://maps.google.com';
+    const encoded = encodeURIComponent(address);
+    return `https://www.google.com/maps/search/?api=1&query=${encoded}`;
+  }
+
+  getGoogleMapsRouteUrl(address: string): string {
+    if (!address) return 'https://maps.google.com';
+    const encoded = encodeURIComponent(address);
+    return `https://www.google.com/maps/dir/?api=1&destination=${encoded}`;
+  }
+  directionsService: any = null;
+  travelDurations: { [shopId: string]: { driving?: string; walking?: string } } = {};
   allAfroshops: AfroshopData[] = [];
   filteredAfroshops: AfroshopData[] = [];
   searchTerm: string = '';
@@ -61,12 +75,23 @@ export class GalleryComponent implements OnInit {
     private authService: AuthService,
     private translationService: TranslationService,
     private router: Router,
-    private geolocationService: GeolocationService
+  private geolocationService: GeolocationService,
+  private geocodingService: GeocodingService
   ) {
     this.user$ = this.authService.user$;
   }
 
   ngOnInit(): void {
+    // Initialiser DirectionsService Google Maps JS
+    if ((window as any).google && (window as any).google.maps) {
+      this.directionsService = new (window as any).google.maps.DirectionsService();
+    }
+    // Récupérer la position utilisateur dès le début si possible
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        this.userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      });
+    }
     this.firebaseService.getAllAfroshops().subscribe({
       next: (afroshops) => {
         this.allAfroshops = this.fixInvalidCoordinates(afroshops);
@@ -433,18 +458,59 @@ export class GalleryComponent implements OnInit {
   }
 
   getDistanceFromUser(shop: AfroshopData): string {
+    // Récupérer la durée du trajet si non déjà chargée
+    if (this.userLocation && shop.coordinates.lat && shop.coordinates.lng && !this.travelDurations[shop.id]) {
+    }
     if (!this.userLocation) return '';
-    
     const distance = this.geolocationService.calculateDistance(
       this.userLocation.lat, this.userLocation.lng,
       shop.coordinates.lat, shop.coordinates.lng
     );
-    
     if (distance < 1) {
       return `${Math.round(distance * 1000)}m entfernt`;
     } else {
       return `${distance.toFixed(1)}km entfernt`;
     }
+  }
+
+
+  getDirectionsDuration(shop: AfroshopData): void {
+    if (!this.directionsService) {
+      if ((window as any).google && (window as any).google.maps) {
+        this.directionsService = new (window as any).google.maps.DirectionsService();
+      } else {
+        return;
+      }
+    }
+    const origin = new (window as any).google.maps.LatLng(this.userLocation!.lat, this.userLocation!.lng);
+    const destination = new (window as any).google.maps.LatLng(shop.coordinates.lat, shop.coordinates.lng);
+    // Voiture
+    this.directionsService.route({
+      origin, destination, travelMode: 'DRIVING'
+    }, (result: any, status: any) => {
+      if (status === 'OK' && result.routes.length > 0) {
+        const duration = result.routes[0].legs[0].duration.text;
+        this.travelDurations[shop.id] = { ...this.travelDurations[shop.id], driving: duration };
+      }
+    });
+    // À pied
+    this.directionsService.route({
+      origin, destination, travelMode: 'WALKING'
+    }, (result: any, status: any) => {
+      if (status === 'OK' && result.routes.length > 0) {
+        const duration = result.routes[0].legs[0].duration.text;
+        this.travelDurations[shop.id] = { ...this.travelDurations[shop.id], walking: duration };
+      }
+    });
+  }
+
+  getTravelDurationDisplay(shop: AfroshopData): string {
+    const durations = this.travelDurations[shop.id];
+    if (!durations) return '';
+    let result = '';
+    if (durations.driving) result += `🚗 ${durations.driving}`;
+    if (durations.walking) result += (result ? ' | ' : '') + `🚶 ${durations.walking}`;
+    return result;
   }
 
   addNewAfroshop(): void {

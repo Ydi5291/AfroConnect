@@ -15,11 +15,63 @@ import { GeocodingService, GeocodeResult } from '../services/geocoding.service';
   styleUrl: './add-afroshop.component.css'
 })
 export class AddAfroshopComponent implements OnInit {
+  geocodingWarning: string = '';
+  // Initialise Google Maps Autocomplete sur le champ de rue
+  initStreetAutocomplete(inputElement: HTMLInputElement): void {
+    // Charger le script Google Maps dynamiquement avec la clé API de l'environnement
+    const apiKey = this.geocodingService['GOOGLE_MAPS_API_KEY'];
+    if (!(window as any).google || !(window as any).google.maps) {
+      if (!document.getElementById('google-maps-script')) {
+        const script = document.createElement('script');
+        script.id = 'google-maps-script';
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => this.setupAutocomplete(inputElement);
+        document.body.appendChild(script);
+      } else {
+        document.getElementById('google-maps-script')!.addEventListener('load', () => this.setupAutocomplete(inputElement));
+      }
+    } else {
+      this.setupAutocomplete(inputElement);
+    }
+  }
+
+  // Configure l'autocomplete Google Maps sur l'input
+  setupAutocomplete(inputElement: HTMLInputElement): void {
+    if ((window as any).google && (window as any).google.maps) {
+      const autocomplete = new (window as any).google.maps.places.Autocomplete(inputElement, {
+        types: ['address'],
+        componentRestrictions: { country: 'de' }
+      });
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (place && place.address_components) {
+          // Remplir les champs à partir du résultat Google
+          let street = '';
+          let city = '';
+          let plz = '';
+          for (const comp of place.address_components) {
+            if (comp.types.includes('route')) street = comp.long_name;
+            if (comp.types.includes('street_number')) street += ' ' + comp.long_name;
+            if (comp.types.includes('locality')) city = comp.long_name;
+            if (comp.types.includes('postal_code')) plz = comp.long_name;
+          }
+          this.afroshop.street = street.trim();
+          this.afroshop.city = city;
+          this.afroshop.plz = plz;
+        }
+      });
+    }
+  }
   
   afroshop = {
     name: '',
     type: 'restaurant' as AfroshopData['type'],
     address: '',
+    street: '',
+    city: '',
+    plz: '',
     coordinates: { lat: 0, lng: 0 },
     phone: '',
     description: '',
@@ -95,6 +147,9 @@ export class AddAfroshopComponent implements OnInit {
           name: afroshop.name || '',
           type: afroshop.type || 'restaurant',
           address: afroshop.address || '',
+          street: afroshop.street || '',
+          city: afroshop.city || '',
+          plz: afroshop.plz || '',
           coordinates: afroshop.coordinates || { lat: 0, lng: 0 },
           phone: afroshop.phone || '',
           description: afroshop.description || '',
@@ -105,6 +160,25 @@ export class AddAfroshopComponent implements OnInit {
           hours: afroshop.hours || '',
           website: afroshop.website || ''
         };
+        // --- FONCTION TEMPORAIRE POUR MIGRATION DES ANCIENNES ADRESSES ---
+        // Si les nouveaux champs sont vides mais l'adresse unique existe, découper automatiquement
+        if (!this.afroshop.street && !this.afroshop.city && !this.afroshop.plz && this.afroshop.address) {
+          const parts = this.afroshop.address.split(',');
+          // Rue et numéro : avant la première virgule
+          this.afroshop.street = parts[0]?.trim() || '';
+          // Code postal et ville : après la première virgule
+          if (parts[1]) {
+            // Essayer d'extraire le code postal (5 chiffres) et la ville
+            const match = parts[1].match(/(\d{5})\s*(.*)/);
+            if (match) {
+              this.afroshop.plz = match[1];
+              this.afroshop.city = match[2]?.trim() || '';
+            } else {
+              this.afroshop.city = parts[1].trim();
+            }
+          }
+        }
+        // --- SUPPRIMER CETTE FONCTION APRÈS MIGRATION DES ANCIENNES ADRESSES ---
         this.imagePreview = afroshop.image || null;
         
         // Parser les heures d'ouverture pour l'interface
@@ -451,7 +525,11 @@ export class AddAfroshopComponent implements OnInit {
   private geocodeTimeout: any = null;
 
   private setCoordinatesFromAddress(): void {
-    if (!this.afroshop.address || this.afroshop.address.trim().length === 0) {
+    // Assembler l'adresse complète à partir des champs séparés
+    const fullAddress = `${this.afroshop.street || ''}, ${this.afroshop.plz || ''} ${this.afroshop.city || ''}`.trim();
+    this.afroshop.address = fullAddress;
+
+    if (!fullAddress || fullAddress.length === 0) {
       console.log('❌ Adresse vide, impossible de géocoder');
       this.isGeocoding = false;
       return;
@@ -464,12 +542,13 @@ export class AddAfroshopComponent implements OnInit {
       return;
     }
 
-    console.log('🗺️ Démarrage du géocodage pour:', this.afroshop.address);
+    console.log('🗺️ Démarrage du géocodage pour:', fullAddress);
     this.isGeocoding = true;
 
-    this.geocodingService.geocodeAddress(this.afroshop.address).subscribe({
+    this.geocodingService.geocodeAddress(fullAddress).subscribe({
       next: (result: GeocodeResult | null) => {
         this.isGeocoding = false;
+        this.geocodingWarning = '';
         if (result) {
           this.afroshop.coordinates = {
             lat: result.lat,
@@ -480,19 +559,27 @@ export class AddAfroshopComponent implements OnInit {
             coordinates: this.afroshop.coordinates,
             formatted_address: result.formatted_address
           });
-          
+          // Vérifier la précision
+          if (result.accuracy === 'APPROXIMATE') {
+            this.geocodingWarning = 'Attention : la localisation est imprécise, veuillez vérifier l\'adresse.';
+          }
+          // Vérifier la ville
+          if (result.formatted_address && this.afroshop.city && !result.formatted_address.toLowerCase().includes(this.afroshop.city.toLowerCase())) {
+            this.geocodingWarning = 'Attention : la ville trouvée ne correspond pas à celle saisie.';
+          }
           // Mettre à jour l'adresse avec la version formatée si disponible
           if (result.formatted_address && result.accuracy !== 'APPROXIMATE') {
             this.afroshop.address = result.formatted_address;
           }
         } else {
           console.warn('❌ Géocodage échoué pour:', this.afroshop.address);
-          // Garder les coordonnées par défaut (0,0) pour indiquer l'échec
+          this.geocodingWarning = 'Adresse non reconnue, veuillez vérifier.';
           this.afroshop.coordinates = { lat: 0, lng: 0 };
         }
       },
       error: (error) => {
         this.isGeocoding = false;
+        this.geocodingWarning = 'Erreur lors du géocodage.';
         console.error('❌ Erreur lors du géocodage:', error);
         this.afroshop.coordinates = { lat: 0, lng: 0 };
       }
@@ -501,8 +588,21 @@ export class AddAfroshopComponent implements OnInit {
 
   private resetForm(): void {
     this.afroshop = {
-      name: '', type: 'restaurant', address: '', coordinates: { lat: 0, lng: 0 },
-      phone: '', description: '', rating: 4.0, image: '', cuisine: '', priceLevel: 2, hours: '', website: ''
+      name: '',
+      type: 'restaurant',
+      address: '',
+      street: '',
+      city: '',
+      plz: '',
+      coordinates: { lat: 0, lng: 0 },
+      phone: '',
+      description: '',
+      rating: 4.0,
+      image: '',
+      cuisine: '',
+      priceLevel: 2,
+      hours: '',
+      website: ''
     };
   }
 

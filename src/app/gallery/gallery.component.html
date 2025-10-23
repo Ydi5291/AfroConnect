@@ -13,12 +13,25 @@
 <section class="controls-section">
   <div class="controls-main">
     <div class="controls-row">
-      <div class="gps-group">
-        <button (click)="useCurrentLocation()" class="location-btn gps-btn-desktop" title="GPS aktivieren und Standort verwenden">
-          📡 GPS aktivieren
-        </button>
+      <div class="filter-gps-column">
+        <div class="type-filter-group">
+          <label for="type-filter" class="unified-label">Nach Type filtern:</label>
+          <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="unified-select type-select-compact">
+            <option value="">Alle Typen</option>
+            <option value="restaurant">Restaurant</option>
+            <option value="epicerie">Epicerie</option>
+            <option value="coiffeur">Coiffeur</option>
+            <option value="vetement">Vêtement</option>
+            <option value="services">Services</option>
+          </select>
+        </div>
+        <div class="gps-group">
+          <button (click)="useCurrentLocation()" class="location-btn gps-btn-desktop" title="GPS aktivieren und Standort verwenden">
+            📡 GPS aktivieren
+          </button>
+        </div>
       </div>
-      <div class="radius-info" *ngIf="userLocation || selectedCity">
+  <div class="radius-info" *ngIf="userLocation && !selectedCity">
         <div class="radius-indicator">
           🎯 Suche in 50km Umkreis
           <span *ngIf="selectedCity" class="city-name">um {{ getSelectedCityName() }}</span>
@@ -66,6 +79,8 @@
               <option value="dortmund">Dortmund</option>
               <option value="essen">Essen</option>
               <option value="leipzig">Leipzig</option>
+              <option value="bremen">Bremen</option>
+              <option value="hannover">Hannover</option>
             </select>
             <button 
               (click)="onCityChange()" 
@@ -78,9 +93,6 @@
         </div>
       </div>
     </div>
-    <small class="location-hint mobile-only">
-      🎯 Findet automatisch Afroshops in deiner Nähe
-    </small>
   </div>
 </section>
 
@@ -121,6 +133,15 @@
         </div>
         <div class="distance" *ngIf="userLocation">
           🎯 {{ getDistanceFromUser(shop) }}
+          <span *ngIf="getTravelDurationDisplay(shop)">
+            <!-- Appel de la méthode pour déclencher le calcul -->
+            {{ getDirectionsDuration(shop) }}
+            – {{ getTravelDurationDisplay(shop) }}
+          </span>
+        </div>
+        <div class="map-buttons">
+          <a [href]="getGoogleMapsUrl(shop.address)" target="_blank" class="map-btn">🗺️ Karte anzeigen</a>
+          <a [href]="getGoogleMapsRouteUrl(shop.address)" target="_blank" class="route-btn">🚗 Route</a>
         </div>
       </div>
     </div>

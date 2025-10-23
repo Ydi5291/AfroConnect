@@ -5,6 +5,9 @@ export interface AfroshopData {
   name: string;
   type: 'restaurant' | 'epicerie' | 'coiffeur' | 'vetement' | 'services';
   address: string;
+  street?: string;
+  city?: string;
+  plz?: string;
   coordinates: {
     lat: number;
     lng: number;

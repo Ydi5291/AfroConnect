@@ -12,5 +12,6 @@ export const environment = {
   adminConfig: {
     // En production, utilisez Firebase Admin SDK ou votre backend
     adminEmails: [] // Vide en production - géré côté serveur
-  }
+  },
+  googleMapsApiKey: "AIzaSyBY571lmuW24qnczKhCGORAGWg4gei8cek"
 };

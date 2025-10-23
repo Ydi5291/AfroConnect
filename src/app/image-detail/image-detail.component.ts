@@ -80,19 +80,20 @@ export class ImageDetailComponent implements OnInit {
     window.open(`tel:${phoneNumber}`, '_self');
   }
 
-  // Ouvrir dans Google Maps
+  // Ouvrir dans Google Maps avec l'adresse réelle
   openInMaps(): void {
     if (this.afroshop) {
-      const url = `https://www.google.com/maps/search/?api=1&query=${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`;
+      const address = encodeURIComponent(this.afroshop.address || `${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`);
+      const url = `https://www.google.com/maps/search/?api=1&query=${address}`;
       window.open(url, '_blank');
     }
   }
 
-  // Obtenir l'itinéraire vers l'Afroshop
+  // Obtenir l'itinéraire vers l'Afroshop avec l'adresse réelle
   getDirections(): void {
     if (this.afroshop) {
-      // Ouvrir Google Maps avec l'itinéraire
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`;
+      const address = encodeURIComponent(this.afroshop.address || `${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`);
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${address}`;
       window.open(url, '_blank');
     }
   }

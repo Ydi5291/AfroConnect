@@ -3,7 +3,8 @@
     <div class="header-content">
       <div class="header-text">
         <h2>{{ isEditMode ? '✏️ Afroshop bearbeiten' : '🏪 Neuen Afroshop hinzufügen' }}</h2>
-        <p>{{ isEditMode ? 'Aktualisieren Sie die Informationen' : 'Teilen Sie Ihren Lieblings-Afroshop mit der Community!' }}</p>
+        <p>{{ isEditMode ? 'Aktualisieren Sie die Informationen' : 'Teilen Sie Ihren Lieblings-Afroshop mit der
+          Community!' }}</p>
       </div>
       <div class="header-actions">
         <a routerLink="/admin" class="back-btn" *ngIf="isAdmin">
@@ -13,479 +14,561 @@
           ← Galerie
         </a>
       </div>
+      <!-- Fin du champ rue -->
     </div>
-  </div>
 
-  <form (ngSubmit)="onSubmit()" class="afroshop-form">
-    
-    <!-- Import automatique depuis URL -->
-    <div class="auto-import-section">
-      <h3>🔗 Schnell hinzufügen</h3>
-      <p>Fügen Sie einen Link ein, um Informationen automatisch zu laden</p>
-      
+    <form (ngSubmit)="onSubmit()" class="afroshop-form">
+
+      <!-- Import automatique depuis URL -->
+      <div class="auto-import-section">
+        <h3>🔗 Schnell hinzufügen</h3>
+        <p>Fügen Sie einen Link ein, um Informationen automatisch zu laden</p>
+
+        <div class="form-group">
+          <label for="importUrl">Google Maps, Facebook, Nextdoor oder Website URL</label>
+          <div class="url-input-group">
+            <input type="url" id="importUrl" [(ngModel)]="importUrl" name="importUrl"
+              placeholder="https://www.facebook.com/business... oder https://www.google.com/maps/place/..."
+              class="form-input url-input">
+            <button type="button" (click)="importFromUrl()" [disabled]="!importUrl || isImporting" class="import-btn">
+              <span *ngIf="!isImporting">📥 Importieren</span>
+              <span *ngIf="isImporting">⏳ Lädt...</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="divider">
+          <span>oder manuell eingeben</span>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="message success" *ngIf="successMessage">
+        ✅ {{ successMessage }}
+      </div>
+      <div class="message error" *ngIf="errorMessage">
+        ❌ {{ errorMessage }}
+      </div>
+      <!-- Geocoding Warnung -->
+      <div class="message warning" *ngIf="geocodingWarning">
+        ⚠️ {{ geocodingWarning || 'Achtung: Die Adresse konnte nicht genau lokalisiert werden. Bitte überprüfen Sie die
+        Eingabe.' }}
+      </div>
+
+      <!-- Geschäftsname -->
       <div class="form-group">
-        <label for="importUrl">Google Maps, Facebook, Nextdoor oder Website URL</label>
-        <div class="url-input-group">
-          <input 
-            type="url" 
-            id="importUrl"
-            [(ngModel)]="importUrl"
-            name="importUrl"
-            placeholder="https://www.facebook.com/business... oder https://www.google.com/maps/place/..."
-            class="form-input url-input">
-          <button 
-            type="button"
-            (click)="importFromUrl()"
-            [disabled]="!importUrl || isImporting"
-            class="import-btn">
-            <span *ngIf="!isImporting">📥 Importieren</span>
-            <span *ngIf="isImporting">⏳ Lädt...</span>
+        <label for="name">Name des Geschäfts *</label>
+        <input type="text" id="name" [(ngModel)]="afroshop.name" name="name" placeholder="z.B. Mama Afrika Restaurant"
+          required class="form-input">
+      </div>
+
+      <!-- Type -->
+      <div class="form-group">
+        <label for="type">Typ *</label>
+        <select id="type" [(ngModel)]="afroshop.type" name="type" required class="form-select">
+          <option value="">Typ auswählen</option>
+          <option *ngFor="let type of getAllBusinessTypes()" [value]="type.value">
+            {{type.icon}} {{type.label}}
+          </option>
+        </select>
+      </div>
+
+      <!-- Upload d'image -->
+      <div class="form-group">
+        <label for="image">📸 Bild hochladen</label>
+        <div class="image-upload-section">
+          <input type="file" id="image" (change)="onFileSelected($event)" accept="image/*" class="file-input"
+            #fileInput>
+
+          <button type="button" (click)="fileInput.click()" class="upload-btn" [disabled]="isUploadingImage">
+            <span *ngIf="!imagePreview && !isUploadingImage">📁 Bild auswählen</span>
+            <span *ngIf="imagePreview && !isUploadingImage">🔄 Anderes Bild wählen</span>
+            <span *ngIf="isUploadingImage">⏳ Wird bearbeitet...</span>
+          </button>
+
+          <!-- Indicateur de progression -->
+          <div *ngIf="isUploadingImage" class="upload-progress">
+            <div class="progress-bar">
+              <div class="progress-fill"></div>
+            </div>
+            <small>Bild wird komprimiert und vorbereitet...</small>
+          </div>
+
+          <!-- Bildvorschau -->
+          <div *ngIf="imagePreview" class="image-preview-container">
+            <img [src]="imagePreview" alt="Preview" class="image-preview">
+            <button type="button" (click)="imagePreview = null; selectedFile = null; fileInput.value = ''"
+              class="remove-image-btn" title="Bild entfernen">
+              ✕
+            </button>
+          </div>
+
+          <small class="form-hint">Max. 5MB - Wird automatisch komprimiert und optimiert</small>
+        </div>
+      </div>
+
+      <!-- Adresse séparée -->
+      <div class="form-group">
+        <label for="street">Straße und Hausnr. *</label>
+        <input type="text" id="street" [(ngModel)]="afroshop.street" name="street" placeholder="z.B. Müllerstraße 123"
+          required class="form-input" #streetInput (focus)="initStreetAutocomplete(streetInput)"
+          (input)="onAddressChange()">
+        <small class="form-hint">Adresse wird automatisch vorgeschlagen (Google Maps Autocomplete)</small>
+        <!-- Fin de la section auto-import -->
+        <div class="form-group">
+          <label for="city">Stadt *</label>
+          <input type="text" id="city" [(ngModel)]="afroshop.city" name="city" placeholder="z.B. Berlin" required
+            pattern="[A-Za-zäöüÄÖÜß\-\s]+" class="form-input" (input)="onAddressChange()">
+          <small class="form-hint">Nur Buchstaben und Bindestriche</small>
+        </div>
+        <!-- Fin du champ ville -->
+        <div class="form-group">
+          <label for="plz">PLZ *</label>
+          <input type="text" id="plz" [(ngModel)]="afroshop.plz" name="plz" placeholder="z.B. 13349" required
+            pattern="\d{5}" maxlength="5" class="form-input" (input)="onAddressChange()">
+          <small class="form-hint">5-stellige Postleitzahl</small>
+        </div>
+        <!-- Fin du champ PLZ -->
+        <div class="form-group">
+          <small>Bitte geben Sie Straße, Stadt und PLZ an</small>
+          <div *ngIf="isGeocoding" class="geocoding-indicator">
+            🗺️ Adresse wird georeferenziert...
+          </div>
+          <div *ngIf="afroshop.coordinates.lat !== 0 && afroshop.coordinates.lng !== 0" class="geocoding-success">
+            ✅ Standort gefunden: {{afroshop.coordinates.lat.toFixed(4)}}, {{afroshop.coordinates.lng.toFixed(4)}}
+          </div>
+        </div>
+
+        <!-- Telefon -->
+        <div class="form-group">
+          <label for="phone">Telefon *</label>
+          <input type="tel" id="phone" [(ngModel)]="afroshop.phone" name="phone" placeholder="+49 30 12345678" required
+            class="form-input">
+        </div>
+
+        <!-- Beschreibung -->
+        <div class="form-group">
+          <label for="description">Beschreibung *</label>
+          <textarea id="description" [(ngModel)]="afroshop.description" name="description"
+            placeholder="Beschreiben Sie das Geschäft, Spezialitäten, Atmosphäre..." required rows="4"
+            class="form-textarea"></textarea>
+        </div>
+
+        <!-- Cuisine (nur für Restaurants) -->
+        <div class="form-group" *ngIf="afroshop.type === 'restaurant'">
+          <label for="cuisine">Küche</label>
+          <input type="text" id="cuisine" [(ngModel)]="afroshop.cuisine" name="cuisine"
+            placeholder="z.B. Westafrikanische, Äthiopische, Nigerianische, Senegalesische" class="form-input">
+          <small class="form-hint">Spezifizieren Sie die Art der afrikanischen Küche</small>
+        </div>
+
+        <!-- Öffnungszeiten -->
+        <div class="form-group">
+          <label>Öffnungszeiten</label>
+          <div class="opening-hours-container">
+
+            <!-- Montag -->
+            <div class="day-hours">
+              <div class="day-label">Montag:</div>
+              <div class="hours-controls">
+                <input type="checkbox" id="mon-open" [(ngModel)]="openingHours.monday.isOpen" name="mon-open">
+                <label for="mon-open" class="checkbox-label">Geöffnet</label>
+                <div *ngIf="openingHours.monday.isOpen" class="time-selectors">
+                  <select [(ngModel)]="openingHours.monday.open" name="mon-open-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                  <span class="time-separator">bis</span>
+                  <select [(ngModel)]="openingHours.monday.close" name="mon-close-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dienstag -->
+            <div class="day-hours">
+              <div class="day-label">Dienstag:</div>
+              <div class="hours-controls">
+                <input type="checkbox" id="tue-open" [(ngModel)]="openingHours.tuesday.isOpen" name="tue-open">
+                <label for="tue-open" class="checkbox-label">Geöffnet</label>
+                <div *ngIf="openingHours.tuesday.isOpen" class="time-selectors">
+                  <select [(ngModel)]="openingHours.tuesday.open" name="tue-open-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                  <span class="time-separator">bis</span>
+                  <select [(ngModel)]="openingHours.tuesday.close" name="tue-close-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mittwoch -->
+            <div class="day-hours">
+              <div class="day-label">Mittwoch:</div>
+              <div class="hours-controls">
+                <input type="checkbox" id="wed-open" [(ngModel)]="openingHours.wednesday.isOpen" name="wed-open">
+                <label for="wed-open" class="checkbox-label">Geöffnet</label>
+                <div *ngIf="openingHours.wednesday.isOpen" class="time-selectors">
+                  <select [(ngModel)]="openingHours.wednesday.open" name="wed-open-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                  <span class="time-separator">bis</span>
+                  <select [(ngModel)]="openingHours.wednesday.close" name="wed-close-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Donnerstag -->
+            <div class="day-hours">
+              <div class="day-label">Donnerstag:</div>
+              <div class="hours-controls">
+                <input type="checkbox" id="thu-open" [(ngModel)]="openingHours.thursday.isOpen" name="thu-open">
+                <label for="thu-open" class="checkbox-label">Geöffnet</label>
+                <div *ngIf="openingHours.thursday.isOpen" class="time-selectors">
+                  <select [(ngModel)]="openingHours.thursday.open" name="thu-open-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                  <span class="time-separator">bis</span>
+                  <select [(ngModel)]="openingHours.thursday.close" name="thu-close-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Freitag -->
+            <div class="day-hours">
+              <div class="day-label">Freitag:</div>
+              <div class="hours-controls">
+                <input type="checkbox" id="fri-open" [(ngModel)]="openingHours.friday.isOpen" name="fri-open">
+                <label for="fri-open" class="checkbox-label">Geöffnet</label>
+                <div *ngIf="openingHours.friday.isOpen" class="time-selectors">
+                  <select [(ngModel)]="openingHours.friday.open" name="fri-open-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                  <span class="time-separator">bis</span>
+                  <select [(ngModel)]="openingHours.friday.close" name="fri-close-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                      <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Samstag -->
+            <div class="day-hours">
+              <div class="day-label">Samstag:</div>
+              <div class="hours-controls">
+                <input type="checkbox" id="sat-open" [(ngModel)]="openingHours.saturday.isOpen" name="sat-open">
+                <label for="sat-open" class="checkbox-label">Geöffnet</label>
+                <div *ngIf="openingHours.saturday.isOpen" class="time-selectors">
+                  <select [(ngModel)]="openingHours.saturday.open" name="sat-open-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                  <span class="time-separator">bis</span>
+                  <select [(ngModel)]="openingHours.saturday.close" name="sat-close-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                     <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sonntag -->
+            <div class="day-hours">
+              <div class="day-label">Sonntag:</div>
+              <div class="hours-controls">
+                <input type="checkbox" id="sun-open" [(ngModel)]="openingHours.sunday.isOpen" name="sun-open">
+                <label for="sun-open" class="checkbox-label">Geöffnet</label>
+                <div *ngIf="openingHours.sunday.isOpen" class="time-selectors">
+                  <select [(ngModel)]="openingHours.sunday.open" name="sun-open-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                  <span class="time-separator">bis</span>
+                  <select [(ngModel)]="openingHours.sunday.close" name="sun-close-time" class="time-select">
+                    <option value="06:00">06:00</option>
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                    <option value="23:00">23:00</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <small class="form-hint">Wählen Sie für jeden Tag, ob das Geschäft geöffnet ist und die
+              Öffnungszeiten</small>
+          </div>
+        </div>
+
+        <!-- Website -->
+        <div class="form-group">
+          <label for="website">Website</label>
+          <input type="url" id="website" [(ngModel)]="afroshop.website" name="website"
+            placeholder="https://www.beispiel.com" class="form-input">
+          <small class="form-hint">Optional: Offizielle Website oder Social Media Profil</small>
+        </div>
+
+        <!-- Preisstufe -->
+        <div class="form-group">
+          <label for="priceLevel">Preisstufe</label>
+          <select id="priceLevel" [(ngModel)]="afroshop.priceLevel" name="priceLevel" class="form-select">
+            <option value="">-- Bitte wählen --</option>
+            <option value="1">€ - Günstig (unter 10€)</option>
+            <option value="2">€€ - Moderat (10-20€)</option>
+            <option value="3">€€€ - Gehoben (20-40€)</option>
+            <option value="4">€€€€ - Hochpreisig (über 40€)</option>
+          </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-actions">
+          <button type="button" (click)="goBack()" class="btn btn-secondary"
+            [disabled]="isSubmitting || isUploadingImage">
+            <span *ngIf="!isSubmitting && !isUploadingImage">❌ Abbrechen</span>
+            <span *ngIf="isSubmitting || isUploadingImage">⏳ Warten...</span>
+          </button>
+          <button type="submit" [disabled]="isSubmitting || isUploadingImage" class="btn btn-primary">
+            <span *ngIf="isSubmitting && !isUploadingImage">{{ isEditMode ? '⏳ Wird aktualisiert...' : '⏳ Wird
+              hinzugefügt...' }}</span>
+            <span *ngIf="isUploadingImage">📤 Bild wird hochgeladen...</span>
+            <span *ngIf="!isSubmitting && !isUploadingImage">{{ isEditMode ? '💾 Änderungen speichern' : '🏪 Afroshop
+              hinzufügen' }}</span>
           </button>
         </div>
-      </div>
-      
-      <div class="divider">
-        <span>oder manuell eingeben</span>
-      </div>
-    </div>
-    
-    <!-- Messages -->
-    <div class="message success" *ngIf="successMessage">
-      ✅ {{ successMessage }}
-    </div>
-    <div class="message error" *ngIf="errorMessage">
-      ❌ {{ errorMessage }}
-    </div>
-
-    <!-- Geschäftsname -->
-    <div class="form-group">
-      <label for="name">Name des Geschäfts *</label>
-      <input 
-        type="text" 
-        id="name"
-        [(ngModel)]="afroshop.name"
-        name="name"
-        placeholder="z.B. Mama Afrika Restaurant"
-        required
-        class="form-input">
-    </div>
-
-    <!-- Type -->
-    <div class="form-group">
-      <label for="type">Typ *</label>
-      <select 
-        id="type"
-        [(ngModel)]="afroshop.type"
-        name="type"
-        required
-        class="form-select">
-        <option value="">Typ auswählen</option>
-        <option *ngFor="let type of getAllBusinessTypes()" [value]="type.value">
-          {{type.icon}} {{type.label}}
-        </option>
-      </select>
-    </div>
-
-    <!-- Upload d'image -->
-    <div class="form-group">
-      <label for="image">📸 Bild hochladen</label>
-      <div class="image-upload-section">
-        <input 
-          type="file" 
-          id="image"
-          (change)="onFileSelected($event)"
-          accept="image/*"
-          class="file-input"
-          #fileInput>
         
-        <button 
-          type="button" 
-          (click)="fileInput.click()" 
-          class="upload-btn"
-          [disabled]="isUploadingImage">
-          <span *ngIf="!imagePreview && !isUploadingImage">📁 Bild auswählen</span>
-          <span *ngIf="imagePreview && !isUploadingImage">🔄 Anderes Bild wählen</span>
-          <span *ngIf="isUploadingImage">⏳ Wird bearbeitet...</span>
-        </button>
-        
-        <!-- Indicateur de progression -->
-        <div *ngIf="isUploadingImage" class="upload-progress">
-          <div class="progress-bar">
-            <div class="progress-fill"></div>
-          </div>
-          <small>Bild wird komprimiert und vorbereitet...</small>
-        </div>
-        
-        <!-- Bildvorschau -->
-        <div *ngIf="imagePreview" class="image-preview-container">
-          <img [src]="imagePreview" alt="Preview" class="image-preview">
-          <button 
-            type="button" 
-            (click)="imagePreview = null; selectedFile = null; fileInput.value = ''" 
-            class="remove-image-btn"
-            title="Bild entfernen">
-            ✕
-          </button>
-        </div>
-        
-        <small class="form-hint">Max. 5MB - Wird automatisch komprimiert und optimiert</small>
-      </div>
-    </div>
-
-    <!-- Adresse -->
-    <div class="form-group">
-      <label for="address">Adresse *</label>
-      <input 
-        type="text" 
-        id="address"
-        [(ngModel)]="afroshop.address"
-        (ngModelChange)="onAddressChange()"
-        name="address"
-        placeholder="z.B. Müllerstraße 123, 13349 Berlin"
-        required
-        class="form-input">
-      <small>Bitte geben Sie die vollständige Adresse mit Stadt an</small>
-      <div *ngIf="isGeocoding" class="geocoding-indicator">
-        🗺️ Adresse wird georeferenziert...
-      </div>
-      <div *ngIf="afroshop.coordinates.lat !== 0 && afroshop.coordinates.lng !== 0" class="geocoding-success">
-        ✅ Standort gefunden: {{afroshop.coordinates.lat.toFixed(4)}}, {{afroshop.coordinates.lng.toFixed(4)}}
-      </div>
-    </div>
-
-    <!-- Telefon -->
-    <div class="form-group">
-      <label for="phone">Telefon *</label>
-      <input 
-        type="tel" 
-        id="phone"
-        [(ngModel)]="afroshop.phone"
-        name="phone"
-        placeholder="+49 30 12345678"
-        required
-        class="form-input">
-    </div>
-
-    <!-- Beschreibung -->
-    <div class="form-group">
-      <label for="description">Beschreibung *</label>
-      <textarea 
-        id="description"
-        [(ngModel)]="afroshop.description"
-        name="description"
-        placeholder="Beschreiben Sie das Geschäft, Spezialitäten, Atmosphäre..."
-        required
-        rows="4"
-        class="form-textarea"></textarea>
-    </div>
-
-    <!-- Cuisine (nur für Restaurants) -->
-    <div class="form-group" *ngIf="afroshop.type === 'restaurant'">
-      <label for="cuisine">Küche</label>
-      <input 
-        type="text" 
-        id="cuisine"
-        [(ngModel)]="afroshop.cuisine"
-        name="cuisine"
-        placeholder="z.B. Westafrikanische, Äthiopische, Nigerianische, Senegalesische"
-        class="form-input">
-      <small class="form-hint">Spezifizieren Sie die Art der afrikanischen Küche</small>
-    </div>
-
-    <!-- Öffnungszeiten -->
-    <div class="form-group">
-      <label>Öffnungszeiten</label>
-      <div class="opening-hours-container">
-        
-        <!-- Montag -->
-        <div class="day-hours">
-          <div class="day-label">Montag:</div>
-          <div class="hours-controls">
-            <input type="checkbox" 
-                   id="mon-open" 
-                   [(ngModel)]="openingHours.monday.isOpen" 
-                   name="mon-open">
-            <label for="mon-open" class="checkbox-label">Geöffnet</label>
-            <div *ngIf="openingHours.monday.isOpen" class="time-selectors">
-              <select [(ngModel)]="openingHours.monday.open" name="mon-open-time" class="time-select">
-                <option value="06:00">06:00</option>
-                <option value="07:00">07:00</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-              </select>
-              <span class="time-separator">bis</span>
-              <select [(ngModel)]="openingHours.monday.close" name="mon-close-time" class="time-select">
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
-                <option value="21:00">21:00</option>
-                <option value="22:00">22:00</option>
-                <option value="23:00">23:00</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dienstag -->
-        <div class="day-hours">
-          <div class="day-label">Dienstag:</div>
-          <div class="hours-controls">
-            <input type="checkbox" 
-                   id="tue-open" 
-                   [(ngModel)]="openingHours.tuesday.isOpen" 
-                   name="tue-open">
-            <label for="tue-open" class="checkbox-label">Geöffnet</label>
-            <div *ngIf="openingHours.tuesday.isOpen" class="time-selectors">
-              <select [(ngModel)]="openingHours.tuesday.open" name="tue-open-time" class="time-select">
-                <option value="06:00">06:00</option>
-                <option value="07:00">07:00</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-              </select>
-              <span class="time-separator">bis</span>
-              <select [(ngModel)]="openingHours.tuesday.close" name="tue-close-time" class="time-select">
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
-                <option value="21:00">21:00</option>
-                <option value="22:00">22:00</option>
-                <option value="23:00">23:00</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mittwoch -->
-        <div class="day-hours">
-          <div class="day-label">Mittwoch:</div>
-          <div class="hours-controls">
-            <input type="checkbox" 
-                   id="wed-open" 
-                   [(ngModel)]="openingHours.wednesday.isOpen" 
-                   name="wed-open">
-            <label for="wed-open" class="checkbox-label">Geöffnet</label>
-            <div *ngIf="openingHours.wednesday.isOpen" class="time-selectors">
-              <select [(ngModel)]="openingHours.wednesday.open" name="wed-open-time" class="time-select">
-                <option value="06:00">06:00</option>
-                <option value="07:00">07:00</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-              </select>
-              <span class="time-separator">bis</span>
-              <select [(ngModel)]="openingHours.wednesday.close" name="wed-close-time" class="time-select">
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
-                <option value="21:00">21:00</option>
-                <option value="22:00">22:00</option>
-                <option value="23:00">23:00</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Donnerstag -->
-        <div class="day-hours">
-          <div class="day-label">Donnerstag:</div>
-          <div class="hours-controls">
-            <input type="checkbox" 
-                   id="thu-open" 
-                   [(ngModel)]="openingHours.thursday.isOpen" 
-                   name="thu-open">
-            <label for="thu-open" class="checkbox-label">Geöffnet</label>
-            <div *ngIf="openingHours.thursday.isOpen" class="time-selectors">
-              <select [(ngModel)]="openingHours.thursday.open" name="thu-open-time" class="time-select">
-                <option value="06:00">06:00</option>
-                <option value="07:00">07:00</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-              </select>
-              <span class="time-separator">bis</span>
-              <select [(ngModel)]="openingHours.thursday.close" name="thu-close-time" class="time-select">
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
-                <option value="21:00">21:00</option>
-                <option value="22:00">22:00</option>
-                <option value="23:00">23:00</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Freitag -->
-        <div class="day-hours">
-          <div class="day-label">Freitag:</div>
-          <div class="hours-controls">
-            <input type="checkbox" 
-                   id="fri-open" 
-                   [(ngModel)]="openingHours.friday.isOpen" 
-                   name="fri-open">
-            <label for="fri-open" class="checkbox-label">Geöffnet</label>
-            <div *ngIf="openingHours.friday.isOpen" class="time-selectors">
-              <select [(ngModel)]="openingHours.friday.open" name="fri-open-time" class="time-select">
-                <option value="06:00">06:00</option>
-                <option value="07:00">07:00</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-              </select>
-              <span class="time-separator">bis</span>
-              <select [(ngModel)]="openingHours.friday.close" name="fri-close-time" class="time-select">
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
-                <option value="21:00">21:00</option>
-                <option value="22:00">22:00</option>
-                <option value="23:00">23:00</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Samstag -->
-        <div class="day-hours">
-          <div class="day-label">Samstag:</div>
-          <div class="hours-controls">
-            <input type="checkbox" 
-                   id="sat-open" 
-                   [(ngModel)]="openingHours.saturday.isOpen" 
-                   name="sat-open">
-            <label for="sat-open" class="checkbox-label">Geöffnet</label>
-            <div *ngIf="openingHours.saturday.isOpen" class="time-selectors">
-              <select [(ngModel)]="openingHours.saturday.open" name="sat-open-time" class="time-select">
-                <option value="06:00">06:00</option>
-                <option value="07:00">07:00</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-              </select>
-              <span class="time-separator">bis</span>
-              <select [(ngModel)]="openingHours.saturday.close" name="sat-close-time" class="time-select">
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
-                <option value="21:00">21:00</option>
-                <option value="22:00">22:00</option>
-                <option value="23:00">23:00</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sonntag -->
-        <div class="day-hours">
-          <div class="day-label">Sonntag:</div>
-          <div class="hours-controls">
-            <input type="checkbox" 
-                   id="sun-open" 
-                   [(ngModel)]="openingHours.sunday.isOpen" 
-                   name="sun-open">
-            <label for="sun-open" class="checkbox-label">Geöffnet</label>
-            <div *ngIf="openingHours.sunday.isOpen" class="time-selectors">
-              <select [(ngModel)]="openingHours.sunday.open" name="sun-open-time" class="time-select">
-                <option value="06:00">06:00</option>
-                <option value="07:00">07:00</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-              </select>
-              <span class="time-separator">bis</span>
-              <select [(ngModel)]="openingHours.sunday.close" name="sun-close-time" class="time-select">
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
-                <option value="21:00">21:00</option>
-                <option value="22:00">22:00</option>
-                <option value="23:00">23:00</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <small class="form-hint">Wählen Sie für jeden Tag, ob das Geschäft geöffnet ist und die Öffnungszeiten</small>
-      </div>
-    </div>
-
-    <!-- Website -->
-    <div class="form-group">
-      <label for="website">Website</label>
-      <input 
-        type="url" 
-        id="website"
-        [(ngModel)]="afroshop.website"
-        name="website"
-        placeholder="https://www.beispiel.com"
-        class="form-input">
-      <small class="form-hint">Optional: Offizielle Website oder Social Media Profil</small>
-    </div>
-
-    <!-- Preisstufe -->
-    <div class="form-group">
-      <label for="priceLevel">Preisstufe</label>
-      <select 
-        id="priceLevel"
-        [(ngModel)]="afroshop.priceLevel"
-        name="priceLevel"
-        class="form-select">
-        <option value="">-- Bitte wählen --</option>
-        <option value="1">€ - Günstig (unter 10€)</option>
-        <option value="2">€€ - Moderat (10-20€)</option>
-        <option value="3">€€€ - Gehoben (20-40€)</option>
-        <option value="4">€€€€ - Hochpreisig (über 40€)</option>
-      </select>
-    </div>
-
-    <!-- Buttons -->
-    <div class="form-actions">
-      <button 
-        type="button" 
-        (click)="goBack()"
-        class="btn btn-secondary"
-        [disabled]="isSubmitting || isUploadingImage">
-        <span *ngIf="!isSubmitting && !isUploadingImage">❌ Abbrechen</span>
-        <span *ngIf="isSubmitting || isUploadingImage">⏳ Warten...</span>
-      </button>
-      <button 
-        type="submit" 
-        [disabled]="isSubmitting || isUploadingImage"
-        class="btn btn-primary">
-        <span *ngIf="isSubmitting && !isUploadingImage">{{ isEditMode ? '⏳ Wird aktualisiert...' : '⏳ Wird hinzugefügt...' }}</span>
-        <span *ngIf="isUploadingImage">📤 Bild wird hochgeladen...</span>
-        <span *ngIf="!isSubmitting && !isUploadingImage">{{ isEditMode ? '💾 Änderungen speichern' : '🏪 Afroshop hinzufügen' }}</span>
-      </button>
-    </div>
-  </form>
-</div>

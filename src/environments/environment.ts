@@ -13,5 +13,6 @@ export const environment = {
     adminEmails: [
       'youssoufdiamaldiallo@gmail.com' // Seulement en dev
     ]
-  }
+  },
+  googleMapsApiKey: "AIzaSyBY571lmuW24qnczKhCGORAGWg4gei8cek"
 };

@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+// ...existing code...
+const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
 
 export interface GeocodeResult {
   lat: number;
@@ -26,9 +29,76 @@ export interface ReverseGeocodeResult {
   providedIn: 'root'
 })
 export class GeocodingService {
+  /**
+   * Récupère la durée du trajet (voiture et à pied) entre deux points via Google Maps Directions API
+   */
+  getTravelDuration(
+    origin: { lat: number; lng: number },
+    destination: { lat: number; lng: number }
+  ): Observable<{ driving?: string; walking?: string }> {
+    const apiKey = this.GOOGLE_MAPS_API_KEY;
+    const baseUrl = 'https://maps.googleapis.com/maps/api/directions/json';
+    const modes = ['driving', 'walking'];
+    const requests = modes.map(mode => {
+      const url = `${baseUrl}?origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}&mode=${mode}&key=${apiKey}`;
+      return this.http.get<any>(url).pipe(
+        map(res => {
+          if (res.routes && res.routes.length > 0 && res.routes[0].legs && res.routes[0].legs.length > 0) {
+            return { mode, duration: res.routes[0].legs[0].duration.text };
+          }
+          return { mode, duration: undefined };
+        }),
+        catchError(() => of({ mode, duration: undefined }))
+      );
+    });
+    return new Observable(observer => {
+      let results: { [key: string]: string } = {};
+      let completed = 0;
+      requests.forEach((req, idx) => {
+        req.subscribe(result => {
+          results[result.mode] = result.duration;
+          completed++;
+          if (completed === requests.length) {
+            observer.next({ driving: results['driving'], walking: results['walking'] });
+            observer.complete();
+          }
+        });
+      });
+    });
+  }
+  /**
+   * Géocode une adresse avec OpenStreetMap/Nominatim
+   */
+  private geocodeWithNominatim(address: string): Observable<GeocodeResult | null> {
+    const params = {
+      q: address,
+      format: 'json',
+      addressdetails: '1',
+      limit: '1',
+      countrycodes: 'de'
+    };
+    return this.http.get<any[]>(NOMINATIM_URL, { params }).pipe(
+      map(results => {
+        if (results && results.length > 0) {
+          const result = results[0];
+          return {
+            lat: parseFloat(result.lat),
+            lng: parseFloat(result.lon),
+            formatted_address: result.display_name,
+            accuracy: result.type
+          };
+        }
+        return null;
+      }),
+      catchError(error => {
+        console.error('❌ Erreur Nominatim:', error);
+        return of(null);
+      })
+    );
+  }
 
   // Clé API Google Maps - À configurer avec une vraie clé
-  private readonly GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY';
+  private readonly GOOGLE_MAPS_API_KEY = environment.googleMapsApiKey;
   private readonly GEOCODING_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 
   // Fallback : coordonnées des principales villes allemandes
@@ -93,22 +163,30 @@ export class GeocodingService {
       return of(null);
     }
 
-    // Nettoyer l'adresse
     const cleanAddress = address.trim();
     console.log(`🗺️ Géocodage de l'adresse: "${cleanAddress}"`);
 
-    // Si une clé API Google Maps est configurée, utiliser l'API
+    // 1. Essayer Google Maps si la clé est présente
     if (this.GOOGLE_MAPS_API_KEY && this.GOOGLE_MAPS_API_KEY !== 'YOUR_GOOGLE_MAPS_API_KEY') {
       return this.geocodeWithGoogleMaps(cleanAddress).pipe(
         catchError(error => {
-          console.warn('❌ Échec du géocodage Google Maps, utilisation du fallback:', error);
-          return of(this.geocodeWithFallback(cleanAddress));
+          console.warn('❌ Échec du géocodage Google Maps, tentative avec Nominatim:', error);
+          // 2. Si Google échoue, essayer Nominatim
+          return this.geocodeWithNominatim(cleanAddress).pipe(
+            catchError(() => {
+              // 3. Si Nominatim échoue, fallback ville
+              return of(this.geocodeWithFallback(cleanAddress));
+            })
+          );
         })
       );
     } else {
-      // Utiliser directement le système de fallback
-      console.log('🔧 Utilisation du système de géocodage fallback (coordonnées prédéfinies)');
-      return of(this.geocodeWithFallback(cleanAddress));
+      // Si pas de clé Google, essayer Nominatim d'abord
+      return this.geocodeWithNominatim(cleanAddress).pipe(
+        catchError(() => {
+          return of(this.geocodeWithFallback(cleanAddress));
+        })
+      );
     }
   }
 
