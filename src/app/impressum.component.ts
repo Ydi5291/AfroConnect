@@ -6,6 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './impressum.component.html',
-  styleUrls: []
+   styleUrls: ['./impressum.component.css']
 })
 export class ImpressumComponent {}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -42,10 +43,17 @@ export class GalleryComponent implements OnInit {
   showMap: boolean = false;
   userLocation: { lat: number; lng: number } | null = null;
   user$: Observable<User | null>;
+  isAdmin: boolean = false;
 
-  addAfroshop(): void {
-    // TODO: ouvrir le formulaire d'ajout d'Afroshop
-    alert("Formulaire d'ajout Afroshop à implémenter.");
+
+  goToAddAfroshop(): void {
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.router.navigate(['/add-afroshop']);
+      } else {
+        this.router.navigate(['/login'], { queryParams: { returnUrl: '/add-afroshop' } });
+      }
+    });
   }
 
   openSettings(): void {
@@ -75,13 +83,29 @@ export class GalleryComponent implements OnInit {
     private authService: AuthService,
     private translationService: TranslationService,
     private router: Router,
-  private geolocationService: GeolocationService,
-  private geocodingService: GeocodingService
+    private geolocationService: GeolocationService,
+    private geocodingService: GeocodingService,
+    private firestore: Firestore
   ) {
     this.user$ = this.authService.user$;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // Vérification admin via Firestore (modular)
+    this.authService.user$.subscribe(async user => {
+      if (user?.uid) {
+        const adminDocRef = doc(this.firestore, 'roles/admins');
+        const adminDocSnap = await getDoc(adminDocRef);
+        const adminDoc = adminDocSnap.data() as { uids: string[] } | undefined;
+        console.log('[DEBUG] Firestore adminDoc:', adminDoc);
+        console.log('[DEBUG] User UID:', user.uid);
+        this.isAdmin = adminDoc?.uids?.includes(user.uid) ?? false;
+        console.log('[DEBUG] isAdmin:', this.isAdmin);
+      } else {
+        this.isAdmin = false;
+        console.log('[DEBUG] Pas d\'utilisateur connecté, isAdmin:', this.isAdmin);
+      }
+    });
     // Initialiser DirectionsService Google Maps JS
     if ((window as any).google && (window as any).google.maps) {
       this.directionsService = new (window as any).google.maps.DirectionsService();
@@ -548,9 +572,7 @@ export class GalleryComponent implements OnInit {
     this.router.navigate(['/edit-afroshop', shopId]);
   }
 
-  goToAddAfroshop(): void {
-    this.addNewAfroshop();
-  }
+  // ...existing code...
 
   // 🔐 Méthodes pour l'administration
   isAdminUser(user: User): boolean {

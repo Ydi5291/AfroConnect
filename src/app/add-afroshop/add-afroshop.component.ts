@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -64,7 +65,7 @@ export class AddAfroshopComponent implements OnInit {
       });
     }
   }
-  
+
   afroshop = {
     name: '',
     type: 'restaurant' as AfroshopData['type'],
@@ -119,13 +120,24 @@ export class AddAfroshopComponent implements OnInit {
     private translationService: TranslationService,
     private geocodingService: GeocodingService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private firestore: Firestore
   ) { }
 
-  ngOnInit(): void {
-    // Vérifier si l'utilisateur est admin
-    this.authService.user$.subscribe(user => {
-      this.isAdmin = user?.email === 'youssoufdiamaldiallo@gmail.com';
+  async ngOnInit(): Promise<void> {
+    // Vérifier si l'utilisateur est admin via Firestore (modular)
+    this.authService.user$.subscribe(async user => {
+      console.log('Mon UID:', user?.uid);
+      if (user?.uid) {
+        const adminDocRef = doc(this.firestore, 'roles/admins');
+        const adminDocSnap = await getDoc(adminDocRef);
+        const adminDoc = adminDocSnap.data() as { uids: string[] } | undefined;
+        console.log('UIDs Firestore:', adminDoc?.uids);
+        this.isAdmin = adminDoc?.uids?.includes(user.uid) ?? false;
+        console.log('isAdmin:', this.isAdmin);
+      } else {
+        this.isAdmin = false;
+      }
     });
 
     // Vérifier si on est en mode édition
@@ -160,27 +172,8 @@ export class AddAfroshopComponent implements OnInit {
           hours: afroshop.hours || '',
           website: afroshop.website || ''
         };
-        // --- FONCTION TEMPORAIRE POUR MIGRATION DES ANCIENNES ADRESSES ---
-        // Si les nouveaux champs sont vides mais l'adresse unique existe, découper automatiquement
-        if (!this.afroshop.street && !this.afroshop.city && !this.afroshop.plz && this.afroshop.address) {
-          const parts = this.afroshop.address.split(',');
-          // Rue et numéro : avant la première virgule
-          this.afroshop.street = parts[0]?.trim() || '';
-          // Code postal et ville : après la première virgule
-          if (parts[1]) {
-            // Essayer d'extraire le code postal (5 chiffres) et la ville
-            const match = parts[1].match(/(\d{5})\s*(.*)/);
-            if (match) {
-              this.afroshop.plz = match[1];
-              this.afroshop.city = match[2]?.trim() || '';
-            } else {
-              this.afroshop.city = parts[1].trim();
-            }
-          }
-        }
-        // --- SUPPRIMER CETTE FONCTION APRÈS MIGRATION DES ANCIENNES ADRESSES ---
         this.imagePreview = afroshop.image || null;
-        
+
         // Parser les heures d'ouverture pour l'interface
         this.parseOpeningHoursFromString(afroshop.hours || '');
       } else {
@@ -197,10 +190,10 @@ export class AddAfroshopComponent implements OnInit {
   async onFileSelected(event: any): Promise<void> {
     const file = event.target.files[0];
     this.errorMessage = ''; // Clear previous errors
-    
+
     if (file) {
       console.log('📁 Datei ausgewählt:', file.name, `${(file.size / 1024).toFixed(0)}KB`);
-      
+
       // Vérifier le type de fichier
       if (!file.type.startsWith('image/')) {
         this.errorMessage = 'Bitte wählen Sie eine Bilddatei (JPG, PNG, GIF)';
@@ -216,13 +209,13 @@ export class AddAfroshopComponent implements OnInit {
       try {
         this.isUploadingImage = true;
         console.log('🗜️ Komprimierung startet...');
-        
+
         // Compresser l'image automatiquement
         const compressedFile = await this.compressImage(file);
         this.selectedFile = compressedFile;
-        
+
         console.log('✅ Komprimierung abgeschlossen');
-        
+
         // Créer une preview
         const reader = new FileReader();
         reader.onload = (e: any) => {
@@ -230,7 +223,7 @@ export class AddAfroshopComponent implements OnInit {
           console.log('👁️ Vorschau erstellt');
         };
         reader.readAsDataURL(compressedFile);
-        
+
       } catch (error) {
         console.error('❌ Komprimierungsfehler:', error);
         this.errorMessage = 'Fehler bei der Bildkomprimierung';
@@ -246,7 +239,7 @@ export class AddAfroshopComponent implements OnInit {
     try {
       console.log('🔍 Storage service:', this.firebaseService);
       console.log('🔍 Storage instance:', (this.firebaseService as any).storage);
-      
+
       // Test avec une vraie image pour éviter problèmes CORS
       const canvas = document.createElement('canvas');
       canvas.width = 100;
@@ -259,21 +252,21 @@ export class AddAfroshopComponent implements OnInit {
         ctx.font = '16px Arial';
         ctx.fillText('Test', 30, 55);
       }
-      
+
       // Convertir en blob image
       const blob = await new Promise<Blob>((resolve) => {
         canvas.toBlob((blob) => resolve(blob!), 'image/jpeg', 0.8);
       });
-      
+
       const testFile = new File([blob], 'test-image.jpg', { type: 'image/jpeg' });
       console.log('🧪 Test upload avec image générée...', testFile.size, 'bytes');
-      
+
       const url = await this.firebaseService.uploadImage(testFile);
       console.log('✅ Test réussi! URL:', url);
       this.successMessage = 'Firebase Storage fonctionne correctement! Image uploadée.';
     } catch (error) {
       console.error('❌ Test échoué:', error);
-      
+
       // Messages d'erreur plus spécifiques
       if (error instanceof Error) {
         if (error.message.includes('CORS')) {
@@ -302,7 +295,7 @@ export class AddAfroshopComponent implements OnInit {
         img.onload = () => {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          
+
           // Définir la taille maximale (1200px de largeur)
           const MAX_WIDTH = 1200;
           const MAX_HEIGHT = 1200;
@@ -360,30 +353,30 @@ export class AddAfroshopComponent implements OnInit {
     this.isUploadingImage = true;
     console.log(`📤 Upload läuft... Größe: ${(this.selectedFile.size / 1024).toFixed(0)}KB`);
     console.log('📁 Datei:', this.selectedFile.name, this.selectedFile.type);
-    
+
     try {
       // Vérifier que Firebase est bien configuré
       console.log('🔥 Service Firebase:', this.firebaseService);
-      
+
       const imageUrl = await this.firebaseService.uploadImage(this.selectedFile);
       console.log('✅ Upload erfolgreich! URL:', imageUrl);
-      
+
       // Mettre à jour l'aperçu avec l'URL Firebase
       this.afroshop.image = imageUrl;
-      
+
       return imageUrl;
     } catch (error) {
       console.error('❌ Detaillierter Upload-Fehler:', error);
       console.error('❌ Fehlertyp:', typeof error);
       console.error('❌ Nachricht:', error instanceof Error ? error.message : 'Unbekannter Fehler');
-      
+
       // Afficher une erreur plus spécifique
       if (error instanceof Error) {
         this.errorMessage = `Upload-Fehler: ${error.message}`;
       } else {
         this.errorMessage = 'Unbekannter Upload-Fehler';
       }
-      
+
       throw error;
     } finally {
       this.isUploadingImage = false;
@@ -414,16 +407,16 @@ export class AddAfroshopComponent implements OnInit {
       if (!this.afroshop.priceLevel || this.afroshop.priceLevel === 0) {
         this.afroshop.priceLevel = 2; // Par défaut modéré
       }
-      
+
       // Nettoyer les champs optionnels
       this.afroshop.website = this.afroshop.website?.trim() || '';
       this.afroshop.cuisine = this.afroshop.cuisine?.trim() || '';
-      
+
       // Convertir les heures d'ouverture en string
       this.afroshop.hours = this.convertOpeningHoursToString();
 
       const city = this.extractCityFromAddress(this.afroshop.address);
-      
+
       if (this.isEditMode && this.editingId) {
         // Mode édition : mettre à jour l'Afroshop existant
         const updateData = {
@@ -450,17 +443,17 @@ export class AddAfroshopComponent implements OnInit {
         const docId = await this.firebaseService.addAfroshop(newAfroshop);
         this.successMessage = '✅ Afroshop erfolgreich hinzugefügt! ID: ' + docId;
       }
-      
+
       this.resetForm();
-      
+
       setTimeout(() => {
         this.router.navigate(['/']);
       }, 2000);
-      
+
     } catch (error) {
       console.error('Fehler:', error);
-      this.errorMessage = this.isEditMode ? 
-        'Fehler beim Aktualisieren des Afroshops' : 
+      this.errorMessage = this.isEditMode ?
+        'Fehler beim Aktualisieren des Afroshops' :
         'Fehler beim Hinzufügen des Afroshops';
     } finally {
       this.isSubmitting = false;
@@ -472,7 +465,7 @@ export class AddAfroshopComponent implements OnInit {
       this.errorMessage = 'Name ist erforderlich';
       return false;
     }
-    
+
     if (!this.afroshop.address.trim()) {
       this.errorMessage = 'Adresse ist erforderlich';
       return false;
@@ -484,17 +477,17 @@ export class AddAfroshopComponent implements OnInit {
       console.warn('❌ Coordonnées invalides:', this.afroshop.coordinates);
       return false;
     }
-    
+
     if (!this.afroshop.phone.trim()) {
       this.errorMessage = 'Telefonnummer ist erforderlich';
       return false;
     }
-    
+
     if (!this.afroshop.description.trim()) {
       this.errorMessage = 'Beschreibung ist erforderlich';
       return false;
     }
-    
+
     // Validation du website si fourni
     if (this.afroshop.website && this.afroshop.website.trim()) {
       const urlPattern = /^https?:\/\/.+/;
@@ -503,10 +496,10 @@ export class AddAfroshopComponent implements OnInit {
         return false;
       }
     }
-    
+
     // Auto-définir les coordonnées si l'adresse contient une ville connue
     this.setCoordinatesFromAddress();
-    
+
     return true;
   }
 
@@ -516,7 +509,7 @@ export class AddAfroshopComponent implements OnInit {
     if (this.geocodeTimeout) {
       clearTimeout(this.geocodeTimeout);
     }
-    
+
     this.geocodeTimeout = setTimeout(() => {
       this.setCoordinatesFromAddress();
     }, 1000); // Attendre 1 seconde après l'arrêt de la saisie
@@ -636,7 +629,7 @@ export class AddAfroshopComponent implements OnInit {
       } else {
         await this.importFromGenericWebsite();
       }
-      
+
       this.successMessage = 'Informationen erfolgreich importiert! Überprüfen Sie die Felder und ergänzen Sie bei Bedarf.';
     } catch (error) {
       console.error('Import error:', error);
@@ -659,11 +652,11 @@ export class AddAfroshopComponent implements OnInit {
     // Extraction des informations depuis Nextdoor
     const urlParts = this.importUrl.split('/');
     const pageName = urlParts.find(part => part.includes('-'))?.replace(/-/g, ' ') || '';
-    
+
     if (pageName) {
       this.afroshop.name = this.capitalizeWords(pageName);
       this.afroshop.description = `Afrikanisches Geschäft gefunden auf Nextdoor`;
-      
+
       // Extraction de la ville depuis l'URL
       const cityMatch = pageName.match(/(berlin|hamburg|münchen|köln|frankfurt|dortmund|essen|düsseldorf)/i);
       if (cityMatch) {
@@ -678,7 +671,7 @@ export class AddAfroshopComponent implements OnInit {
       // Exemple: https://www.facebook.com/p/Afro-Center-N-1-100069192167484/
       const urlParts = this.importUrl.split('/');
       let businessName = '';
-      
+
       // Recherche du nom dans l'URL
       const nameIndex = urlParts.findIndex(part => part === 'p');
       if (nameIndex !== -1 && urlParts[nameIndex + 1]) {
@@ -686,25 +679,25 @@ export class AddAfroshopComponent implements OnInit {
         businessName = urlParts[nameIndex + 1].split('-').slice(0, -1).join(' ');
       } else {
         // Format classique: /BusinessName/
-        const possibleName = urlParts.find(part => 
-          part && 
-          part !== 'www.facebook.com' && 
-          part !== 'facebook.com' && 
-          part !== 'p' && 
-          !part.match(/^\d+$/) && 
+        const possibleName = urlParts.find(part =>
+          part &&
+          part !== 'www.facebook.com' &&
+          part !== 'facebook.com' &&
+          part !== 'p' &&
+          !part.match(/^\d+$/) &&
           part.length > 2
         );
         if (possibleName) {
           businessName = possibleName.replace(/-/g, ' ');
         }
       }
-      
+
       if (businessName) {
         this.afroshop.name = this.capitalizeWords(businessName);
         this.afroshop.description = `Afrikanisches Geschäft gefunden auf Facebook`;
         this.afroshop.website = this.importUrl;
         this.afroshop.type = 'services'; // Par défaut
-        
+
         // Essayer de détecter le type depuis le nom
         const nameLower = businessName.toLowerCase();
         if (nameLower.includes('restaurant') || nameLower.includes('food') || nameLower.includes('cuisine')) {
@@ -716,7 +709,7 @@ export class AddAfroshopComponent implements OnInit {
         } else if (nameLower.includes('mode') || nameLower.includes('fashion') || nameLower.includes('clothing')) {
           this.afroshop.type = 'vetement';
         }
-        
+
         console.log('Facebook import successful:', businessName);
       } else {
         throw new Error('Impossible d\'extraire le nom depuis l\'URL Facebook');
@@ -735,16 +728,16 @@ export class AddAfroshopComponent implements OnInit {
     try {
       const url = new URL(this.importUrl);
       const domain = url.hostname.replace('www.', '');
-      
+
       // Extraction du nom basé sur le domaine
       let businessName = domain.split('.')[0];
       businessName = this.capitalizeWords(businessName.replace(/[-_]/g, ' '));
-      
+
       this.afroshop.name = businessName;
       this.afroshop.website = this.importUrl;
       this.afroshop.description = `Afrikanisches Geschäft gefunden auf ${domain}`;
       this.afroshop.type = 'services'; // Par défaut
-      
+
       // Essayer de détecter le type depuis le nom de domaine
       const domainLower = domain.toLowerCase();
       if (domainLower.includes('restaurant') || domainLower.includes('food') || domainLower.includes('cuisine')) {
@@ -756,9 +749,9 @@ export class AddAfroshopComponent implements OnInit {
       } else if (domainLower.includes('mode') || domainLower.includes('fashion') || domainLower.includes('clothing')) {
         this.afroshop.type = 'vetement';
       }
-      
+
       console.log(`Site web générique importé: ${businessName} (${domain})`);
-      
+
     } catch (error) {
       console.error('Erreur lors de l\'import du site web:', error);
       // Fallback simple
@@ -796,7 +789,7 @@ export class AddAfroshopComponent implements OnInit {
     ];
 
     const openDays: string[] = [];
-    
+
     days.forEach(day => {
       const dayData = this.openingHours[day.key];
       if (dayData.isOpen) {
@@ -823,15 +816,15 @@ export class AddAfroshopComponent implements OnInit {
     this.openingHours.sunday.isOpen = false;
 
     const dayEntries = hoursString.split(',');
-    
+
     dayEntries.forEach(entry => {
       const trimmed = entry.trim();
       const match = trimmed.match(/^(\w+):\s*(\d{2}:\d{2})-(\d{2}:\d{2})$/);
-      
+
       if (match) {
         const [, dayAbbr, openTime, closeTime] = match;
-        
-        switch(dayAbbr.toLowerCase()) {
+
+        switch (dayAbbr.toLowerCase()) {
           case 'mo':
             this.openingHours.monday = { isOpen: true, open: openTime, close: closeTime };
             break;

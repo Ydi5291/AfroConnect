@@ -3,10 +3,8 @@
     🌍 Entdecke {{ allAfroshops.length }} afrikanische Geschäfte in deiner Nähe
   </div>
   <div class="intro-actions">
-    <button class="add-shop-btn" (click)="goToAddAfroshop()">➕ Afroshop hinzufügen</button>
-    <ng-container *ngIf="user$ | async as user">
-      <button class="settings-btn" (click)="openSettings()" *ngIf="isAdminUser(user)">⚙️</button>
-    </ng-container>
+  <button class="add-shop-btn" (click)="goToAddAfroshop()">➕ Afroshop hinzufügen</button>
+  <button class="settings-btn" (click)="openSettings()" *ngIf="isAdmin">⚙️</button>
   </div>
 </section>
 
@@ -31,7 +29,7 @@
           </button>
         </div>
       </div>
-  <div class="radius-info" *ngIf="userLocation && !selectedCity">
+  <div class="radius-info" *ngIf="userLocation || selectedCity">
         <div class="radius-indicator">
           🎯 Suche in 50km Umkreis
           <span *ngIf="selectedCity" class="city-name">um {{ getSelectedCityName() }}</span>

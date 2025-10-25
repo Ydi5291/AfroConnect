@@ -120,81 +120,31 @@ import { Component } from '@angular/core';
   `,
   styles: [`
     .legal-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: white;
-      min-height: 100vh;
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(49,130,206,0.08);
     }
-    
-    .legal-content {
-      line-height: 1.6;
-      color: #333;
-    }
-    
-    h1 {
-      color: #2c5530;
-      border-bottom: 2px solid #4CAF50;
-      padding-bottom: 0.5rem;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    h2 {
-      color: #2c5530;
-      margin-top: 2rem;
-      text-align: center;
-    }
-    h3 {
-      color: #4CAF50;
-      text-align: center;
+    h1, h2 {
+      color: #3182ce;
+      margin-bottom: 1rem;
     }
     .last-updated {
-      color: #666;
-      font-style: italic;
-      margin-bottom: 2rem;
-      text-align: center;
+      font-size: 0.98rem;
+      color: #4a5568;
+      margin-bottom: 1.5rem;
+    }
+    p, ul, li {
+      font-size: 1.08rem;
+      margin-bottom: 1rem;
+    }
+    ul {
+      padding-left: 1.2rem;
     }
     section {
       margin-bottom: 2rem;
-    }
-    ul {
-      margin-left: 1rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
-    .legal-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .legal-content {
-      width: 100%;
-      max-width: 800px;
-    }
-    @media (max-width: 600px) {
-      .legal-container {
-        padding: 0.5rem;
-        min-height: 90vh;
-      }
-      h1 {
-        font-size: 1.3rem;
-        margin-bottom: 1rem;
-      }
-      h2 {
-        font-size: 1.05rem;
-        margin-top: 1.2rem;
-      }
-      h3 {
-        font-size: 1rem;
-      }
-      .legal-content {
-        padding: 0.2rem;
-      }
-      section {
-        margin-bottom: 1.2rem;
-      }
     }
   `]
 })

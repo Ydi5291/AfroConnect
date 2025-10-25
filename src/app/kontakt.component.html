@@ -1,0 +1,31 @@
+<div class="kontakt-container">
+  <h1>Kontakt</h1>
+  <p>Du hast Fragen, Feedback oder möchtest mitmachen? Schreib uns direkt über das Formular!</p>
+  <form *ngIf="!submitted" (ngSubmit)="submitForm()" #kontaktForm="ngForm">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" name="name" [(ngModel)]="name" required class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="email">E-Mail</label>
+      <input id="email" name="email" [(ngModel)]="email" required type="email" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="message">Nachricht</label>
+      <textarea id="message" name="message" [(ngModel)]="message" required rows="5" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="submit-btn">Absenden</button>
+  </form>
+  <div *ngIf="submitted" class="success-message">
+    <h2>Danke für deine Nachricht!</h2>
+    <p>Wir melden uns so schnell wie möglich bei dir.</p>
+  </div>
+  <div class="kontakt-suggestions">
+    <h3>Weitere Kontaktmöglichkeiten</h3>
+    <ul>
+  <li>E-Mail: <a href="mailto:lamaid0502&#64;gmail.com">lamaid0502&#64;gmail.com</a></li>
+  <li>Instagram: <a href="https://instagram.com/afroconnect.de" target="_blank">&#64;afroconnect.de</a></li>
+  <li>WhatsApp: <a href="https://wa.me/4917841223151" target="_blank">+49 178 41223151</a></li>
+    </ul>
+  </div>
+</div>

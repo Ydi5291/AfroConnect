@@ -1,0 +1,16 @@
+.hilfe-section {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+h1 {
+  color: #3182ce;
+  margin-bottom: 1rem;
+}
+p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}

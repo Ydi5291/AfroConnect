@@ -24,7 +24,8 @@ export class AdminSecurityService {
     }
 
     // En développement uniquement
-    const adminEmails = environment.adminConfig?.adminEmails || [];
+  // Utiliser Firestore pour la vérification admin, ne pas utiliser adminConfig
+  const adminEmails: string[] = [];
     return adminEmails.includes(user.email);
   }
 

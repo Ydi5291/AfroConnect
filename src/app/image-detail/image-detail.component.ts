@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AfroshopService, AfroshopData } from '../services/image.service';
+import { Title, Meta } from '@angular/platform-browser';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
 
@@ -22,7 +23,9 @@ export class ImageDetailComponent implements OnInit {
     private router: Router,
     private afroshopService: AfroshopService,
     private firebaseService: FirebaseAfroshopService,
-    private authService: AuthService
+    private authService: AuthService,
+    private title: Title,
+    private meta: Meta
   ) {}
 
   ngOnInit(): void {
@@ -31,24 +34,30 @@ export class ImageDetailComponent implements OnInit {
     if (id) {
       this.shopId = id; // Garder comme string
       console.log('🔍 Recherche Afroshop avec ID:', id);
-      
       // Charger depuis Firebase
       this.firebaseService.getAllAfroshops().subscribe({
         next: (afroshops) => {
           console.log('🔍 Afroshops disponibles:', afroshops.map(a => `${a.id}: ${a.name}`));
-          
           // Recherche flexible (string ou number)
           this.afroshop = afroshops.find(shop => 
             shop.id === id || shop.id === +id || shop.id.toString() === id
           );
-          
           if (this.afroshop) {
             console.log('✅ Afroshop trouvé:', this.afroshop.name);
             console.log('🖼️ URL de l\'image:', this.afroshop.image);
             console.log('📦 Données complètes:', this.afroshop);
-            
-            // Parser les heures d'ouverture pour l'affichage formaté
+            // Parser les heures d\'ouverture pour l\'affichage formaté
             this.parseOpeningHours(this.afroshop.hours || '');
+
+            // SEO dynamique
+            this.title.setTitle(`${this.afroshop.name} | AfroConnect`);
+            this.meta.updateTag({ name: 'description', content: this.afroshop.description || '' });
+            this.meta.updateTag({ name: 'keywords', content: `${this.afroshop.name}, ${this.afroshop.type}, ${this.afroshop.city}, AfroConnect` });
+            const africanProducts = 'Alloco, Kochbanane, ignam, fufu, manioc, feuilles de patate, feuilles de manioc, okra, gombo, attiéké, poisson fumé, épices africaines, plantain, couscous de maïs, arachide, huile de palme, bissap, gingembre, ndolé, mafé, yassa, poulet DG, sauce graine, sauce feuille, sauce arachide, kédjénou, gari, tapioca, bouillon cube, piment africain';
+            this.meta.updateTag({ name: 'keywords', content: `${this.afroshop.name}, ${this.afroshop.type}, ${this.afroshop.city}, AfroConnect, ${africanProducts}` });
+            this.meta.updateTag({ property: 'og:title', content: `${this.afroshop.name} | AfroConnect` });
+            this.meta.updateTag({ property: 'og:description', content: this.afroshop.description || '' });
+            this.meta.updateTag({ property: 'og:image', content: this.afroshop.image || '' });
           } else {
             console.log('❌ Afroshop non trouvé avec ID:', id);
             console.log('❌ Types des IDs:', afroshops.map(a => `${a.id} (${typeof a.id})`));
@@ -59,6 +68,17 @@ export class ImageDetailComponent implements OnInit {
           // Fallback vers les données locales
           const numId = +id;
           this.afroshop = this.afroshopService.getAfroshopById(numId);
+          // SEO dynamique fallback
+          if (this.afroshop) {
+            this.title.setTitle(`${this.afroshop.name} | AfroConnect`);
+            this.meta.updateTag({ name: 'description', content: this.afroshop.description || '' });
+            this.meta.updateTag({ name: 'keywords', content: `${this.afroshop.name}, ${this.afroshop.type}, ${this.afroshop.city}, AfroConnect` });
+            const africanProducts = 'Alloco, Kochbanane, ignam, fufu, manioc, feuilles de patate, feuilles de manioc, okra, gombo, attiéké, poisson fumé, épices africaines, plantain, couscous de maïs, arachide, huile de palme, bissap, gingembre, ndolé, mafé, yassa, poulet DG, sauce graine, sauce feuille, sauce arachide, kédjénou, gari, tapioca, bouillon cube, piment africain';
+            this.meta.updateTag({ name: 'keywords', content: `${this.afroshop.name}, ${this.afroshop.type}, ${this.afroshop.city}, AfroConnect, ${africanProducts}` });
+            this.meta.updateTag({ property: 'og:title', content: `${this.afroshop.name} | AfroConnect` });
+            this.meta.updateTag({ property: 'og:description', content: this.afroshop.description || '' });
+            this.meta.updateTag({ property: 'og:image', content: this.afroshop.image || '' });
+          }
         }
       });
     }

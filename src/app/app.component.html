@@ -4,6 +4,7 @@
   <!-- Header section -->
   <header class="app-header">
     <div class="header-content">
+      <app-burger-menu></app-burger-menu>
       <div class="header-left">
         <a routerLink="/" class="logo-link">
       <h1><span class="rotating-globe">🌍</span> AfroConnect</h1>
@@ -29,9 +30,12 @@
     </div>
   </header>
 
+
   <!-- Main content - Ici s'afficheront les différentes pages -->
   <main class="app-main">
     <router-outlet></router-outlet>
+  <!-- Chatbot intégré sur mobile, uniquement sur la page Hilfe -->
+  <app-chatbot *ngIf="isMobile && isHilfePage"></app-chatbot>
   </main>
 
   <!-- Footer -->
@@ -53,6 +57,10 @@
   </footer>
 
   <!-- Cookie Consent Banner -->
+
+
+  <!-- Chatbot flottant (desktop/tablette) -->
+  <app-chatbot *ngIf="!isMobile"></app-chatbot>
   <app-cookie-consent></app-cookie-consent>
 
 </div>

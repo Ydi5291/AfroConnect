@@ -36,27 +36,27 @@ export class AdminComponent {
     private adminSecurity: AdminSecurityService,
     private router: Router
   ) {
-    // Vérifier si l'utilisateur est connecté ET s'il est admin
-    this.authService.user$.subscribe(user => {
+    // Vérifier si l'utilisateur est connecté ET s'il est admin (par UID Firestore)
+    this.authService.user$.subscribe(async user => {
       if (!user) {
         this.router.navigate(['/login']);
         return;
       }
-      
-      // 🔐 Vérification des droits admin avec le service sécurisé
-      this.checkAdminAccess(user);
+      // Vérification admin par UID Firestore (comme le guard)
+      const { doc, getDoc } = await import('@angular/fire/firestore');
+      const firestore = (this.firebaseAfroshopService as any).firestore || (window as any).firestore;
+      const adminDocRef = doc(firestore, 'roles/admins');
+      const adminDocSnap = await getDoc(adminDocRef);
+      const adminDoc = adminDocSnap.data() as { uids: string[] } | undefined;
+      this.isAuthenticated = adminDoc?.uids?.includes(user.uid) ?? false;
+      if (!this.isAuthenticated) {
+        console.warn('🚫 Accès admin refusé: UID non autorisé');
+        this.router.navigate(['/gallery']);
+      }
     });
   }
 
-  private checkAdminAccess(user: any) {
-    // 🔐 Utilisation du service de sécurité
-    this.isAuthenticated = this.adminSecurity.isAdminUser(user);
-    
-    if (!this.isAuthenticated) {
-      console.warn('🚫 Accès admin refusé:', this.adminSecurity.getSecurityMessage());
-      this.router.navigate(['/gallery']);
-    }
-  }
+  // Suppression de checkAdminAccess : la vérification se fait désormais par UID Firestore
 
   async seedDatabase(): Promise<void> {
     if (!this.isAuthenticated) {

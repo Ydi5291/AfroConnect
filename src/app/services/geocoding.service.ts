@@ -98,7 +98,7 @@ export class GeocodingService {
   }
 
   // Clé API Google Maps - À configurer avec une vraie clé
-  private readonly GOOGLE_MAPS_API_KEY = environment.googleMapsApiKey;
+  private readonly GOOGLE_MAPS_API_KEY = environment.firebase.apiKey;
   private readonly GEOCODING_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 
   // Fallback : coordonnées des principales villes allemandes

@@ -1,0 +1,21 @@
+<div class="burger-menu-container">
+    <button class="burger-icon" (click)="toggleMenu()" aria-label="Menü öffnen">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="menu-overlay" *ngIf="menuOpen" (click)="closeMenu()"></div>
+    <nav class="menu-panel" *ngIf="menuOpen">
+        <button class="close-menu" (click)="closeMenu()">×</button>
+        <ul>
+            <li><a routerLink="/about" (click)="closeMenu()">Über uns</a></li>
+            <li><a routerLink="/add-afroshop" (click)="closeMenu()">Afroshop hinzufügen</a></li>
+               <li><a routerLink="/kontakt" (click)="closeMenu()">Kontakt</a></li>
+                <li><a routerLink="/impressum" (click)="closeMenu()">Impressum</a></li>
+                <li><a routerLink="/terms" (click)="closeMenu()">AGB</a></li>
+                <li><a routerLink="/privacy" (click)="closeMenu()">Datenschutz</a></li>
+                <li><a routerLink="/hilfe" (click)="closeMenu()">Hilfe</a></li>
+
+        </ul>
+    </nav>
+</div>

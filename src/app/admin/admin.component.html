@@ -5,10 +5,10 @@
   </div>
 
   <div class="admin-panel" *ngIf="isAuthenticated">
+      <h1>Admin works!</h1>
     <div class="seeding-section">
       <div class="section-header">
         <h2>🌱 Peuplement de la base de données</h2>
-        <p>Ajouter des Afroshops dans toute l'Allemagne pour donner vie à l'application</p>
       </div>
 
       <div class="data-info">
@@ -23,14 +23,6 @@
       </div>
 
       <div class="action-section">
-        <!-- Bouton de peuplement -->
-        <button 
-          (click)="seedDatabase()" 
-          [disabled]="isSeeding || isCleaning"
-          class="seed-btn">
-          <span *ngIf="!isSeeding">🚀 Datenbank mit Afroshops füllen</span>
-          <span *ngIf="isSeeding">⏳ Import läuft...</span>
-        </button>
 
         <!-- Bouton de nettoyage -->
         <button 
