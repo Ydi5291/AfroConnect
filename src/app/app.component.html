@@ -34,8 +34,12 @@
   <!-- Main content - Ici s'afficheront les différentes pages -->
   <main class="app-main">
     <router-outlet></router-outlet>
-  <!-- Chatbot intégré sur mobile, uniquement sur la page Hilfe -->
-  <app-chatbot *ngIf="isMobile && isHilfePage"></app-chatbot>
+  <!-- Chatbot flottant sur mobile uniquement sur la page Hilfe, contrôlable par l'utilisateur -->
+  <!-- Sur mobile, le composant chatbot est toujours monté sur la page Hilfe, le bouton/bulle sont contrôlés par showChat -->
+  <!-- Le composant chatbot est toujours monté sur desktop, tablette ET sur mobile (page Hilfe), bouton flottant visible partout -->
+  <ng-container *ngIf="!isMobile || (isMobile && isHilfePage)">
+    <app-chatbot></app-chatbot>
+  </ng-container>
   </main>
 
   <!-- Footer -->
@@ -51,7 +55,7 @@
         <span class="footer-separator">|</span>
         <a routerLink="/impressum" class="footer-link">Impressum</a>
         <span class="footer-separator">|</span>
-        <a href="mailto:lamaid0502@gmail.com" class="footer-link">Kontakt</a>
+  <a routerLink="/kontakt" class="footer-link">Kontakt</a>
       </div>
     </div>
   </footer>
@@ -59,8 +63,8 @@
   <!-- Cookie Consent Banner -->
 
 
-  <!-- Chatbot flottant (desktop/tablette) -->
-  <app-chatbot *ngIf="!isMobile"></app-chatbot>
+  <!-- Chatbot flottant (desktop/tablette uniquement) -->
+  <!-- (supprimé, déjà géré plus haut) -->
   <app-cookie-consent></app-cookie-consent>
 
 </div>

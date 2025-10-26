@@ -47,7 +47,7 @@
   color: #3182ce;
 }
 .chatbot-messages {
-  max-height: 200px;
+  max-height: 260px;
   overflow-y: auto;
   margin-bottom: 0.9rem;
 }
@@ -78,22 +78,4 @@
   font-size: 1rem;
   box-shadow: 0 2px 8px rgba(49,130,206,0.08);
 }
-.chatbot-bubble.mobile {
-  display: none;
-}
-.chatbot-mobile {
-  width: 100%;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  padding: 1rem;
-  margin: 1rem 0;
-}
-@media (max-width: 600px) {
-  .chatbot-bubble {
-    display: none;
-  }
-  .chatbot-mobile {
-    display: block;
-  }
-}
+

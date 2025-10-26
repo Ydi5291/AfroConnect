@@ -1,25 +1,17 @@
-<button *ngIf="!showChat && !isMobile" class="chatbot-float-btn" (click)="toggleChat()">💬 Diamal</button>
+
+<!-- Bouton flottant pour ouvrir le bot partout -->
+<button *ngIf="!showChat" class="chatbot-float-btn" (click)="toggleChat()">💬 Diamal</button>
+
+<!-- Bulle du bot, mobile et desktop -->
 <div *ngIf="showChat" class="chatbot-bubble" [class.mobile]="isMobile">
   <div class="chatbot-header">
     <span>🤖 Diamal</span>
-    <button *ngIf="!isMobile" class="close-btn" (click)="toggleChat()">×</button>
+    <button class="close-btn" (click)="toggleChat()">×</button>
   </div>
   <div class="chatbot-messages">
     <div *ngFor="let msg of messages" [class.user]="msg.from === 'user'" [class.bot]="msg.from === 'bot'">
-      {{ msg.text }}
-    </div>
-    <div #messagesEnd></div>
-  </div>
-  <div class="chatbot-topics" *ngIf="!isMobile">
-    <button *ngFor="let topic of topics" (click)="selectTopic(topic)">{{ topic }}</button>
-  </div>
-</div>
-<!-- Auf Mobilgeräten erscheint Diamal in der Hilfe-Seite -->
-<div *ngIf="isMobile" class="chatbot-mobile">
-  <h2>🤖 Diamal</h2>
-  <div class="chatbot-messages">
-    <div *ngFor="let msg of messages" [class.user]="msg.from === 'user'" [class.bot]="msg.from === 'bot'">
-      {{ msg.text }}
+      <span *ngIf="!msg.isHtml">{{ msg.text }}</span>
+      <span *ngIf="msg.isHtml" [innerHTML]="msg.text"></span>
     </div>
     <div #messagesEnd></div>
   </div>
