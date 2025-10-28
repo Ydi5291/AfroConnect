@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAVTCyd8uLieVgnMHEygb5mm1xQKcjiOVk",
+  apiKey: "NG_APP_FIREBASE_API_KEY",
   authDomain: "afroconnect-a53a5.firebaseapp.com",
   projectId: "afroconnect-a53a5",
   storageBucket: "afroconnect-a53a5.appspot.com",
