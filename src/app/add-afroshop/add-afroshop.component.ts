@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,26 +15,22 @@ import { GeocodingService, GeocodeResult } from '../services/geocoding.service';
   templateUrl: './add-afroshop.component.html',
   styleUrl: './add-afroshop.component.css'
 })
-export class AddAfroshopComponent implements OnInit {
+export class AddAfroshopComponent {
   geocodingWarning: string = '';
   // Initialise Google Maps Autocomplete sur le champ de rue
   initStreetAutocomplete(inputElement: HTMLInputElement): void {
-    // Charger le script Google Maps dynamiquement avec la clé API de l'environnement
-    const apiKey = this.geocodingService['GOOGLE_MAPS_API_KEY'];
-    if (!(window as any).google || !(window as any).google.maps) {
-      if (!document.getElementById('google-maps-script')) {
-        const script = document.createElement('script');
-        script.id = 'google-maps-script';
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-        script.onload = () => this.setupAutocomplete(inputElement);
-        document.body.appendChild(script);
-      } else {
-        document.getElementById('google-maps-script')!.addEventListener('load', () => this.setupAutocomplete(inputElement));
-      }
-    } else {
+    // Le script Google Maps est maintenant chargé dans index.html en mode async
+    // On attend simplement qu'il soit disponible
+    if ((window as any).google && (window as any).google.maps) {
       this.setupAutocomplete(inputElement);
+    } else {
+      // Si Google Maps n'est pas encore chargé, attendre et réessayer
+      const interval = setInterval(() => {
+        if ((window as any).google && (window as any).google.maps) {
+          clearInterval(interval);
+          this.setupAutocomplete(inputElement);
+        }
+      }, 300);
     }
   }
 
@@ -48,7 +44,7 @@ export class AddAfroshopComponent implements OnInit {
       autocomplete.addListener('place_changed', () => {
         const place = autocomplete.getPlace();
         if (place && place.address_components) {
-          // Remplir les champs à partir du résultat Google
+          // Remplir les champs à partir du résultat Google UNIQUEMENT si l'utilisateur sélectionne une suggestion
           let street = '';
           let city = '';
           let plz = '';
@@ -58,9 +54,12 @@ export class AddAfroshopComponent implements OnInit {
             if (comp.types.includes('locality')) city = comp.long_name;
             if (comp.types.includes('postal_code')) plz = comp.long_name;
           }
-          this.afroshop.street = street.trim();
-          this.afroshop.city = city;
-          this.afroshop.plz = plz;
+          // Ne pas écraser la saisie manuelle si le résultat est vide ou anormal
+          if (street.trim() && street.trim() !== '!') {
+            this.afroshop.street = street.trim();
+          }
+          if (city) this.afroshop.city = city;
+          if (plz) this.afroshop.plz = plz;
         }
       });
     }
@@ -417,6 +416,12 @@ export class AddAfroshopComponent implements OnInit {
 
       const city = this.extractCityFromAddress(this.afroshop.address);
 
+      // Log complet avant enregistrement
+      console.log('📝 Données soumises:', JSON.stringify(this.afroshop));
+      console.log('🗺️ Coordonnées:', this.afroshop.coordinates);
+      console.log('🏙️ Ville extraite:', city);
+      console.log('🛣️ Adresse:', this.afroshop.address);
+
       if (this.isEditMode && this.editingId) {
         // Mode édition : mettre à jour l'Afroshop existant
         const updateData = {
@@ -426,7 +431,7 @@ export class AddAfroshopComponent implements OnInit {
           updatedByName: currentUser.displayName || currentUser.email,
           updatedAt: new Date()
         };
-
+        console.log('🔄 Mise à jour Afroshop:', updateData);
         await this.firebaseService.updateAfroshop(this.editingId, updateData);
         this.successMessage = '✅ Afroshop erfolgreich aktualisiert!';
       } else {
@@ -439,15 +444,17 @@ export class AddAfroshopComponent implements OnInit {
           createdByName: currentUser.displayName || currentUser.email,
           createdAt: new Date()
         };
-
+        console.log('➕ Création Afroshop:', newAfroshop);
         const docId = await this.firebaseService.addAfroshop(newAfroshop);
         this.successMessage = '✅ Afroshop erfolgreich hinzugefügt! ID: ' + docId;
       }
 
       this.resetForm();
 
+      // Log avant routage
+      console.log('🔀 Navigation vers la galerie...');
       setTimeout(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/gallery']);
       }, 2000);
 
     } catch (error) {
@@ -505,6 +512,12 @@ export class AddAfroshopComponent implements OnInit {
 
   // Méthode appelée quand l'utilisateur modifie l'adresse
   onAddressChange(): void {
+  // Log chaque modification du champ Rue
+  console.log('📝 Saisie Rue:', this.afroshop.street);
+    // Protection contre la saisie anormale
+    if (this.afroshop.street === '!') {
+      this.afroshop.street = '';
+    }
     // Débouncer les appels pour éviter trop de requêtes
     if (this.geocodeTimeout) {
       clearTimeout(this.geocodeTimeout);
@@ -518,9 +531,50 @@ export class AddAfroshopComponent implements OnInit {
   private geocodeTimeout: any = null;
 
   private setCoordinatesFromAddress(): void {
-    // Assembler l'adresse complète à partir des champs séparés
-    const fullAddress = `${this.afroshop.street || ''}, ${this.afroshop.plz || ''} ${this.afroshop.city || ''}`.trim();
-    this.afroshop.address = fullAddress;
+  // Formatage de l'adresse : '[rue] [numéro], [PLZ] [ville]'
+  let street = this.afroshop.street ? this.afroshop.street.trim() : '';
+  let plz = this.afroshop.plz ? this.afroshop.plz.trim() : '';
+  let city = this.afroshop.city ? this.afroshop.city.trim() : '';
+
+  // Validation stricte : ne pas géocoder si la rue est vide ou trop courte
+  if (!street || street.length < 3) {
+    this.geocodingWarning = 'Bitte geben Sie eine gültige Straße ein (mindestens 3 Zeichen).';
+    console.warn('❌ Straße zu kurz oder leer, Geocodierung abgebrochen.');
+    return;
+  }
+
+  // Correction : ajouter un espace entre le nom de rue et le numéro si collés
+  street = street.replace(/([a-zA-ZäöüÄÖÜß]+)(\d+)/, '$1 $2');
+
+  // Correction automatique des abréviations courantes
+  street = street.replace(/\bStr\.?\b/g, 'Straße');
+  street = street.replace(/\bPl\.?\b/g, 'Platz');
+  street = street.replace(/\bDr\.?\b/g, 'Doktor');
+
+  // Normalisation de la casse (majuscules)
+  street = street.replace(/\b([a-zäöüßéèàâêîôûç])([a-zäöüßéèàâêîôûç]*)/gi, (match, first, rest) => first.toUpperCase() + rest.toLowerCase());
+  city = city.replace(/\b([a-zäöüßéèàâêîôûç])([a-zäöüßéèàâêîôûç]*)/gi, (match, first, rest) => first.toUpperCase() + rest.toLowerCase());
+
+  // Remplacement des caractères spéciaux
+  street = street.replace(/ß/g, 'ss')
+    .replace(/[éèêë]/gi, 'e')
+    .replace(/[áàâä]/gi, 'a')
+    .replace(/[íìîï]/gi, 'i')
+    .replace(/[óòôö]/gi, 'o')
+    .replace(/[úùûü]/gi, 'u')
+    .replace(/ç/gi, 'c');
+  city = city.replace(/ß/g, 'ss')
+    .replace(/[éèêë]/gi, 'e')
+    .replace(/[áàâä]/gi, 'a')
+    .replace(/[íìîï]/gi, 'i')
+    .replace(/[óòôö]/gi, 'o')
+    .replace(/[úùûü]/gi, 'u')
+    .replace(/ç/gi, 'c');
+
+  const fullAddress = `${street}, ${plz} ${city}`.trim();
+  this.afroshop.address = fullAddress;
+  // Log pour debug
+  console.log('🗺️ Adresse normalisée pour géocodage:', fullAddress);
 
     if (!fullAddress || fullAddress.length === 0) {
       console.log('❌ Adresse vide, impossible de géocoder');
@@ -542,7 +596,7 @@ export class AddAfroshopComponent implements OnInit {
       next: (result: GeocodeResult | null) => {
         this.isGeocoding = false;
         this.geocodingWarning = '';
-        if (result) {
+        if (result && result.lat && result.lng && (result.lat !== 0 || result.lng !== 0)) {
           this.afroshop.coordinates = {
             lat: result.lat,
             lng: result.lng
@@ -565,9 +619,36 @@ export class AddAfroshopComponent implements OnInit {
             this.afroshop.address = result.formatted_address;
           }
         } else {
-          console.warn('❌ Géocodage échoué pour:', this.afroshop.address);
-          this.geocodingWarning = 'Adresse non reconnue, veuillez vérifier.';
-          this.afroshop.coordinates = { lat: 0, lng: 0 };
+          // Fallback: essayer avec l'adresse brute (non normalisée)
+          console.warn('❌ Première tentative échouée, essai avec adresse brute:', this.afroshop.street, this.afroshop.plz, this.afroshop.city);
+          let rawAddress = `${this.afroshop.street}, ${this.afroshop.plz} ${this.afroshop.city}`.trim();
+          // Ajout du pays pour améliorer la reconnaissance
+          rawAddress += ', Deutschland';
+          this.geocodingService.geocodeAddress(rawAddress).subscribe({
+            next: (fallbackResult: GeocodeResult | null) => {
+              // Log de la réponse brute pour analyse
+              console.log('🗺️ Réponse brute API géocodage (fallback):', fallbackResult);
+              if (fallbackResult && fallbackResult.lat && fallbackResult.lng && (fallbackResult.lat !== 0 || fallbackResult.lng !== 0)) {
+                this.afroshop.coordinates = {
+                  lat: fallbackResult.lat,
+                  lng: fallbackResult.lng
+                };
+                console.log('✅ Coordonnées trouvées (fallback):', fallbackResult);
+                if (fallbackResult.formatted_address && fallbackResult.accuracy !== 'APPROXIMATE') {
+                  this.afroshop.address = fallbackResult.formatted_address;
+                }
+              } else {
+                this.afroshop.coordinates = { lat: 0, lng: 0 };
+                console.log('❌ Coordonnées invalides après fallback:', fallbackResult);
+                this.geocodingWarning = 'Adresse non reconnue, veuillez vérifier.';
+              }
+            },
+            error: (error) => {
+              this.afroshop.coordinates = { lat: 0, lng: 0 };
+              this.geocodingWarning = 'Erreur lors du géocodage.';
+              console.error('❌ Erreur lors du géocodage (fallback):', error);
+            }
+          });
         }
       },
       error: (error) => {

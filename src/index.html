@@ -17,7 +17,11 @@
     gtag('js', new Date());
     gtag('config', 'G-4VZ4WFYE9M', { 'anonymize_ip': true });
   </script>
-  <!-- Google Maps API - Clé API injectée dynamiquement par Angular -->
+  <!-- Google Maps API - Chargement asynchrone officiel -->
+  <script
+    async
+    src="https://maps.googleapis.com/maps/api/js?key=TA_CLE_API&libraries=places&loading=async"
+  ></script>
 </head>
 <body>
   <app-root></app-root>
