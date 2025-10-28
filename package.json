@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "prebuild": "node prebuild.mjs",
+  "build": "npm run prebuild ; ng build",
     "start": "ng serve",
-    "build": "ng build",
     "build:prod": "ng build --configuration production --base-href /AfroConnect/",
     "build:vercel": "ng build --configuration production --base-href /",
     "build:ghpages": "ng build --configuration production --base-href /AfroConnect/",
@@ -40,13 +41,15 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.2.5",
+    "@angular-devkit/build-angular": "^19.0.7",
     "@angular/cli": "^19.2.18",
     "@angular/compiler-cli": "^19.2.0",
+    "@ngx-env/builder": "^20.1.1",
     "@types/express": "^4.17.17",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
     "angular-cli-ghpages": "^2.0.3",
+    "dotenv": "^17.2.3",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
