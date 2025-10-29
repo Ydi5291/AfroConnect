@@ -6,7 +6,7 @@
     "prebuild": "node prebuild.mjs",
   "build": "npm run prebuild ; ng build",
     "start": "ng serve",
-    "build:prod": "ng build --configuration production --base-href /AfroConnect/",
+    "build:prod": "node prebuild-prod.mjs ; ng build --configuration production --base-href /AfroConnect/",
     "build:vercel": "ng build --configuration production --base-href /",
     "build:ghpages": "ng build --configuration production --base-href /AfroConnect/",
     "deploy:ghpages": "npm run build:ghpages && npx angular-cli-ghpages --dir=dist/first-angular-project/browser",

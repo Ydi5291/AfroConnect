@@ -54,6 +54,8 @@ Thumbs.db
 /src/environments/environment.local.ts
 /src/environments/environment.secret.ts
 /src/environments/*.secret.ts
+/src/environments/environment.ts
+/src/environments/environment.prod.ts
 
 # 🔒 Clés et certificats
 *.key

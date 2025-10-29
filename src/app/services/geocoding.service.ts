@@ -79,6 +79,7 @@ export class GeocodingService {
     };
     return this.http.get<any[]>(NOMINATIM_URL, { params }).pipe(
       map(results => {
+        console.log('🗺️ Réponse brute Nominatim:', results);
         if (results && results.length > 0) {
           const result = results[0];
           return {

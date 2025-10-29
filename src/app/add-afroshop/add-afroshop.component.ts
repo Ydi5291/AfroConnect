@@ -36,15 +36,19 @@ export class AddAfroshopComponent {
 
   // Configure l'autocomplete Google Maps sur l'input
   setupAutocomplete(inputElement: HTMLInputElement): void {
-    if ((window as any).google && (window as any).google.maps) {
-      const autocomplete = new (window as any).google.maps.places.Autocomplete(inputElement, {
-        types: ['address'],
-        componentRestrictions: { country: 'de' }
-      });
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
+    if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places.PlaceAutocompleteElement) {
+      // Crée dynamiquement l'élément PlaceAutocompleteElement
+      const placeAutocompleteEl = document.createElement('gmp-place-autocomplete');
+      placeAutocompleteEl.setAttribute('componentRestrictions', JSON.stringify({ country: 'DE' }));
+      placeAutocompleteEl.setAttribute('fields', 'address_components,formatted_address');
+      placeAutocompleteEl.setAttribute('placeholder', inputElement.placeholder || 'Adresse');
+      placeAutocompleteEl.setAttribute('inputMode', 'search');
+      // Remplace l'input existant par le nouvel élément
+      inputElement.parentNode?.replaceChild(placeAutocompleteEl, inputElement);
+      // Écoute l'événement de sélection
+      placeAutocompleteEl.addEventListener('gmp-place-autocomplete:place_changed', (event: any) => {
+        const place = event.detail;
         if (place && place.address_components) {
-          // Remplir les champs à partir du résultat Google UNIQUEMENT si l'utilisateur sélectionne une suggestion
           let street = '';
           let city = '';
           let plz = '';
@@ -54,8 +58,7 @@ export class AddAfroshopComponent {
             if (comp.types.includes('locality')) city = comp.long_name;
             if (comp.types.includes('postal_code')) plz = comp.long_name;
           }
-          // Ne pas écraser la saisie manuelle si le résultat est vide ou anormal
-          if (street.trim() && street.trim() !== '!') {
+          if (street.trim() && !/^!+$/.test(street.trim())) {
             this.afroshop.street = street.trim();
           }
           if (city) this.afroshop.city = city;
@@ -513,10 +516,14 @@ export class AddAfroshopComponent {
   // Méthode appelée quand l'utilisateur modifie l'adresse
   onAddressChange(): void {
   // Log chaque modification du champ Rue
-  console.log('📝 Saisie Rue:', this.afroshop.street);
-    // Protection contre la saisie anormale
-    if (this.afroshop.street === '!') {
-      this.afroshop.street = '';
+  console.log('📝 Straßeneingabe:', this.afroshop.street);
+    // Protection contre la saisie anormale uniquement si la valeur est exactement "!" et que ce n'est pas une saisie manuelle
+    // On ne modifie pas la valeur pendant la saisie pour ne pas bloquer le curseur
+    // Si besoin, on peut afficher un warning au lieu de vider le champ
+    if (/^!+$/.test(this.afroshop.street)) {
+      this.geocodingWarning = 'Ungültige Eingabe: Bitte geben Sie eine gültige Straße ein.';
+      // Ne pas modifier la valeur du champ
+      return;
     }
     // Débouncer les appels pour éviter trop de requêtes
     if (this.geocodeTimeout) {
