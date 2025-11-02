@@ -36,6 +36,11 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(() => {
       this.isHilfePage = this.router.url === '/hilfe';
     });
+
+    // Log de la config Firebase utilisée
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const env = require('../environments/environment');
+    console.log('Firebase config utilisée:', env.environment.firebase);
   }
 
   ngOnInit() {}

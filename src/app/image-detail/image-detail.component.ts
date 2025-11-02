@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AfroshopService, AfroshopData } from '../services/image.service';
+import { FormsModule } from '@angular/forms';
+import { AfroshopService, AfroshopData, Product } from '../services/image.service';
 import { Title, Meta } from '@angular/platform-browser';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
@@ -9,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-image-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './image-detail.component.html',
   styleUrl: './image-detail.component.css'
 })
@@ -17,6 +18,14 @@ export class ImageDetailComponent implements OnInit {
   afroshop: AfroshopData | undefined;
   shopId: string | number = '';
   formattedHours: Array<{day: string, hours: string, isOpen: boolean}> = [];
+
+  cart: Product[] = [];
+  newProduct: Product = { id: '', name: '', price: 0, image: '' };
+  isAdmin: boolean = false;
+
+  // Ajout des propriétés pour l'upload d'image produit
+  productImagePreview: string | null = null;
+  productImageFile: File | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,6 +36,11 @@ export class ImageDetailComponent implements OnInit {
     private title: Title,
     private meta: Meta
   ) {}
+
+  editProducts() {
+    // Naviguer vers la page d’ajout de produit pour ce commerce
+    this.router?.navigate(['/add-product'], { queryParams: { afroshopId: this.shopId } });
+  }
 
   ngOnInit(): void {
     // Récupérer l'ID depuis l'URL
@@ -82,6 +96,18 @@ export class ImageDetailComponent implements OnInit {
         }
       });
     }
+
+    // Vérification admin (à adapter selon ta logique)
+
+    // Exemple de récupération du statut admin via Firestore
+    this.authService.user$.subscribe(user => {
+      if (user?.uid && this.afroshop) {
+        // Propriétaire du commerce
+        this.isAdmin = user.uid === (this.afroshop as any).createdBy;
+      } else {
+        this.isAdmin = false;
+      }
+    });
   }
 
   // Retour à la galerie
@@ -141,7 +167,6 @@ export class ImageDetailComponent implements OnInit {
     
     console.log('🔍 Debug canEdit:');
     console.log('  - User connecté:', currentUser?.uid);
-    console.log('  - User email:', currentUser?.email);
     console.log('  - Afroshop:', this.afroshop);
     console.log('  - CreatedBy:', (this.afroshop as any)?.createdBy);
     
@@ -245,6 +270,42 @@ export class ImageDetailComponent implements OnInit {
   editAfroshop(): void {
     if (this.canEdit()) {
       this.router.navigate(['/edit-afroshop', this.shopId]);
+    }
+  }
+
+  addToCart(product: Product): void {
+    this.cart.push(product);
+  }
+
+  removeFromCart(productId: string): void {
+    this.cart = this.cart.filter(p => p.id !== productId);
+  }
+
+  addProduct(): void {
+    if (!this.afroshop) return;
+    if (!this.afroshop.products) this.afroshop.products = [];
+    const prod = { ...this.newProduct, id: Date.now().toString() };
+    this.afroshop.products.push(prod);
+    this.newProduct = { id: '', name: '', price: 0, image: '' };
+  }
+
+  async onProductImageSelected(event: any): Promise<void> {
+    const file = event.target.files[0];
+    if (!file) return;
+    // Preview
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.productImagePreview = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    this.productImageFile = file;
+    // Upload
+    try {
+      // Utilise le service FirebaseAfroshopService pour uploader
+      const url = await this.firebaseService.uploadImage(file);
+      this.newProduct.image = url;
+    } catch (error) {
+      console.error('Erreur upload image produit:', error);
     }
   }
 }

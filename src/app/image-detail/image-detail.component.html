@@ -101,7 +101,26 @@
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Section produits -->
+  <div class="products-section" *ngIf="afroshop?.products?.length">
+    <h2>Produits</h2>
+    <div class="product-list">
+      <div class="product-card" *ngFor="let product of afroshop.products">
+        <img [src]="product.image" [alt]="product.name" class="product-image" />
+        <div class="product-info">
+          <span class="product-name">{{ product.name }}</span>
+          <span class="product-price">{{ product.price | currency:'EUR' }}</span>
+          <button (click)="addToCart(product)">Ajouter au panier</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <!-- Bearbeiten-Button für Produkte (nur für Ersteller sichtbar) -->
+<button *ngIf="canEdit()" class="edit-button" (click)="editProducts()" title="Produkte bearbeiten">
+  ✏️ Produkte bearbeiten
+</button>
 
 <div class="error-container" *ngIf="!afroshop">
   <h2>❌ Geschäft nicht gefunden</h2>

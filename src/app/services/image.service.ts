@@ -1,4 +1,12 @@
+
 import { Injectable } from '@angular/core';
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+}
 
 export interface AfroshopData {
   id: number | string; // Support pour Firebase (string) et données locales (number)
@@ -21,6 +29,7 @@ export interface AfroshopData {
   hours: string;
   website?: string; // Site web optionnel
   distance?: number; // Sera calculée dynamiquement
+  products?: Product[]; // Liste des produits du commerce
 }
 
 @Injectable({
@@ -38,10 +47,11 @@ export class AfroshopService {
       phone: '+49 30 12345678',
       description: 'Authentisches Restaurant mit westafrikanischen Spezialitäten. Warme Atmosphäre und traditionelle Gerichte mit Liebe zubereitet. Spezialitäten: Jollof Rice, Poulet Yassa, Attiéké.',
       rating: 4.5,
-      image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop',
-      cuisine: 'Westafrikanische',
-      priceLevel: 2,
-      hours: 'Mo-So: 12:00-22:00'
+  image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop',
+  cuisine: 'Westafrikanische',
+  priceLevel: 2,
+  hours: 'Mo-So: 12:00-22:00',
+  products: []
     },
 
     // DORTMUND - Afroshops
@@ -54,10 +64,11 @@ export class AfroshopService {
       phone: '+49 231 567890',
       description: 'Das beste afrikanische Restaurant im Herzen von Dortmund. Bekannt für authentische nigerianische und ghanaische Küche.',
       rating: 4.7,
-      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop',
-      cuisine: 'Westafrikanische',
-      priceLevel: 2,
-      hours: 'Di-So: 17:00-23:00'
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop',
+    cuisine: 'Westafrikanische',
+    priceLevel: 2,
+    hours: 'Di-So: 17:00-23:00',
+    products: []
     },
     {
       id: 8,
@@ -68,9 +79,10 @@ export class AfroshopService {
       phone: '+49 231 445566',
       description: 'Größter afrikanischer Supermarkt in Dortmund. Frische Produkte, Gewürze und Spezialitäten aus ganz Afrika.',
       rating: 4.3,
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
-      priceLevel: 1,
-      hours: 'Mo-Sa: 09:00-20:00'
+    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
+    priceLevel: 1,
+    hours: 'Mo-Sa: 09:00-20:00',
+    products: []
     },
     {
       id: 9,
@@ -81,9 +93,10 @@ export class AfroshopService {
       phone: '+49 231 778899',
       description: 'Spezialisiert auf afrikanische Frisuren, Braiding und Extensions. Erfahrene Stylisten aus ganz Afrika.',
       rating: 4.6,
-      image: 'https://images.unsplash.com/photo-1562322140-8198e5d5067e?w=800&h=600&fit=crop',
-      priceLevel: 2,
-      hours: 'Mo-Sa: 10:00-19:00'
+    image: 'https://images.unsplash.com/photo-1562322140-8198e5d5067e?w=800&h=600&fit=crop',
+    priceLevel: 2,
+    hours: 'Mo-Sa: 10:00-19:00',
+    products: []
     },
 
     // HAMBURG - Afroshops
@@ -96,10 +109,11 @@ export class AfroshopService {
       phone: '+49 40 334455',
       description: 'Ostafriikanisches Restaurant mit Swahili-Küche. Authentische Gerichte aus Tansania und Kenia.',
       rating: 4.4,
-      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop',
-      cuisine: 'Ostafrikanische',
-      priceLevel: 3,
-      hours: 'Mi-So: 18:00-23:00'
+    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop',
+    cuisine: 'Ostafrikanische',
+    priceLevel: 3,
+    hours: 'Mi-So: 18:00-23:00',
+    products: []
     },
     {
       id: 11,
@@ -110,9 +124,10 @@ export class AfroshopService {
       phone: '+49 40 667788',
       description: 'Afrikanische Lebensmittel und Produkte im Zentrum von Hamburg. Von Kochbananen bis Shea-Butter.',
       rating: 4.2,
-      image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop',
-      priceLevel: 2,
-      hours: 'Mo-Sa: 08:00-20:00'
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop',
+    priceLevel: 2,
+    hours: 'Mo-Sa: 08:00-20:00',
+    products: []
     },
 
     // KÖLN - Afroshops  
@@ -125,10 +140,11 @@ export class AfroshopService {
       phone: '+49 221 889900',
       description: 'Traditionelles senegalesisches Restaurant. Thieboudienne und Yassa-Spezialitäten in gemütlicher Atmosphäre.',
       rating: 4.8,
-      image: 'https://images.unsplash.com/photo-1493770348161-369560ae357d?w=800&h=600&fit=crop',
-      cuisine: 'Senegalesische',
-      priceLevel: 2,
-      hours: 'Do-Mo: 17:00-22:00'
+    image: 'https://images.unsplash.com/photo-1493770348161-369560ae357d?w=800&h=600&fit=crop',
+    cuisine: 'Senegalesische',
+    priceLevel: 2,
+    hours: 'Do-Mo: 17:00-22:00',
+    products: []
     },
     {
       id: 13,

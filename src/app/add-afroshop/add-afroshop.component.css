@@ -261,10 +261,43 @@
 
 .form-actions {
   display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 40px;
-  padding: 20px 0;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.form-actions:first-of-type {
+  justify-content: flex-start;
+}
+
+.form-actions + .form-actions {
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1.2rem;
+}
+
+.info-text {
+  width: 100%;
+  text-align: center;
+  font-size: 1.05em;
+  color: #1976d2;
+  background: #e3f2fd;
+  border-radius: 8px;
+  padding: 10px 18px;
+  margin-bottom: 0.7rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+}
+
+.form-actions .btn-success {
+  min-width: 200px;
+  font-size: 1.08em;
+  padding: 12px 28px;
+  border-radius: 8px;
+  margin: 0 auto;
+  display: block;
 }
 
 .btn {
@@ -768,4 +801,14 @@
   .afroshop-form {
     padding: var(--spacing-sm);
   }
+}
+
+/* Réduction de la taille des boutons principaux du formulaire d'ajout afroshop */
+.form-actions button.btn {
+  font-size: 0.95em;
+  padding: 6px 14px;
+  min-width: 0;
+  border-radius: 6px;
+  max-width: 180px;
+  white-space: nowrap;
 }

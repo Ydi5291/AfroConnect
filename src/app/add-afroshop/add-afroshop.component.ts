@@ -951,4 +951,9 @@ export class AddAfroshopComponent {
   getBusinessTypeName(type: AfroshopData['type']): string {
     return this.translationService.getBusinessTypeName(type);
   }
+
+  onAddProducts(): void {
+    // Redirige vers la page d'ajout de produit
+    this.router.navigate(['/add-product']);
+  }
 }

@@ -12,6 +12,7 @@ import { AdminComponent } from './admin/admin.component';
 import { GeocodingDiagnosticComponent } from './geocoding-diagnostic/geocoding-diagnostic.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { AddProductComponent } from './add-product/add-product.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/gallery', pathMatch: 'full' },
@@ -45,5 +46,10 @@ export const routes: Routes = [
   { path: 'privacy', component: PrivacyComponent },
   { path: 'terms', component: TermsComponent },
   { path: 'impressum', component: ImpressumComponent },
+  { 
+    path: 'add-product', 
+    component: AddProductComponent,
+    canActivate: [AuthGuard] // 🔒
+  },
   { path: '**', redirectTo: '/gallery' } 
 ];
