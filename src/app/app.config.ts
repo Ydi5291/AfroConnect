@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     // Firebase providers
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
+  provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage())
   ]

@@ -1,0 +1,66 @@
+<div class="shop-header-btns">
+	<button class="modern-btn" (click)="router.navigate(['/gallery'])">← Zurück zur Übersicht</button>
+	<button *ngIf="canEdit()" class="modern-btn primary" (click)="goToAddProduct()">➕ Produkte hinzufügen</button>
+	<button *ngIf="canEdit() && afroshop" class="modern-btn dashboard" (click)="goToDashboard(afroshop.id)">📊 Dashboard</button>
+<!-- Panier flottant global, hors du header pour éviter la superposition -->
+<div class="cart-float-global">
+	<button class="cart-float-btn" (click)="toggleCart()">
+		🛒
+		<span class="cart-count" *ngIf="getCartItemCount() > 0">{{ getCartItemCount() }}</span>
+	</button>
+</div>
+</div>
+
+<div class="cart-overlay" *ngIf="cartOpen">
+	<div class="cart-float-panel modern-cart">
+		<div class="cart-header">
+			<span class="cart-title">🛒 Mein Warenkorb</span>
+			<span class="cart-badge">{{ getCartItemCount() }}</span>
+		</div>
+		<ul class="cart-list">
+			<li *ngFor="let item of cartItems" class="cart-item">
+				<img [src]="item.product.image" [alt]="item.product.name" class="cart-item-img" />
+				<div class="cart-item-info">
+					<span class="cart-item-name">{{ item.product.name }}</span>
+					<span class="cart-item-price">{{ item.product.price | currency:'EUR' }}</span>
+				</div>
+				<div class="cart-qty-controls">
+					<button (click)="decrementQuantity(item)">-</button>
+					<span>{{ item.quantity }}</span>
+					<button (click)="incrementQuantity(item)">+</button>
+				</div>
+				<span class="cart-item-total">{{ item.product.price * item.quantity | currency:'EUR' }}</span>
+				<button class="cart-remove-btn" (click)="decrementQuantity(item)" title="Entfernen">✖️</button>
+			</li>
+		</ul>
+		<div class="cart-total-row">
+			<span>Gesamt:</span>
+			<strong class="cart-total">{{ getCartTotal() | currency:'EUR' }}</strong>
+		</div>
+			<div class="cart-actions">
+				<button class="cart-order-btn" (click)="goToPayment()" [disabled]="getCartItemCount() === 0">Zur Kasse</button>
+				<button class="close-cart-btn" (click)="toggleCart()">Schließen</button>
+			</div>
+	</div>
+</div>
+<div class="shop-container" *ngIf="afroshop">
+	<h2>{{ afroshop.name }}</h2>
+	<div *ngIf="!afroshop.products || afroshop.products.length === 0" class="info-message">
+		<span style="color:#d32f2f;font-weight:600;">Hinweis:</span> Dieser Shop bietet keinen Online-Bestellservice an. Bitte besuchen Sie das Geschäft vor Ort oder rufen Sie an.
+	</div>
+	<div class="products-grid">
+		<div class="product-card" *ngFor="let product of afroshop.products">
+			<img [src]="product.image" [alt]="product.name" class="product-image" />
+			<div class="product-row">
+				<div class="product-name">{{ product.name }}</div>
+				<div class="product-price">{{ product.price | currency:'EUR' }}</div>
+				<button class="add-to-cart-btn" (click)="addToCart(product)">🛒</button>
+			</div>
+			<div class="admin-actions" *ngIf="canEdit()">
+				<button class="edit-btn" (click)="editProduct(product)">✏️</button>
+				<button class="delete-btn" (click)="deleteProduct(product)">🗑️</button>
+			</div>
+		</div>
+	</div>
+</div>
+

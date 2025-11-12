@@ -1,0 +1,242 @@
+/* Conteneur scrollable pour le tableau */
+.dashboard-table-wrapper {
+  width: 100%;
+  max-height: 70vh; /* Ajustable selon l’écran */
+  overflow-x: auto;  /* Scroll horizontal si nécessaire */
+  overflow-y: auto;  /* Scroll vertical si nécessaire */
+  -webkit-overflow-scrolling: touch; /* Smooth scroll sur iOS */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Tableau full-width mais scrollable */
+.dashboard-table {
+  width: 100%;
+  min-width: 600px; /* minimum pour les colonnes */
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fafbfc;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Responsive Scroll Wrapper */
+@media (max-width: 900px) {
+  .dashboard-table-wrapper {
+    max-height: 60vh; /* pour les petits écrans */
+  }
+  .dashboard-table th,
+  .dashboard-table td {
+    white-space: nowrap;
+    font-size: 0.95rem;
+    padding: 0.6rem 0.4rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .dashboard-table-wrapper {
+    max-height: 55vh;
+  }
+  .dashboard-table th,
+  .dashboard-table td {
+    font-size: 0.88rem;
+    padding: 0.45rem 0.25rem;
+  }
+}
+/* ==============================
+   Container du Dashboard
+============================== */
+.dashboard-container {
+  max-width: 950px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 2rem 1.5rem 2.5rem 1.5rem;
+}
+
+/* Header */
+.dashboard-container h2 {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1a8917;
+  gap: 0.7rem;
+}
+
+/* ==============================
+   Tableau
+============================== */
+.dashboard-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fafbfc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Entêtes */
+.dashboard-table th {
+  background: #f5f5f5;
+  color: #333;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  text-align: left;
+  padding: 1rem 0.7rem;
+}
+
+/* Lignes et cellules */
+.dashboard-table td {
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 1rem;
+  padding: 1rem 0.7rem;
+}
+
+.dashboard-table tr {
+  transition: background 0.15s;
+}
+
+.dashboard-table tr:hover {
+  background: #f0f7f4;
+}
+
+/* Listes dans les cellules */
+.dashboard-table ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.dashboard-table strong {
+  color: #1a8917;
+  font-weight: 700;
+}
+
+/* ==============================
+   Badge de paiement
+============================== */
+.payment-badge {
+  display: inline-block;
+  padding: 0.25em 0.8em;
+  border-radius: 12px;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #fff;
+  margin-right: 0.5em;
+}
+
+.payment-badge.bar { background: #607d8b; }
+.payment-badge.vorkasse { background: #e65100; }
+.payment-badge.paypal { background: #0070ba; }
+.payment-badge.karte { background: #009688; }
+.payment-badge.sofort { background: #fbc02d; color: #333; }
+.payment-badge.applepay { background: #222; }
+
+/* ==============================
+   Bouton retour
+============================== */
+.modern-btn.dashboard-return {
+  background: linear-gradient(90deg, #e8f5e9 0%, #f5f5f5 100%) !important;
+  color: #1a8917 !important;
+  border: 2px solid #1a8917 !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  padding: 0.6rem 1.5rem !important;
+  font-size: 1.12rem !important;
+  margin-bottom: 1.5rem !important;
+  margin-right: 0.7rem !important;
+  box-shadow: 0 2px 8px rgba(26,137,23,0.08);
+  letter-spacing: 0.02em;
+  transition: all 0.2s !important;
+}
+
+.modern-btn.dashboard-return:hover:enabled {
+  background: #1a8917 !important;
+  color: #fff !important;
+  border-color: #1a8917 !important;
+  box-shadow: 0 4px 16px rgba(26,137,23,0.13);
+}
+
+.modern-btn.dashboard-return:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* ==============================
+   Empty state
+============================== */
+.dashboard-empty {
+  text-align: center;
+  color: #888;
+  font-size: 1.1rem;
+  margin: 2rem 0;
+}
+
+/* ==============================
+   Responsive
+============================== */
+
+/* Table scrollable sur mobile */
+@media (max-width: 900px) {
+  .dashboard-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+  }
+
+  .dashboard-table thead,
+  .dashboard-table tbody,
+  .dashboard-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .dashboard-table th,
+  .dashboard-table td {
+    white-space: nowrap;
+    font-size: 0.98rem;
+    padding: 0.6rem 0.4rem;
+  }
+}
+
+/* Petite largeur écran */
+@media (max-width: 700px) {
+  .dashboard-container {
+    padding: 1rem 0.2rem;
+  }
+
+  .dashboard-table th,
+  .dashboard-table td {
+    padding: 0.55rem 0.35rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Ultra petit écran (mobile) */
+@media (max-width: 500px) {
+  .dashboard-container h2 {
+    font-size: 1.5rem;
+    gap: 0.4rem;
+  }
+
+  .dashboard-table th,
+  .dashboard-table td {
+    font-size: 0.88rem;
+    padding: 0.45rem 0.25rem;
+  }
+
+  .payment-badge {
+    font-size: 0.8rem;
+    padding: 0.2em 0.5em;
+  }
+
+  .modern-btn.dashboard-return {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
+}

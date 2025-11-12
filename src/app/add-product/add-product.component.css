@@ -55,6 +55,7 @@ img.preview {
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
 
+
 .modern-btn {
   background: linear-gradient(90deg, #3182ce 0%, #00bcd4 100%);
   color: #fff;
@@ -66,8 +67,31 @@ img.preview {
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(49,130,206,0.10);
   transition: background 0.2s, transform 0.1s;
+  margin-bottom: 0.5rem;
 }
-.modern-btn:hover {
-  background: linear-gradient(90deg, #00bcd4 0%, #3182ce 100%);
-  transform: translateY(-2px) scale(1.03);
+.modern-btn.secondary {
+  background: linear-gradient(90deg, #00bcd4 0%, #43e97b 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(67,233,123,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.modern-btn.secondary::before {
+  content: "🖼️";
+  font-size: 1.2rem;
+  margin-right: 0.3rem;
+}
+.modern-btn.secondary:hover {
+  background: linear-gradient(90deg, #43e97b 0%, #00bcd4 100%);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 16px rgba(67,233,123,0.18);
 }

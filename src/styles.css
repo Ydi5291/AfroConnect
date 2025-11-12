@@ -1,3 +1,11 @@
+@media (max-width: 768px) {
+  .rotating-globe {
+    animation: rotate-globe 2s linear infinite;
+    -webkit-animation: rotate-globe 2s linear infinite;
+    -moz-animation: rotate-globe 2s linear infinite;
+    -o-animation: rotate-globe 2s linear infinite;
+  }
+}
 /* ===== STYLES GLOBAUX DE L'APPLICATION ===== */
 
 /* Reset CSS et base */
@@ -25,6 +33,11 @@
   --background-light: #F8F9FA;
   --background-white: #FFFFFF;
   --overlay-dark: rgba(0, 0, 0, 0.5);
+  /* Variables manquantes pour image-detail */
+  --surface-color: #FFFFFF;
+  --border-color: #E0E0E0;
+  --border-light: #F0F0F0;
+  --text-primary: #2C3E50;
   
   /* Espacement */
   --spacing-xs: 0.5rem;

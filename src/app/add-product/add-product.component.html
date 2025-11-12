@@ -4,8 +4,15 @@
     <label for="name">Produktname</label>
     <input type="text" [(ngModel)]="newProduct.name" name="name" id="name" placeholder="Name des Produkts" required />
 
-  <label for="price">Preis (€)</label>
-  <input type="number" step="0.01" [(ngModel)]="newProduct.price" name="price" id="price" placeholder="Preis in Euro" required />
+
+    <label for="category">Kategorie</label>
+    <select [(ngModel)]="newProduct.category" name="category" id="category" required>
+      <option value="Lebensmittel">Lebensmittel</option>
+      <option value="Getränke">Getränke</option>
+    </select>
+
+    <label for="price">Preis (€)</label>
+    <input type="number" step="0.01" [(ngModel)]="newProduct.price" name="price" id="price" placeholder="Preis in Euro" required />
 
     <label for="image">Produktbild</label>
     <input type="file" id="image" (change)="onProductImageSelected($event)" />
@@ -13,6 +20,20 @@
       <img [src]="productImagePreview" alt="Bildvorschau" class="preview" />
     </div>
 
-    <button type="submit" class="modern-btn">Hinzufügen</button>
+  <button type="submit" class="modern-btn" [disabled]="showBankForm">Hinzufügen</button>
+    <button type="button" class="modern-btn secondary" (click)="goToGallery()">Galerie</button>
+    <button type="button" class="modern-btn shop" (click)="goToShop()">Shop ansehen</button>
   </form>
+
+  <div *ngIf="showBankForm" class="bank-form">
+    <h3>Bankverbindung für den Shop angeben</h3>
+    <label for="iban">IBAN</label>
+    <input type="text" id="iban" [(ngModel)]="iban" name="iban" placeholder="IBAN" required />
+    <label for="bic">BIC</label>
+    <input type="text" id="bic" [(ngModel)]="bic" name="bic" placeholder="BIC" required />
+    <button (click)="saveBankData()" class="modern-btn">Speichern</button>
+    <div *ngIf="bankSuccessMessage" class="bank-success-message">
+      <strong>{{ bankSuccessMessage }}</strong>
+    </div>
+  </div>
 </div>

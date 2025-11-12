@@ -1,18 +1,26 @@
 import { Component, OnInit } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AfroshopService, AfroshopData, Product } from '../services/image.service';
 import { Title, Meta } from '@angular/platform-browser';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
+import { AfroshopService, AfroshopData, Product } from '../services/image.service';
+
+// Minimal local type definitions to satisfy the component's usage.
+// If you already have these types defined elsewhere in the project,
+// prefer importing them from the shared models instead of duplicating.
+// The local declaration of the Product interface has been removed to avoid conflicts with the imported Product type.
+
 
 @Component({
   selector: 'app-image-detail',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './image-detail.component.html',
-  styleUrl: './image-detail.component.css'
+  styleUrls: ['./image-detail.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ImageDetailComponent implements OnInit { 
   afroshop: AfroshopData | undefined;
@@ -20,7 +28,7 @@ export class ImageDetailComponent implements OnInit {
   formattedHours: Array<{day: string, hours: string, isOpen: boolean}> = [];
 
   cart: Product[] = [];
-  newProduct: Product = { id: '', name: '', price: 0, image: '' };
+  newProduct: Product = { id: '', name: '', price: 0, image: '', category: 'Lebensmittel' };
   isAdmin: boolean = false;
 
   // Ajout des propriétés pour l'upload d'image produit
@@ -38,8 +46,8 @@ export class ImageDetailComponent implements OnInit {
   ) {}
 
   editProducts() {
-    // Naviguer vers la page d’ajout de produit pour ce commerce
-    this.router?.navigate(['/add-product'], { queryParams: { afroshopId: this.shopId } });
+    // Rediriger vers la page d'édition du commerce (add-afroshop)
+    this.router?.navigate(['/add-afroshop'], { queryParams: { afroshopId: this.shopId } });
   }
 
   ngOnInit(): void {
@@ -103,7 +111,9 @@ export class ImageDetailComponent implements OnInit {
     this.authService.user$.subscribe(user => {
       if (user?.uid && this.afroshop) {
         // Propriétaire du commerce
-        this.isAdmin = user.uid === (this.afroshop as any).createdBy;
+        this.isAdmin = (this.afroshop && (this.afroshop as any).createdBy)
+          ? user.uid === (this.afroshop as any).createdBy
+          : false;
       } else {
         this.isAdmin = false;
       }
@@ -128,8 +138,12 @@ export class ImageDetailComponent implements OnInit {
 
   // Ouvrir dans Google Maps avec l'adresse réelle
   openInMaps(): void {
-    if (this.afroshop) {
-      const address = encodeURIComponent(this.afroshop.address || `${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`);
+    if (this.afroshop && this.afroshop.address) {
+      const address = encodeURIComponent(this.afroshop.address);
+      const url = `https://www.google.com/maps/search/?api=1&query=${address}`;
+      window.open(url, '_blank');
+    } else if (this.afroshop && this.afroshop.coordinates) {
+      const address = encodeURIComponent(`${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`);
       const url = `https://www.google.com/maps/search/?api=1&query=${address}`;
       window.open(url, '_blank');
     }
@@ -137,8 +151,12 @@ export class ImageDetailComponent implements OnInit {
 
   // Obtenir l'itinéraire vers l'Afroshop avec l'adresse réelle
   getDirections(): void {
-    if (this.afroshop) {
-      const address = encodeURIComponent(this.afroshop.address || `${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`);
+    if (this.afroshop && this.afroshop.address) {
+      const address = encodeURIComponent(this.afroshop.address);
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${address}`;
+      window.open(url, '_blank');
+    } else if (this.afroshop && this.afroshop.coordinates) {
+      const address = encodeURIComponent(`${this.afroshop.coordinates.lat},${this.afroshop.coordinates.lng}`);
       const url = `https://www.google.com/maps/dir/?api=1&destination=${address}`;
       window.open(url, '_blank');
     }
@@ -146,14 +164,14 @@ export class ImageDetailComponent implements OnInit {
 
   // Obtenir l'icône selon le type
   getTypeIcon(type: AfroshopData['type']): string {
-    const icons = {
+    const icons: { [key: string]: string } = {
       restaurant: '🍽️',
       epicerie: '🛒',
       coiffeur: '✂️',
       vetement: '👗',
       services: '🏦'
     };
-    return icons[type];
+    return type ? icons[type] || '' : '';
   }
 
   // Convertir le niveau de prix en symboles
@@ -273,39 +291,8 @@ export class ImageDetailComponent implements OnInit {
     }
   }
 
-  addToCart(product: Product): void {
-    this.cart.push(product);
-  }
-
-  removeFromCart(productId: string): void {
-    this.cart = this.cart.filter(p => p.id !== productId);
-  }
-
-  addProduct(): void {
-    if (!this.afroshop) return;
-    if (!this.afroshop.products) this.afroshop.products = [];
-    const prod = { ...this.newProduct, id: Date.now().toString() };
-    this.afroshop.products.push(prod);
-    this.newProduct = { id: '', name: '', price: 0, image: '' };
-  }
-
-  async onProductImageSelected(event: any): Promise<void> {
-    const file = event.target.files[0];
-    if (!file) return;
-    // Preview
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      this.productImagePreview = e.target.result;
-    };
-    reader.readAsDataURL(file);
-    this.productImageFile = file;
-    // Upload
-    try {
-      // Utilise le service FirebaseAfroshopService pour uploader
-      const url = await this.firebaseService.uploadImage(file);
-      this.newProduct.image = url;
-    } catch (error) {
-      console.error('Erreur upload image produit:', error);
-    }
+  // Redirige vers la page Shop du commerce concerné
+  goToShop(): void {
+    this.router.navigate(['/shop', this.shopId]);
   }
 }

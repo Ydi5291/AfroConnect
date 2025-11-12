@@ -1,12 +1,12 @@
 
 <!-- Bouton flottant pour ouvrir le bot partout -->
-<button *ngIf="!showChat" class="chatbot-float-btn" (click)="toggleChat()">💬 Diamal</button>
+<button *ngIf="!showChat" class="chatbot-float-btn" (click)="toggleChatHandler()">💬 Diamal</button>
 
 <!-- Bulle du bot, mobile et desktop -->
 <div *ngIf="showChat" class="chatbot-bubble" [class.mobile]="isMobile">
   <div class="chatbot-header">
     <span>🤖 Diamal</span>
-    <button class="close-btn" (click)="toggleChat()">×</button>
+    <button class="close-btn" (click)="toggleChatHandler()">×</button>
   </div>
   <div class="chatbot-messages">
     <div *ngFor="let msg of messages" [class.user]="msg.from === 'user'" [class.bot]="msg.from === 'bot'">

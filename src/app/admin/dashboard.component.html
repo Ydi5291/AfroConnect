@@ -1,0 +1,51 @@
+<div class="dashboard-container">
+
+  <h2><span style="font-size:1.5em;">📊</span> Bestellungen für Ihren Shop</h2>
+  <button class="modern-btn dashboard-return" style="margin-bottom:1.5rem;" (click)="goToShop()" [disabled]="!shopIdReady">← Zurück zum Shop</button>
+  <div *ngIf="orders.length === 0" class="dashboard-empty">
+    <p>Keine Bestellungen gefunden.</p>
+  </div>
+  <div class="dashboard-table-wrapper" *ngIf="orders.length > 0">
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th>Kunde</th>
+          <th>Produkte</th>
+          <th>Menge</th>
+          <th>Gesamtbetrag (€)</th>
+          <th>Zahlungsart</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders">
+          <td>{{ order.createdAt?.toDate() | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <ng-container *ngIf="order.clientInfo; else noClientInfo">
+              <strong>{{ order.clientInfo.firstName }} {{ order.clientInfo.lastName }}</strong><br>
+              {{ order.clientInfo.street }} {{ order.clientInfo.number }}<br>
+              {{ order.clientInfo.plz }} {{ order.clientInfo.city }}<br>
+              Tel: {{ order.clientInfo.phone }}<br>
+              <span *ngIf="order.clientInfo.email">E-Mail: {{ order.clientInfo.email }}</span>
+            </ng-container>
+            <ng-template #noClientInfo>
+              <span style="color:#888">Aucune info client</span>
+            </ng-template>
+          </td>
+          <td>
+            <ul>
+              <li *ngFor="let product of order.products">{{ product.name }}</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li *ngFor="let product of order.products">{{ product.quantity }}</li>
+            </ul>
+          </td>
+          <td>€{{ order.total.toFixed(2) }}</td>
+          <td>{{ order.paymentMethod }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

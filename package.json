@@ -1,10 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "first-angular-project",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "prebuild": "node prebuild.mjs",
-  "build": "npm run prebuild ; ng build",
+    "build": "npm run prebuild ; ng build",
     "start": "ng serve",
     "build:prod": "node prebuild-prod.mjs ; ng build --configuration production --base-href /AfroConnect/",
     "build:vercel": "ng build --configuration production --base-href /",
@@ -35,7 +36,7 @@
     "@capacitor/ios": "^7.4.3",
     "@googlemaps/js-api-loader": "^2.0.1",
     "express": "^4.18.2",
-    "firebase": "^12.4.0",
+    "firebase": "^11.10.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

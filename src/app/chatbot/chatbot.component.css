@@ -91,9 +91,16 @@
 }
 @media (max-width: 600px) {
   .chatbot-bubble {
-    display: none;
-  }
-  .chatbot-mobile {
-    display: block;
+    width: 100vw;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border-radius: 0;
+    padding: 0.5rem 0.2rem 1rem 0.2rem;
+    min-width: unset;
+    max-width: unset;
+    border: 3px solid red;
+    background: #fffbe6;
+    z-index: 9999;
   }
 }

@@ -1,0 +1,21 @@
+<header class="app-header">
+  <div class="header-background">
+    <div class="header-slideshow">
+      <div *ngFor="let img of slideshowImages; let i = index" class="header-slide" [ngClass]="{ 'active': i === currentSlide }" [style.backgroundImage]="'url(' + img + ')'">
+      </div>
+    </div>
+    <div class="header-overlay"></div>
+  </div>
+  <div class="header-content">
+    <app-burger-menu></app-burger-menu>
+    <div class="header-left">
+      <a routerLink="/gallery" class="logo-link">
+        <h1><span class="rotating-globe">🌍</span> AfroConnect</h1>
+      </a>
+      <p class="welcome-message">Verbinde dich mit der afrikanischen Community in Deutschland</p>
+    </div>
+    <div class="header-right">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</header>

@@ -1,6 +1,5 @@
 // Initialisation manuelle de Firebase avec la vraie clé
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+
 
 const firebaseConfig = {
   apiKey: "NG_APP_FIREBASE_API_KEY",
@@ -12,6 +11,4 @@ const firebaseConfig = {
   measurementId: "G-4VZ4WFYE9M"
 };
 
-// Initialisation Firebase
-export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+

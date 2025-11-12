@@ -1,3 +1,31 @@
+/* Flex container for header buttons */
+.flex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Style for the add product button */
+.add-product-btn {
+  background: #1e88e5;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.add-product-btn:hover {
+  background: #1565c0;
+}
+.detail-container {
+  background: pink !important;
+}
 .detail-container {
   max-width: 1200px;
   margin: 0 auto;

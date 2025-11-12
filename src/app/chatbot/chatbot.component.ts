@@ -1,4 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+// ...existing code...
+import { Component, HostListener, OnInit, OnDestroy, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -16,10 +17,15 @@ export interface ChatbotMessage {
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.css']
 })
-export class ChatbotComponent implements AfterViewChecked, OnInit {
+export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, OnChanges {
+  // ...existing code...
+  ngOnDestroy(): void {
+    console.log('[Chatbot] ngOnDestroy appelé, composant démonté. isMobile:', this.isMobile, 'showChat:', this.showChat);
+  }
   @ViewChild('messagesEnd') messagesEnd!: ElementRef;
   isMobile = false;
-  showChat = false;
+  @Input() showChat = false;
+  @Output() toggleChat = new EventEmitter<void>();
   messages: ChatbotMessage[] = [
     { from: 'bot', text: 'Hallo! Ich bin Diamal, dein Assistent. Ich erkläre dir, warum und wie du Popups aktivierst und warum Cookies wichtig sind.' },
     { from: 'bot', text: 'Stelle mir eine Frage oder wähle ein Thema:' },
@@ -33,12 +39,17 @@ export class ChatbotComponent implements AfterViewChecked, OnInit {
 
   constructor(private router: Router) {
     this.isMobile = window.innerWidth < 600;
-    this.showChat = false;
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['showChat']) {
+      console.log('[Chatbot] ngOnChanges showChat:', changes['showChat'].currentValue);
+    }
   }
 
   ngOnInit() {
-    this.isMobile = window.innerWidth < 600;
-    // Ne pas toucher à showChat ici, laisse le contrôle à l'utilisateur
+  this.isMobile = window.innerWidth < 600;
+  console.log('[Chatbot] ngOnInit, isMobile:', this.isMobile, 'showChat:', this.showChat);
+  // Ne pas toucher à showChat ici, laisse le contrôle à l'utilisateur
   }
 
 
@@ -77,7 +88,8 @@ export class ChatbotComponent implements AfterViewChecked, OnInit {
     }
   }
 
-  toggleChat() {
-    this.showChat = !this.showChat;
+  toggleChatHandler() {
+    this.toggleChat.emit();
+    console.log('[Chatbot] toggleChatHandler appelé, showChat:', this.showChat, 'isMobile:', this.isMobile);
   }
 }

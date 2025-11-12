@@ -6,9 +6,12 @@ export interface Product {
   name: string;
   price: number;
   image: string;
+  category: 'Lebensmittel' | 'Getränke';
 }
 
 export interface AfroshopData {
+  iban?: string;
+  bic?: string;
   id: number | string; // Support pour Firebase (string) et données locales (number)
   name: string;
   type: 'restaurant' | 'epicerie' | 'coiffeur' | 'vetement' | 'services';
@@ -30,6 +33,7 @@ export interface AfroshopData {
   website?: string; // Site web optionnel
   distance?: number; // Sera calculée dynamiquement
   products?: Product[]; // Liste des produits du commerce
+  onlineShop?: boolean; // Indique si le shop propose la commande en ligne
 }
 
 @Injectable({

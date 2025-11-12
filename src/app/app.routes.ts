@@ -13,9 +13,13 @@ import { GeocodingDiagnosticComponent } from './geocoding-diagnostic/geocoding-d
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { AddProductComponent } from './add-product/add-product.component';
+import { ShopComponent } from './shop/shop.component';
+import { PaymentComponent } from './payment/payment.component';
+import { DashboardComponent } from './admin/dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/gallery', pathMatch: 'full' },
+  { path: 'shop/:id', component: ShopComponent },
   { path: 'about', loadComponent: () => import('./about/about.component').then(m => m.AboutComponent) },
   { path: 'kontakt', loadComponent: () => import('./kontakt.component').then(m => m.KontaktComponent) },
   { path: 'hilfe', loadComponent: () => import('./hilfe.component').then(m => m.HilfeComponent) },
@@ -50,6 +54,15 @@ export const routes: Routes = [
     path: 'add-product', 
     component: AddProductComponent,
     canActivate: [AuthGuard] // 🔒
+  },
+  { 
+    path: 'payment', 
+    component: PaymentComponent
+  },
+  { 
+    path: 'dashboard/:id', 
+    component: DashboardComponent, 
+    canActivate: [AdminGuard] // 🔒
   },
   { path: '**', redirectTo: '/gallery' } 
 ];

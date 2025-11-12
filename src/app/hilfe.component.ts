@@ -5,8 +5,14 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
 @Component({
   selector: 'app-hilfe',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ChatbotComponent],
   templateUrl: './hilfe.component.html',
   styleUrls: ['./hilfe.component.css']
 })
-export class HilfeComponent {}
+export class HilfeComponent {
+  showChat = false;
+
+  toggleChatFromChild() {
+    this.showChat = !this.showChat;
+  }
+}
