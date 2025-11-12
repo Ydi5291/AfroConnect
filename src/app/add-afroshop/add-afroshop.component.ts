@@ -83,7 +83,13 @@ export class AddAfroshopComponent {
     cuisine: '',
     priceLevel: 0, // Commencer vide pour forcer la sélection
     hours: '',
-    website: ''
+    website: '',
+    // Champs Impressum obligatoires
+    impressumName: '',
+    impressumAddress: '',
+    impressumEmail: '',
+    impressumPhone: '',
+    impressumText: ''
   };
 
   // Structure pour les heures d'ouverture
@@ -172,7 +178,12 @@ export class AddAfroshopComponent {
           cuisine: afroshop.cuisine || '',
           priceLevel: afroshop.priceLevel || 2,
           hours: afroshop.hours || '',
-          website: afroshop.website || ''
+          website: afroshop.website || '',
+          impressumName: afroshop.impressumName || '',
+          impressumAddress: afroshop.impressumAddress || '',
+          impressumEmail: afroshop.impressumEmail || '',
+          impressumPhone: afroshop.impressumPhone || '',
+          impressumText: afroshop.impressumText || ''
         };
         this.imagePreview = afroshop.image || null;
 
@@ -683,7 +694,12 @@ export class AddAfroshopComponent {
       cuisine: '',
       priceLevel: 2,
       hours: '',
-      website: ''
+      website: '',
+      impressumName: '',
+      impressumAddress: '',
+      impressumEmail: '',
+      impressumPhone: '',
+      impressumText: ''
     };
   }
 

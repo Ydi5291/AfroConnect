@@ -1,3 +1,68 @@
+// Impressum Modal Styles
+.impressum-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 3000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.impressum-modal-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0,0,0,0.35);
+	z-index: 3001;
+}
+.impressum-modal-content {
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+	padding: 2rem 1.5rem 1.5rem 1.5rem;
+	max-width: 420px;
+	width: 90vw;
+	z-index: 3002;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 0.7rem;
+}
+.impressum-modal-content h3 {
+	margin-top: 0;
+	margin-bottom: 0.7rem;
+	font-size: 1.3rem;
+	color: #1a8917;
+}
+.impressum-modal-content .close-btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background: none;
+	border: none;
+	font-size: 1.2rem;
+	color: #888;
+	cursor: pointer;
+}
+.impressum-modal-content .close-btn:hover {
+	color: #d32f2f;
+}
+.impressum-modal-content strong {
+	color: #222;
+}
+.impressum-modal-content a {
+	color: #1a8917;
+	text-decoration: underline;
+}
+.impressum-modal-content .form-hint {
+	color: #888;
+	font-size: 0.92rem;
+	margin-top: 0.5rem;
+}
 // Boutons modernes du header
 .modern-btn {
 	background: #e0e0e0;

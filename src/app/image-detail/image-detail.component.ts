@@ -23,6 +23,8 @@ import { AfroshopService, AfroshopData, Product } from '../services/image.servic
   encapsulation: ViewEncapsulation.None
 })
 export class ImageDetailComponent implements OnInit { 
+
+  showImpressum = false;
   afroshop: AfroshopData | undefined;
   shopId: string | number = '';
   formattedHours: Array<{day: string, hours: string, isOpen: boolean}> = [];
@@ -198,6 +200,13 @@ export class ImageDetailComponent implements OnInit {
     console.log('  ✅ Peut éditer:', canEdit);
     
     return canEdit;
+  }
+
+  // Vérifier si l'utilisateur est le propriétaire du shop
+  isShopOwner(): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !this.afroshop) return false;
+    return (this.afroshop as any).createdBy === currentUser.uid;
   }
 
   // Parse and format opening hours for display

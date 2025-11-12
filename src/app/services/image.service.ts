@@ -34,6 +34,12 @@ export interface AfroshopData {
   distance?: number; // Sera calculée dynamiquement
   products?: Product[]; // Liste des produits du commerce
   onlineShop?: boolean; // Indique si le shop propose la commande en ligne
+  // Champs Impressum obligatoires
+  impressumName: string;
+  impressumAddress: string;
+  impressumEmail: string;
+  impressumPhone: string;
+  impressumText: string;
 }
 
 @Injectable({
@@ -51,11 +57,16 @@ export class AfroshopService {
       phone: '+49 30 12345678',
       description: 'Authentisches Restaurant mit westafrikanischen Spezialitäten. Warme Atmosphäre und traditionelle Gerichte mit Liebe zubereitet. Spezialitäten: Jollof Rice, Poulet Yassa, Attiéké.',
       rating: 4.5,
-  image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop',
-  cuisine: 'Westafrikanische',
-  priceLevel: 2,
-  hours: 'Mo-So: 12:00-22:00',
-  products: []
+      image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop',
+      cuisine: 'Westafrikanische',
+      priceLevel: 2,
+      hours: 'Mo-So: 12:00-22:00',
+      products: [],
+      impressumName: 'Max Mustermann',
+      impressumAddress: 'Musterstraße 1, 12345 Berlin',
+      impressumEmail: 'info@mama-afrika.de',
+      impressumPhone: '+49 30 12345678',
+      impressumText: 'USt-ID: DE123456789, Geschäftsführer: Max Mustermann'
     },
 
     // DORTMUND - Afroshops
@@ -68,11 +79,16 @@ export class AfroshopService {
       phone: '+49 231 567890',
       description: 'Das beste afrikanische Restaurant im Herzen von Dortmund. Bekannt für authentische nigerianische und ghanaische Küche.',
       rating: 4.7,
-    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop',
-    cuisine: 'Westafrikanische',
-    priceLevel: 2,
-    hours: 'Di-So: 17:00-23:00',
-    products: []
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop',
+      cuisine: 'Westafrikanische',
+      priceLevel: 2,
+      hours: 'Di-So: 17:00-23:00',
+      products: [],
+      impressumName: 'Fatou Ndiaye',
+      impressumAddress: 'Kampstraße 45, 44137 Dortmund',
+      impressumEmail: 'kontakt@afro-palace.de',
+      impressumPhone: '+49 231 567890',
+      impressumText: 'USt-ID: DE987654321, Geschäftsführer: Fatou Ndiaye'
     },
     {
       id: 8,
@@ -83,10 +99,15 @@ export class AfroshopService {
       phone: '+49 231 445566',
       description: 'Größter afrikanischer Supermarkt in Dortmund. Frische Produkte, Gewürze und Spezialitäten aus ganz Afrika.',
       rating: 4.3,
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
-    priceLevel: 1,
-    hours: 'Mo-Sa: 09:00-20:00',
-    products: []
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
+      priceLevel: 1,
+      hours: 'Mo-Sa: 09:00-20:00',
+      products: [],
+      impressumName: 'Aminata Diallo',
+      impressumAddress: 'Steinstraße 33, 44147 Dortmund',
+      impressumEmail: 'info@sahara-markt.de',
+      impressumPhone: '+49 231 445566',
+      impressumText: 'USt-ID: DE192837465, Inhaberin: Aminata Diallo'
     },
     {
       id: 9,
@@ -97,10 +118,15 @@ export class AfroshopService {
       phone: '+49 231 778899',
       description: 'Spezialisiert auf afrikanische Frisuren, Braiding und Extensions. Erfahrene Stylisten aus ganz Afrika.',
       rating: 4.6,
-    image: 'https://images.unsplash.com/photo-1562322140-8198e5d5067e?w=800&h=600&fit=crop',
-    priceLevel: 2,
-    hours: 'Mo-Sa: 10:00-19:00',
-    products: []
+      image: 'https://images.unsplash.com/photo-1562322140-8198e5d5067e?w=800&h=600&fit=crop',
+      priceLevel: 2,
+      hours: 'Mo-Sa: 10:00-19:00',
+      products: [],
+      impressumName: 'Binta Traoré',
+      impressumAddress: 'Rheinische Straße 89, 44137 Dortmund',
+      impressumEmail: 'kontakt@style-africain.de',
+      impressumPhone: '+49 231 778899',
+      impressumText: 'USt-ID: DE564738291, Inhaberin: Binta Traoré'
     },
 
     // HAMBURG - Afroshops
@@ -113,11 +139,16 @@ export class AfroshopService {
       phone: '+49 40 334455',
       description: 'Ostafriikanisches Restaurant mit Swahili-Küche. Authentische Gerichte aus Tansania und Kenia.',
       rating: 4.4,
-    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop',
-    cuisine: 'Ostafrikanische',
-    priceLevel: 3,
-    hours: 'Mi-So: 18:00-23:00',
-    products: []
+      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop',
+      cuisine: 'Ostafrikanische',
+      priceLevel: 3,
+      hours: 'Mi-So: 18:00-23:00',
+      products: [],
+      impressumName: 'John Mushi',
+      impressumAddress: 'Große Bergstraße 123, 22767 Hamburg',
+      impressumEmail: 'info@kilimanjaro-hamburg.de',
+      impressumPhone: '+49 40 334455',
+      impressumText: 'USt-ID: DE246813579, Geschäftsführer: John Mushi'
     },
     {
       id: 11,
@@ -128,10 +159,15 @@ export class AfroshopService {
       phone: '+49 40 667788',
       description: 'Afrikanische Lebensmittel und Produkte im Zentrum von Hamburg. Von Kochbananen bis Shea-Butter.',
       rating: 4.2,
-    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop',
-    priceLevel: 2,
-    hours: 'Mo-Sa: 08:00-20:00',
-    products: []
+      image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop',
+      priceLevel: 2,
+      hours: 'Mo-Sa: 08:00-20:00',
+      products: [],
+      impressumName: 'Samuel Baobab',
+      impressumAddress: 'Steindamm 55, 20099 Hamburg',
+      impressumEmail: 'kontakt@baobab-markt.de',
+      impressumPhone: '+49 40 667788',
+      impressumText: 'USt-ID: DE135792468, Inhaber: Samuel Baobab'
     },
 
     // KÖLN - Afroshops  
@@ -144,11 +180,16 @@ export class AfroshopService {
       phone: '+49 221 889900',
       description: 'Traditionelles senegalesisches Restaurant. Thieboudienne und Yassa-Spezialitäten in gemütlicher Atmosphäre.',
       rating: 4.8,
-    image: 'https://images.unsplash.com/photo-1493770348161-369560ae357d?w=800&h=600&fit=crop',
-    cuisine: 'Senegalesische',
-    priceLevel: 2,
-    hours: 'Do-Mo: 17:00-22:00',
-    products: []
+      image: 'https://images.unsplash.com/photo-1493770348161-369560ae357d?w=800&h=600&fit=crop',
+      cuisine: 'Senegalesische',
+      priceLevel: 2,
+      hours: 'Do-Mo: 17:00-22:00',
+      products: [],
+      impressumName: 'Mamadou Diop',
+      impressumAddress: 'Venloer Straße 234, 50823 Köln',
+      impressumEmail: 'info@senegal-eck.de',
+      impressumPhone: '+49 221 889900',
+      impressumText: 'USt-ID: DE112233445, Geschäftsführer: Mamadou Diop'
     },
     {
       id: 13,
@@ -161,7 +202,12 @@ export class AfroshopService {
       rating: 4.1,
       image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop',
       priceLevel: 1,
-      hours: 'Mo-Fr: 09:00-18:00'
+      hours: 'Mo-Fr: 09:00-18:00',
+      impressumName: 'Awa Sarr',
+      impressumAddress: 'Wilhelmsplatz 12, 50674 Köln',
+      impressumEmail: 'kontakt@afrika-center.de',
+      impressumPhone: '+49 221 445566',
+      impressumText: 'USt-ID: DE556677889, Inhaberin: Awa Sarr'
     },
 
     // FRANKFURT - Afroshops
@@ -177,7 +223,12 @@ export class AfroshopService {
       image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop',
       cuisine: 'Äthiopische',
       priceLevel: 2,
-      hours: 'Di-So: 17:30-23:00'
+      hours: 'Di-So: 17:30-23:00',
+      impressumName: 'Abeba Tesfaye',
+      impressumAddress: 'Leipziger Straße 78, 60487 Frankfurt am Main',
+      impressumEmail: 'info@addisabeba-ffm.de',
+      impressumPhone: '+49 69 778899',
+      impressumText: 'USt-ID: DE998877665, Inhaberin: Abeba Tesfaye'
     },
     {
       id: 15,
@@ -190,7 +241,12 @@ export class AfroshopService {
       rating: 4.5,
       image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=600&fit=crop',
       priceLevel: 3,
-      hours: 'Mo-Sa: 11:00-19:00'
+      hours: 'Mo-Sa: 11:00-19:00',
+      impressumName: 'Fatimata Sow',
+      impressumAddress: 'Kaiserstraße 199, 60311 Frankfurt am Main',
+      impressumEmail: 'kontakt@waxprintfashion.de',
+      impressumPhone: '+49 69 556677',
+      impressumText: 'USt-ID: DE334455667, Inhaberin: Fatimata Sow'
     },
 
     // Ajouter plus de villes...
@@ -205,7 +261,12 @@ export class AfroshopService {
       rating: 4.3,
       image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop',
       priceLevel: 2,
-      hours: 'Mo-Sa: 09:00-20:00'
+      hours: 'Mo-Sa: 09:00-20:00',
+      impressumName: 'Koffi Mensah',
+      impressumAddress: 'Steindamm 78, 20099 Hamburg',
+      impressumEmail: 'info@afro-market-hamburg.de',
+      impressumPhone: '+49 40 87654321',
+      impressumText: 'USt-ID: DE445566778, Inhaber: Koffi Mensah'
     },
     {
       id: 3,
@@ -218,7 +279,12 @@ export class AfroshopService {
       rating: 4.8,
       image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=600&fit=crop',
       priceLevel: 3,
-      hours: 'Di-Sa: 10:00-19:00'
+      hours: 'Di-Sa: 10:00-19:00',
+      impressumName: 'Nadia Nappy',
+      impressumAddress: 'Königstraße 45, 70173 Stuttgart',
+      impressumEmail: 'kontakt@nappyqueen.de',
+      impressumPhone: '+49 711 98765432',
+      impressumText: 'USt-ID: DE556644332, Inhaberin: Nadia Nappy'
     },
     {
       id: 4,
@@ -232,7 +298,12 @@ export class AfroshopService {
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop',
       cuisine: 'Senegalesische',
       priceLevel: 3,
-      hours: 'Mi-So: 18:00-23:00'
+      hours: 'Mi-So: 18:00-23:00',
+      impressumName: 'Cheikh Baobab',
+      impressumAddress: 'Landwehrstraße 32, 80336 München',
+      impressumEmail: 'info@lebaobab-muenchen.de',
+      impressumPhone: '+49 89 11223344',
+      impressumText: 'USt-ID: DE223344556, Geschäftsführer: Cheikh Baobab'
     },
     {
       id: 5,
@@ -245,7 +316,12 @@ export class AfroshopService {
       rating: 4.4,
       image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=600&fit=crop',
       priceLevel: 3,
-      hours: 'Mo-Sa: 10:00-19:00'
+      hours: 'Mo-Sa: 10:00-19:00',
+      impressumName: 'Aminata Mode',
+      impressumAddress: 'Ehrenstraße 67, 50672 Köln',
+      impressumEmail: 'info@afrikamode-koeln.de',
+      impressumPhone: '+49 221 55667788',
+      impressumText: 'USt-ID: DE667788990, Inhaberin: Aminata Mode'
     },
     {
       id: 6,
@@ -258,7 +334,12 @@ export class AfroshopService {
       rating: 4.2,
       image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop',
       priceLevel: 1,
-      hours: 'Mo-Fr: 09:00-18:00, Sa: 10:00-16:00'
+      hours: 'Mo-Fr: 09:00-18:00, Sa: 10:00-16:00',
+      impressumName: 'Moussa Traoré',
+      impressumAddress: 'Warschauer Str. 34, 10243 Berlin',
+      impressumEmail: 'kontakt@transfert-afrika.de',
+      impressumPhone: '+49 30 99887766',
+      impressumText: 'USt-ID: DE778899001, Inhaber: Moussa Traoré'
     }
   ];
 

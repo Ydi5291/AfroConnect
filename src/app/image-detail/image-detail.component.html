@@ -83,10 +83,26 @@
       <!-- Aktionen -->
       <div class="actions">
         <button class="action-btn call" (click)="callPhone(afroshop.phone)">📞 Anrufen</button>
-        <button class="action-btn maps" (click)="openInMaps()">🗺️ Auf Karte anzeigen</button>
-        <button class="action-btn route" (click)="getDirections()">🧭 Route</button>
+        <!-- <button class="action-btn maps" (click)="openInMaps()">🗺️ Auf Karte anzeigen</button> -->
+        <!-- <button class="action-btn route" (click)="getDirections()">🧭 Route</button> -->
         <button class="action-btn cart" (click)="goToShop()" title="Zum Shop">🛒 Einkaufen</button>
+        <button class="action-btn impressum" (click)="showImpressum = true">📝 Impressum</button>
         <button class="action-btn secondary" (click)="goBack()">← Zurück</button>
+
+<!-- Modale Impressum -->
+<div class="impressum-modal" *ngIf="showImpressum">
+  <div class="impressum-modal-content">
+    <button class="close-btn" (click)="showImpressum = false">✖</button>
+    <h3>Impressum</h3>
+    <div *ngIf="afroshop.impressumName"><strong>Name/Firma:</strong> {{ afroshop.impressumName }}</div>
+    <div *ngIf="afroshop.impressumAddress"><strong>Adresse:</strong> {{ afroshop.impressumAddress }}</div>
+    <div *ngIf="afroshop.impressumEmail"><strong>E-Mail:</strong> <a href="mailto:{{afroshop.impressumEmail}}">{{ afroshop.impressumEmail }}</a></div>
+    <div *ngIf="afroshop.impressumPhone"><strong>Telefon:</strong> <a href="tel:{{afroshop.impressumPhone}}">{{ afroshop.impressumPhone }}</a></div>
+    <div *ngIf="afroshop.impressumText"><strong>Weitere Angaben:</strong><br>{{ afroshop.impressumText }}</div>
+    <small class="form-hint">Dieses Impressum wurde vom Shop-Betreiber hinterlegt. Angaben ohne Gewähr.</small>
+  </div>
+  <div class="impressum-modal-backdrop" (click)="showImpressum = false"></div>
+</div>
       </div>
     </div>
   </div>

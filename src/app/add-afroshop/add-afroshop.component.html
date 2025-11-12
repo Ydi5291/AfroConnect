@@ -539,6 +539,33 @@
         <small class="form-hint">Optional: Offizielle Website oder Social Media Profil</small>
       </div>
 
+
+      <!-- IMPRESSUM (gesetzlich vorgeschrieben) -->
+      <div class="form-group impressum-group">
+        <h3>📝 Impressum <span class="required">(Pflichtfeld)</span></h3>
+        <div class="form-group">
+          <label for="impressumName">Name/Firma *</label>
+          <input type="text" id="impressumName" [(ngModel)]="afroshop.impressumName" name="impressumName" required class="form-input" placeholder="z.B. Max Mustermann oder Firma GmbH">
+        </div>
+        <div class="form-group">
+          <label for="impressumAddress">Adresse *</label>
+          <input type="text" id="impressumAddress" [(ngModel)]="afroshop.impressumAddress" name="impressumAddress" required class="form-input" placeholder="Straße, PLZ, Stadt">
+        </div>
+        <div class="form-group">
+          <label for="impressumEmail">E-Mail *</label>
+          <input type="email" id="impressumEmail" [(ngModel)]="afroshop.impressumEmail" name="impressumEmail" required class="form-input" placeholder="info@beispiel.de">
+        </div>
+        <div class="form-group">
+          <label for="impressumPhone">Telefon *</label>
+          <input type="tel" id="impressumPhone" [(ngModel)]="afroshop.impressumPhone" name="impressumPhone" required class="form-input" placeholder="z.B. +49 30 12345678">
+        </div>
+        <div class="form-group">
+          <label for="impressumText">Weitere Angaben (z.B. USt-ID, Vertretungsberechtigter, Handelsregister, etc.) *</label>
+          <textarea id="impressumText" [(ngModel)]="afroshop.impressumText" name="impressumText" required rows="3" class="form-textarea" placeholder="Bitte geben Sie alle gesetzlich erforderlichen Angaben ein."></textarea>
+        </div>
+        <small class="form-hint">Das Impressum ist in Deutschland für alle Online-Shops gesetzlich vorgeschrieben. Alle Felder sind Pflichtfelder.</small>
+      </div>
+
       <!-- Preisstufe -->
       <div class="form-group">
         <label for="priceLevel">Preisstufe</label>
@@ -564,14 +591,6 @@
           <span *ngIf="isUploadingImage">📤 Bild wird hochgeladen...</span>
           <span *ngIf="!isSubmitting && !isUploadingImage">{{ isEditMode ? '💾 Änderungen speichern' : '🏪 Afroshop
             hinzufügen' }}</span>
-        </button>
-      </div>
-      <div class="form-actions">
-        <div class="info-text">
-          <span>Wenn Sie eine E-Commerce Seite erstellen möchten, dann klicken Sie auf den Button hier unter.</span>
-        </div>
-        <button type="button" class="btn btn-success" (click)="onAddProducts()">
-          🛒 Produkte hinzufügen
         </button>
       </div>
     </form>

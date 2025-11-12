@@ -1,3 +1,4 @@
+// ...existing code...
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +16,10 @@ import { AuthService } from '../services/auth.service';
 	styleUrls: ['./shop.component.scss']
 })
 export class ShopComponent implements OnInit {
+	openUrl(url: string, target: string = '_blank') {
+		window.open(url, target);
+	}
+	showImpressum = false;
 	goToDashboard(shopId?: string | number): void {
     const id = shopId || this.shopId;
     this.router.navigate(['/dashboard', id]);
@@ -143,5 +148,12 @@ export class ShopComponent implements OnInit {
 				this.toggleCart();
 				this.router.navigate(['/payment'], { queryParams: { shopId: this.shopId } });
 			}
+
+  // Vérifier si l'utilisateur est le propriétaire du shop
+  isShopOwner(): boolean {
+    const currentUser = this.authService.getCurrentUser?.();
+    if (!currentUser || !this.afroshop) return false;
+    return (this.afroshop as any).createdBy === currentUser.uid;
+  }
 }
 

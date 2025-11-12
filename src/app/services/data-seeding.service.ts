@@ -93,7 +93,12 @@ export class DataSeedingService {
       cuisine: 'Westafrikanische',
       priceLevel: 2,
       hours: 'Mo-Fr: 12:00-22:00, Sa: 14:00-23:00, So: 14:00-21:00',
-      website: 'https://mama-afrika-berlin.de'
+  website: 'https://mama-afrika-berlin.de',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
     {
       name: 'Ethiopian Queen Restaurant',
@@ -107,7 +112,12 @@ export class DataSeedingService {
       cuisine: 'Äthiopische',
       priceLevel: 2,
       hours: 'Mo-So: 17:00-23:00',
-      website: 'https://ethiopian-queen.de'
+  website: 'https://ethiopian-queen.de',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
     {
       name: 'Afro Hair Salon Berlin',
@@ -121,7 +131,12 @@ export class DataSeedingService {
       cuisine: '',
       priceLevel: 3,
       hours: 'Mo-Fr: 09:00-19:00, Sa: 09:00-17:00',
-      website: ''
+  website: '',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
     {
       name: 'Afrika Market Berlin',
@@ -135,7 +150,12 @@ export class DataSeedingService {
       cuisine: '',
       priceLevel: 2,
       hours: 'Mo-Sa: 08:00-20:00, So: 10:00-18:00',
-      website: 'https://afrika-market-berlin.de'
+  website: 'https://afrika-market-berlin.de',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
 
     // HAMBURG - Grande ville
@@ -151,7 +171,12 @@ export class DataSeedingService {
       cuisine: 'Senegalesische',
       priceLevel: 3,
       hours: 'Mo-Fr: 18:00-24:00, Sa-So: 17:00-01:00',
-      website: 'https://senegal-restaurant-hh.de'
+  website: 'https://senegal-restaurant-hh.de',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
     {
       name: 'Afro Style Hamburg',
@@ -165,7 +190,12 @@ export class DataSeedingService {
       cuisine: '',
       priceLevel: 3,
       hours: 'Mo-Fr: 10:00-20:00, Sa: 09:00-18:00',
-      website: ''
+  website: '',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
 
     // MÜNCHEN - Grande ville
@@ -181,7 +211,12 @@ export class DataSeedingService {
       cuisine: 'Kamerunische',
       priceLevel: 2,
       hours: 'Mo-Sa: 11:30-22:00',
-      website: ''
+  website: '',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
 
     // KÖLN - Grande ville  
@@ -197,7 +232,12 @@ export class DataSeedingService {
       cuisine: 'Nigerianische',
       priceLevel: 2,
       hours: 'Mo-Fr: 12:00-21:00, Sa-So: 14:00-22:00',
-      website: 'https://nigerian-restaurant-koeln.de'
+  website: 'https://nigerian-restaurant-koeln.de',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
 
     // FRANKFURT - Grande ville
@@ -213,7 +253,12 @@ export class DataSeedingService {
       cuisine: 'Eritreische',
       priceLevel: 2,
       hours: 'Mo-So: 17:00-23:00',
-      website: ''
+  website: '',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
 
     // STUTTGART - Grande ville
@@ -229,7 +274,12 @@ export class DataSeedingService {
       cuisine: '',
       priceLevel: 2,
       hours: 'Mo-Fr: 09:00-19:00, Sa: 09:00-17:00',
-      website: ''
+  website: '',
+  impressumName: '',
+  impressumAddress: '',
+  impressumEmail: '',
+  impressumPhone: '',
+  impressumText: ''
     },
 
     // DÜSSELDORF - Grande ville
@@ -424,9 +474,15 @@ export class DataSeedingService {
 
       for (const afroshop of newAfroshops) {
         try {
-          // Préparer les données pour Firebase
+          // Préparer les données pour Firebase, forcer tous les champs Impressum à string
+
           const firebaseData = {
             ...afroshop,
+            impressumName: 'impressumName' in afroshop && typeof afroshop.impressumName === 'string' ? afroshop.impressumName : '',
+            impressumAddress: 'impressumAddress' in afroshop && typeof afroshop.impressumAddress === 'string' ? afroshop.impressumAddress : '',
+            impressumEmail: 'impressumEmail' in afroshop && typeof afroshop.impressumEmail === 'string' ? afroshop.impressumEmail : '',
+            impressumPhone: 'impressumPhone' in afroshop && typeof afroshop.impressumPhone === 'string' ? afroshop.impressumPhone : '',
+            impressumText: 'impressumText' in afroshop && typeof afroshop.impressumText === 'string' ? afroshop.impressumText : '',
             city: this.extractCityFromAddress(afroshop.address),
             verified: true, // Les données importées sont vérifiées
             createdBy: 'system',
