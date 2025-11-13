@@ -79,28 +79,36 @@
   box-shadow: 0 2px 8px rgba(49,130,206,0.08);
 }
 .chatbot-bubble.mobile {
-  display: none;
-}
-.chatbot-mobile {
+  /* Afficher la bulle sur mobile et utiliser un style adapté */
+  display: block;
   width: 100%;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  padding: 1rem;
-  margin: 1rem 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: 0;
+  padding: 0.5rem 0.2rem 1rem 0.2rem;
+  min-width: unset;
+  max-width: unset;
+  background: #fffbe6; /* conserver la couleur mobile existante */
+  z-index: 9999;
 }
 @media (max-width: 600px) {
   .chatbot-bubble {
-    width: 100vw;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    border-radius: 0;
-    padding: 0.5rem 0.2rem 1rem 0.2rem;
+    /* inset pour laisser voir le border-radius, même apparence que desktop/tablet */
+    width: calc(100% - 2rem);
+    right: 1rem;
+    left: 1rem;
+    bottom: 1rem;
+    border-radius: 20px;
+    padding: 0.75rem 0.75rem 1rem 0.75rem;
     min-width: unset;
     max-width: unset;
-    border: 3px solid red;
+    border: 2px solid #3182ce; /* bordure bleue cohérente */
     background: #fffbe6;
     z-index: 9999;
+    box-shadow: 0 8px 32px rgba(49,130,206,0.18);
+    overflow: hidden; /* empêche le fond de déborder sur les angles */
+    -webkit-background-clip: padding-box; /* garantir que le background respecte le border-radius */
+    background-clip: padding-box;
   }
 }

@@ -1,9 +1,10 @@
-
 <!-- Bouton flottant pour ouvrir le bot partout -->
-<button *ngIf="!showChat" class="chatbot-float-btn" (click)="toggleChatHandler()">💬 Diamal</button>
+<button *ngIf="!showChat && !isMobile" class="chatbot-float-btn" (click)="toggleChatHandler()">💬 Diamal</button>
+<!-- Sur mobile on affiche le bouton différemment (dans la page Hilfe) -->
+<button *ngIf="!showChat && isMobile" class="chatbot-float-btn mobile-btn" (click)="toggleChatHandler()">💬 Diamal</button>
 
 <!-- Bulle du bot, mobile et desktop -->
-<div *ngIf="showChat" class="chatbot-bubble" [class.mobile]="isMobile">
+<div *ngIf="showChat" class="chatbot-bubble" [ngClass]="{ 'mobile': isMobile }">
   <div class="chatbot-header">
     <span>🤖 Diamal</span>
     <button class="close-btn" (click)="toggleChatHandler()">×</button>

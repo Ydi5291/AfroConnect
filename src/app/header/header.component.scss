@@ -91,15 +91,34 @@
   width: 100%;
 }
 
-.header-left h1 {
+.logo-title {
   font-size: 2.3rem;
   margin: 0;
   text-align: center;
   color: #4A90E2;
+  display: inline-block;
+  /* abaisser le bas du logo en augmentant le line-height et en jouant sur padding-bottom */
+  line-height: 1.1;
+  padding-bottom: 10px; /* fait descendre le bottom du texte */
+}
+
+.header-welcome {
+  /* Aligner le message de bienvenue au même niveau vertical que le logo mais plus bas visuellement */
+  display: flex;
+  align-items: flex-end; /* place le texte vers le bas */
+  justify-content: center;
+  height: 40px; /* même hauteur que l'espace du header pour alignement */
+  margin-top: 0.25rem;
+}
+
+.welcome-text {
+  font-size: 1rem;
+  color: #ffffff;
+  background: rgba(0,0,0,0.25);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
 }
 
 .welcome-message {
   text-align: center;
 }
-
-// ...existing code...

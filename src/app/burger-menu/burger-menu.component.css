@@ -81,3 +81,99 @@
     padding: 1.2rem 0.7rem 0.7rem 0.7rem;
   }
 }
+
+/* Nouveau : comportement mobile amélioré pour que le panneau occupe la largeur du header
+   et présente les liens centrés verticalement et horizontalement */
+@media (max-width: 800px) {
+  .menu-overlay {
+    /* obscurcir davantage le fond pour une meilleure lisibilité */
+    background: rgba(0,0,0,0.55);
+    z-index: 1205;
+  }
+
+  .menu-panel {
+    position: fixed;
+    top: 0; /* commencer au sommet du header */
+    left: 0;
+    width: 100%; /* même largeur que le header (plein écran) */
+    height: auto; /* hauteur automatique */
+    max-height: 80vh; /* limite la hauteur pour permettre le scroll */
+    overflow-y: auto; /* permet le défilement si le contenu déborde */
+    /* fond sombre et brillant avec léger flou pour effet glassmorphism */
+    background: rgba(8, 10, 15, 0.66);
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    z-index: 1206;
+    padding: 1rem 1.25rem 2rem 1.25rem; /* padding-bottom augmenté pour espace final */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* centrer horizontalement */
+    justify-content: center; /* centrer verticalement si peu d'éléments */
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    color: #fff;
+  }
+
+  /* Assurer que la liste prend l'espace disponible et reste centrée */
+  .menu-panel ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* réduire le gap entre les liens */
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .menu-panel li {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .menu-panel a {
+    color: #ffffff;
+    font-size: 1.15rem;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    display: inline-block;
+    width: auto;
+    padding: 0.45rem 0.75rem;
+    border-radius: 8px;
+    /* léger fond brillant pour chaque lien */
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    transition: background 0.18s ease, transform 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .menu-panel a:hover,
+  .menu-panel a:focus {
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    transform: translateY(-2px);
+  }
+
+  .close-menu {
+    position: absolute;
+    right: 1rem;
+    top: 0.6rem;
+    font-size: 1.8rem;
+    color: #ffffff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1210; /* s'assurer qu'il reste au-dessus du panneau */
+  }
+
+  /* Optionnel : style pour la scrollbar sur mobile / webkit */
+  .menu-panel::-webkit-scrollbar {
+    width: 8px;
+  }
+  .menu-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.12);
+    border-radius: 8px;
+  }
+}

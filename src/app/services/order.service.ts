@@ -1,4 +1,4 @@
-import { Injectable, inject, runInInjectionContext } from '@angular/core';
+import { Injectable, inject, runInInjectionContext, Injector } from '@angular/core';
 import { Firestore, collection, addDoc, query, where, orderBy, Timestamp, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -25,6 +25,7 @@ export interface OrderData {
 @Injectable({ providedIn: 'root' })
 export class OrderService {
   private firestore = inject(Firestore);
+  private injector = inject(Injector);
 
   // 🔹 Ajouter une commande
   async addOrder(order: Omit<OrderData, 'id' | 'createdAt'>): Promise<void> {
@@ -37,7 +38,7 @@ export class OrderService {
 
   // 🔹 Récupérer toutes les commandes (admin)
   getAllOrders(): Observable<OrderData[]> {
-    return runInInjectionContext(this.firestore as any, () => {
+    return runInInjectionContext(this.injector, () => {
       const ordersRef = collection(this.firestore, 'orders');
       const q = query(ordersRef, orderBy('createdAt', 'desc'));
       return collectionData(q, { idField: 'id' }) as Observable<OrderData[]>;
@@ -46,7 +47,7 @@ export class OrderService {
 
   // 🔹 Récupérer les commandes d’un shop précis
   getOrdersByShop(shopId: string): Observable<OrderData[]> {
-    return runInInjectionContext(this.firestore as any, () => {
+    return runInInjectionContext(this.injector, () => {
       const ordersRef = collection(this.firestore, 'orders');
       const q = query(ordersRef, where('shopId', '==', shopId), orderBy('createdAt', 'desc'));
       return collectionData(q, { idField: 'id' }) as Observable<OrderData[]>;
@@ -55,7 +56,7 @@ export class OrderService {
 
   // 🔹 (Optionnel) Récupérer les commandes d’un client spécifique
   getOrdersByUser(userId: string): Observable<OrderData[]> {
-    return runInInjectionContext(this.firestore as any, () => {
+    return runInInjectionContext(this.injector, () => {
       const ordersRef = collection(this.firestore, 'orders');
       const q = query(ordersRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
       return collectionData(q, { idField: 'id' }) as Observable<OrderData[]>;

@@ -1,0 +1,80 @@
+/* Styles for Dashboard responsiveness and scrolling on mobile */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 1.2rem auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: transparent;
+  min-width: 0; /* allow children to overflow internally without expanding parent */
+  overflow-x: hidden; /* avoid page-level horizontal scroll */
+}
+
+.dashboard-empty {
+  text-align: center;
+  color: #666;
+  padding: 2rem 1rem;
+}
+
+/* Wrapper that provides both vertical and horizontal scrolling when needed */
+.dashboard-table-wrapper {
+  width: 100%;
+  overflow: auto; /* allow both x and y scrolling */
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  padding: 0.5rem;
+  max-height: calc(100vh - 220px); /* reserve space for header/footer on mobile */
+  min-width: 0; /* important for flexbox parents */
+  scrollbar-gutter: stable both-edges; /* keep layout stable when scrollbar appears */
+  padding-right: 0.75rem; /* small right padding to avoid flush edge */
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 100%; /* prefer responsive behavior; allow internal scroll if needed */
+  table-layout: auto;
+}
+
+.dashboard-table thead th,
+.dashboard-table tbody td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  text-align: left;
+  vertical-align: top;
+  font-size: 0.95rem;
+  word-break: break-word; /* allow long text to wrap inside cells */
+}
+
+.dashboard-table tbody tr:nth-child(even) {
+  background: rgba(0,0,0,0.015);
+}
+
+/* Make inner lists in cells wrap and not overflow */
+.dashboard-table td ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  max-width: 320px; /* limit width of lists to avoid huge table width */
+  overflow-wrap: anywhere;
+}
+
+/* Mobile tweaks */
+@media (max-width: 800px) {
+  .dashboard-container {
+    padding: 0.6rem;
+    margin: 0.6rem auto;
+  }
+  .dashboard-table-wrapper {
+    max-height: calc(100vh - 160px); /* slightly larger area for mobile */
+    padding: 0.4rem;
+  }
+  .dashboard-table {
+    min-width: 100%; /* responsive: avoid forcing extra horizontal scroll */
+  }
+  .dashboard-table thead th,
+  .dashboard-table tbody td {
+    padding: 0.55rem 0.6rem;
+    font-size: 0.92rem;
+  }
+}

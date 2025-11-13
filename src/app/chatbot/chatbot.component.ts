@@ -89,7 +89,9 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
   }
 
   toggleChatHandler() {
+    // éviter le comportement de bubbling qui ferme immédiatement sur mobile
+    // Ne pas modifier la valeur d'input ici; on émet un événement pour que le parent change showChat
     this.toggleChat.emit();
-    console.log('[Chatbot] toggleChatHandler appelé, showChat:', this.showChat, 'isMobile:', this.isMobile);
+    console.log('[Chatbot] toggleChatHandler appelé, showChat (avant emit):', this.showChat, 'isMobile:', this.isMobile);
   }
 }

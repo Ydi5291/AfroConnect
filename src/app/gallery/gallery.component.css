@@ -1999,3 +1999,93 @@
     min-width: 100px; /* Taille raisonnable même sur grands écrans */
   }
 }
+
+/* Correction spécifique pour iPad / tablettes (évite que le bouton 'Suchen' passe au-dessus de 'Beliebte Städte') */
+@media (min-width: 700px) and (max-width: 1024px) {
+  .location-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.8rem;
+    width: 100%;
+  }
+
+  .city-search-group, .quick-cities-group {
+    flex: 1 1 0;
+    min-width: 0; /* important pour permettre le shrink sur iPad */
+  }
+
+  .city-search-group .unified-input-group,
+  .quick-cities-group .unified-input-group {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    width: 100%;
+  }
+
+  .unified-input.city-input-compact,
+  .unified-select.city-select-compact {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .search-btn, .confirm-btn {
+    flex: 0 0 auto !important; /* garder les boutons à leur taille */
+    margin-left: 0 !important;
+  }
+
+  /* enlever margin-bottom trop grand qui pousse le suivi vers le haut */
+  .city-search-group { margin-bottom: 0 !important; }
+  .quick-cities-group { margin-top: 0 !important; }
+}
+
+/* Make intro and controls sections match the gallery dark glossy background */
+.intro-section, .controls-section {
+  background: linear-gradient(180deg, rgba(8,10,15,0.96), rgba(20,24,30,0.94));
+  color: #e6eef8;
+  padding: 1rem 0.6rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(2,6,23,0.6);
+  margin-bottom: 1rem;
+}
+
+.intro-message {
+  color: #eaf4ff;
+  font-weight: 600;
+}
+
+.intro-actions .add-shop-btn, .intro-actions .settings-btn {
+  background: linear-gradient(135deg, #3178e0, #1a63c4);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(3,9,39,0.55);
+}
+
+/* Ensure select content and options are visible (dark text) when opened */
+.unified-select,
+.unified-select option,
+.unified-select:focus,
+.unified-select:active {
+  color: #0b1220 !important; /* texte noir foncé */
+  background: #ffffff !important;
+  -webkit-text-fill-color: #0b1220 !important; /* iOS/Safari */
+}
+
+/* Specific for type filter compact select */
+.type-filter-group .unified-select,
+.unified-select.type-select-compact {
+  color: #0b1220 !important;
+  background: #ffffff !important;
+  -webkit-text-fill-color: #0b1220 !important;
+}
+
+/* For some Android webviews, force the select's inner text color via appearance reset */
+.unified-select {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* If a native picker overlays, ensure the visible control remains readable */
+.unified-select::placeholder {
+  color: #0b1220 !important;
+}

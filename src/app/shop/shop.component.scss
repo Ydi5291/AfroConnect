@@ -95,6 +95,38 @@
 	position: relative;
 }
 
+/* Mobile: rendre la barre de boutons scrollable horizontalement pour le shopOwner */
+@media (max-width: 800px) {
+  .shop-header-btns {
+    justify-content: flex-start; /* aligner à gauche, on scrollera horizontalement */
+    gap: 0.6rem;
+    padding: 0.4rem 0.6rem; /* espace pour le scroll */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* inertial scrolling sur iOS */
+    scroll-snap-type: x proximity;
+    white-space: nowrap; /* empêcher le wrap des boutons */
+  }
+
+  .shop-header-btns .modern-btn {
+    flex: 0 0 auto; /* éviter que les boutons rétrécissent */
+    scroll-snap-align: start;
+    margin-right: 0.5rem; /* léger espacement entre boutons */
+  }
+
+  /* Style discret pour la scrollbar horizontale */
+  .shop-header-btns::-webkit-scrollbar {
+    height: 8px;
+  }
+  .shop-header-btns::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.12);
+    border-radius: 8px;
+  }
+  .shop-header-btns::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
 .cart-float-global {
 	position: fixed;
 	top: 18px;
