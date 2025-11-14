@@ -508,6 +508,7 @@
 @media (max-width: 500px) {
   .impressum-modal-content {
     width: 95vw;
+    max-height: 90vh;
     border-radius: 16px;
   }
   
@@ -518,6 +519,9 @@
   
   .impressum-modal-scroll-wrapper {
     padding: 1rem 1.5rem 2rem;
+    max-height: calc(90vh - 100px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

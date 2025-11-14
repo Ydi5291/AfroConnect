@@ -9,11 +9,12 @@ import { User } from '@angular/fire/auth';
 import { CookieConsentComponent } from './cookie-consent/cookie-consent.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { HeaderComponent } from './header/header.component';
+import { BurgerMenuComponent } from './burger-menu/burger-menu.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterModule, CookieConsentComponent, ChatbotComponent, HeaderComponent],
+  imports: [CommonModule, RouterOutlet, RouterModule, CookieConsentComponent, ChatbotComponent, HeaderComponent, BurgerMenuComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
