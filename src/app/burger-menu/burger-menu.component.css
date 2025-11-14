@@ -1,8 +1,8 @@
 .burger-menu-container {
-  position: absolute;
+  position: fixed;
   top: 1.2rem;
   left: 1.2rem;
-  z-index: 9999;
+  z-index: 10000;
 }
 .burger-icon {
   background: none;
@@ -32,7 +32,7 @@
   width: 100vw;
   height: 100vh;
   background: rgba(49,130,206,0.12);
-  z-index: 9998;
+  z-index: 9999;
 }
 .menu-panel {
   position: fixed;
@@ -42,7 +42,7 @@
   height: 100vh;
   background: #fff;
   box-shadow: 2px 0 16px rgba(49,130,206,0.12);
-  z-index: 9999;
+  z-index: 10000;
   padding: 2rem 1.2rem 1.2rem 1.2rem;
   display: flex;
   flex-direction: column;
@@ -87,7 +87,7 @@
   .menu-overlay {
     /* overlay couvre tout l'écran mais permet de cliquer pour fermer */
     background: rgba(0,0,0,0.55);
-    z-index: 9998;
+    z-index: 9999;
   }
 
   .menu-panel {
@@ -103,7 +103,7 @@
     backdrop-filter: blur(8px) saturate(120%);
     -webkit-backdrop-filter: blur(8px) saturate(120%);
     box-shadow: 2px 0 30px rgba(0,0,0,0.45);
-    z-index: 9999;
+    z-index: 10000;
     padding: 3rem 1.5rem 2rem 1.5rem;
     display: flex;
     flex-direction: column;
@@ -172,7 +172,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    z-index: 10000; /* s'assurer qu'il reste au-dessus du panneau */
+    z-index: 10001; /* s'assurer qu'il reste au-dessus du panneau */
   }
 
   /* Optionnel : style pour la scrollbar sur mobile / webkit */
