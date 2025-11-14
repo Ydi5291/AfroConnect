@@ -16,6 +16,7 @@ import { AddProductComponent } from './add-product/add-product.component';
 import { ShopComponent } from './shop/shop.component';
 import { PaymentComponent } from './payment/payment.component';
 import { DashboardComponent } from './admin/dashboard.component';
+import { SuperDashboardComponent } from './admin/super-dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/gallery', pathMatch: 'full' },
@@ -63,6 +64,11 @@ export const routes: Routes = [
     path: 'dashboard/:id', 
     component: DashboardComponent, 
     canActivate: [AdminGuard] // 🔒
+  },
+  { 
+    path: 'super-dashboard', 
+    component: SuperDashboardComponent, 
+    canActivate: [AdminGuard] // 🔒 Super Admin uniquement
   },
   { path: '**', redirectTo: '/gallery' } 
 ];

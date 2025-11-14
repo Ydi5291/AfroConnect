@@ -1,16 +1,65 @@
 <div class="dashboard-container">
 
-  <h2><span style="font-size:1.5em;">📊</span> Bestellungen für Ihren Shop</h2>
-  <button class="modern-btn dashboard-return" style="margin-bottom:1.5rem;" (click)="goToShop()" [disabled]="!shopIdReady">← Zurück zum Shop</button>
-  <div *ngIf="orders.length === 0" class="dashboard-empty">
+  <h2><span style="font-size:1.5em;">🌍</span> Super Admin Dashboard - Toutes les Commandes</h2>
+  
+  <div class="super-admin-controls">
+    <button class="modern-btn dashboard-return" (click)="goToAdmin()">← Zurück zur Admin</button>
+    <button class="modern-btn" (click)="goToGallery()">Zur Gallery</button>
+  </div>
+
+  <!-- Statistiques globales -->
+  <div class="stats-container" *ngIf="!isLoading">
+    <div class="stat-card">
+      <div class="stat-icon">📦</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getTotalOrders() }}</div>
+        <div class="stat-label">Gesamtbestellungen</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-content">
+        <div class="stat-value">€{{ getTotalRevenue().toFixed(2) }}</div>
+        <div class="stat-label">Gesamtumsatz</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏪</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ allShops.length }}</div>
+        <div class="stat-label">Aktive Shops</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtre par shop -->
+  <div class="filter-section">
+    <label for="shopFilter">🔍 Filtern nach Shop:</label>
+    <select id="shopFilter" [(ngModel)]="selectedShopId" (change)="onShopFilterChange()" class="shop-filter">
+      <option value="all">📊 Alle Shops anzeigen</option>
+      <option *ngFor="let shop of allShops" [value]="shop.id">{{ shop.name }} ({{ shop.city || 'Keine Stadt' }})</option>
+    </select>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="dashboard-empty">
+    <p>⏳ Lade Bestellungen...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && filteredOrders.length === 0" class="dashboard-empty">
     <p>Keine Bestellungen gefunden.</p>
   </div>
-  <div class="dashboard-info" *ngIf="orders.length > 0">
+
+  <!-- Tip -->
+  <div class="dashboard-info" *ngIf="!isLoading && filteredOrders.length > 0">
     <p style="color: #1e88e5; font-size: 0.9rem; margin-bottom: 0.5rem;">
       💡 <em>Tipp: Wischen Sie nach links/rechts und oben/unten, um alle Informationen zu sehen.</em>
     </p>
   </div>
-  <div class="dashboard-table-wrapper" *ngIf="orders.length > 0">
+
+  <!-- Tables groupées par jour -->
+  <div class="dashboard-table-wrapper" *ngIf="!isLoading && filteredOrders.length > 0">
     <ng-container *ngFor="let group of groupedOrders">
       <div class="date-separator">
         <h3>
@@ -23,6 +72,7 @@
         <thead>
           <tr>
             <th>Uhrzeit</th>
+            <th>Shop</th>
             <th>Kunde</th>
             <th>Produkte</th>
             <th>Menge</th>
@@ -34,6 +84,7 @@
         <tbody>
           <tr *ngFor="let order of group.orders">
             <td><strong>{{ order.createdAt?.toDate() | date:'HH:mm' }}</strong></td>
+            <td><strong style="color: #1a8917;">{{ getShopName(order.shopId) }}</strong></td>
             <td>
               <ng-container *ngIf="order.clientInfo; else noClientInfo">
                 <strong>{{ order.clientInfo.firstName }} {{ order.clientInfo.lastName }}</strong><br>
@@ -43,7 +94,7 @@
                 <span *ngIf="order.clientInfo.email">E-Mail: {{ order.clientInfo.email }}</span>
               </ng-container>
               <ng-template #noClientInfo>
-                <span style="color:#888">Aucune info client</span>
+                <span style="color:#888">Keine Kundeninfo</span>
               </ng-template>
             </td>
             <td>
@@ -56,7 +107,7 @@
                 <li *ngFor="let product of order.products">{{ product.quantity }}</li>
               </ul>
             </td>
-            <td>€{{ order.total.toFixed(2) }}</td>
+            <td><strong>€{{ order.total.toFixed(2) }}</strong></td>
             <td>{{ order.paymentMethod }}</td>
             <td>
               <span *ngIf="order.deliveryType === 'abholung'" style="color: #1a8917;">🏪 Abholung</span>

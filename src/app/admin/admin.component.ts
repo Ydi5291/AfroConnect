@@ -98,6 +98,10 @@ export class AdminComponent {
     this.router.navigate(['/gallery']);
   }
 
+  goToSuperDashboard(): void {
+    this.router.navigate(['/super-dashboard']);
+  }
+
   // 🧹 Nettoyer les doublons
   async cleanDuplicates(): Promise<void> {
     if (!this.isAuthenticated) {
