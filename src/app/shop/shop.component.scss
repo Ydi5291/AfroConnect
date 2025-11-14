@@ -123,29 +123,27 @@
   }
 }
 
-/* Mobile: scroll horizontal optimisé */
+/* Mobile: disposition en 2 colonnes pour tous les boutons visibles */
 @media (max-width: 800px) {
   .shop-header-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 0.6rem;
-    padding: 0.8rem 0.8rem;
+    padding: 0.8rem;
     margin: 0.5rem;
-    /* Ajouter des ombres pour indiquer qu'on peut scroller */
-    background: 
-      linear-gradient(90deg, white 30%, rgba(255,255,255,0)),
-      linear-gradient(90deg, rgba(255,255,255,0), white 70%) 100% 0,
-      radial-gradient(farthest-side at 0% 50%, rgba(0,0,0,.15), rgba(0,0,0,0)),
-      radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.15), rgba(0,0,0,0)) 100% 0;
-    background-repeat: no-repeat;
-    background-color: white;
-    background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-    background-attachment: local, local, scroll, scroll;
+    overflow-x: visible;
+    overflow-y: visible;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
   }
 
   .shop-header-btns .modern-btn {
     font-size: 0.85rem;
-    padding: 0.7rem 1.1rem;
-    /* S'assurer que les boutons sont tous visibles */
-    min-width: max-content;
+    padding: 0.7rem 0.8rem;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.3;
   }
 }
 
