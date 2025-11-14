@@ -508,20 +508,33 @@
 @media (max-width: 500px) {
   .impressum-modal-content {
     width: 95vw;
-    max-height: 90vh;
+    max-height: 85vh;
     border-radius: 16px;
+    display: flex;
+    flex-direction: column;
   }
   
   .impressum-modal-content h3 {
     font-size: 1.4rem;
     padding: 1.5rem 1.5rem 1rem;
+    flex-shrink: 0;
   }
   
   .impressum-modal-scroll-wrapper {
-    padding: 1rem 1.5rem 2rem;
-    max-height: calc(90vh - 100px);
+    padding: 1rem 1.5rem 1.5rem;
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    flex: 1;
+    min-height: 0;
+  }
+  
+  .close-btn {
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
   }
 }
 
