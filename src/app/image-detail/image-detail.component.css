@@ -515,13 +515,13 @@
   }
   
   .impressum-modal-content h3 {
-    font-size: 1.4rem;
-    padding: 1.5rem 1.5rem 1rem;
+    font-size: 1.3rem;
+    padding: 1rem 1rem 0.8rem;
     flex-shrink: 0;
   }
   
   .impressum-modal-scroll-wrapper {
-    padding: 1rem 1.5rem 1.5rem;
+    padding: 0.8rem 1rem 1rem;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
@@ -529,12 +529,38 @@
     min-height: 0;
   }
   
+  .impressum-info-container > div {
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .impressum-modal-content .afroconnect-disclaimer {
+    padding: 0.8rem 1rem;
+    margin: 0 0 0.8rem 0;
+  }
+  
+  .impressum-modal-content .afroconnect-disclaimer p {
+    margin: 0.2rem 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  
+  .impressum-modal-content hr {
+    margin: 0.8rem 0;
+  }
+  
+  .impressum-modal-content .form-hint {
+    padding: 0.7rem;
+    font-size: 0.8rem;
+    margin-top: 0.8rem;
+  }
+  
   .close-btn {
-    top: 1rem;
-    right: 1rem;
-    width: 32px;
-    height: 32px;
-    font-size: 1.2rem;
+    top: 0.8rem;
+    right: 0.8rem;
+    width: 30px;
+    height: 30px;
+    font-size: 1.1rem;
   }
 }
 
