@@ -48,8 +48,10 @@ export class ImageDetailComponent implements OnInit {
   ) {}
 
   editProducts() {
-    // Rediriger vers la page d'édition du commerce (add-afroshop)
-    this.router?.navigate(['/add-afroshop'], { queryParams: { afroshopId: this.shopId } });
+    // Rediriger vers la page d'édition du commerce
+    if (this.shopId) {
+      this.router.navigate(['/edit-afroshop', this.shopId]);
+    }
   }
 
   ngOnInit(): void {
@@ -70,6 +72,13 @@ export class ImageDetailComponent implements OnInit {
             console.log('✅ Afroshop trouvé:', this.afroshop.name);
             console.log('🖼️ URL de l\'image:', this.afroshop.image);
             console.log('📦 Données complètes:', this.afroshop);
+            console.log('📝 Impressum données:', {
+              name: this.afroshop.impressumName,
+              address: this.afroshop.impressumAddress,
+              email: this.afroshop.impressumEmail,
+              phone: this.afroshop.impressumPhone,
+              text: this.afroshop.impressumText
+            });
             // Parser les heures d\'ouverture pour l\'affichage formaté
             this.parseOpeningHours(this.afroshop.hours || '');
 

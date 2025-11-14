@@ -75,9 +75,17 @@ import { Component } from '@angular/core';
 
         <section>
           <h2>§ 6 Haftung</h2>
+          <h3>6.1 Allgemeine Haftung</h3>
           <p>
             AfroConnect haftet nur für Schäden, die auf vorsätzlichem oder 
             grob fahrlässigem Verhalten beruhen.
+          </p>
+          
+          <h3>6.2 Haftungsausschluss für Drittanbieter</h3>
+          <p>
+            AfroConnect haftet nicht für Vertragsverhältnisse, Bestellungen, 
+            Lieferungen oder Zahlungen zwischen Nutzern und Anbietern. 
+            Die Plattform dient ausschließlich als Vermittlungs- und Informationsdienst.
           </p>
         </section>
 

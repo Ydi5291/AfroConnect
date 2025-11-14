@@ -5,6 +5,11 @@
   <div *ngIf="orders.length === 0" class="dashboard-empty">
     <p>Keine Bestellungen gefunden.</p>
   </div>
+  <div class="dashboard-info" *ngIf="orders.length > 0">
+    <p style="color: #1e88e5; font-size: 0.9rem; margin-bottom: 0.5rem;">
+      💡 <em>Tipp: Wischen Sie nach links/rechts und oben/unten, um alle Informationen zu sehen.</em>
+    </p>
+  </div>
   <div class="dashboard-table-wrapper" *ngIf="orders.length > 0">
     <table class="dashboard-table">
       <thead>

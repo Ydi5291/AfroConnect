@@ -1,8 +1,7 @@
 <div class="shop-container" *ngIf="afroshop">
 	<div class="shop-header-btns">
-		<button class="modern-btn" (click)="router.navigate(['/gallery'])">← Zurück zur Übersicht</button>
-		<!-- Correction : ce bouton va sur la page détail du shop avec la bonne route -->
-		<button class="modern-btn" (click)="router.navigate(['/afroshop', afroshop.id])">🔍 Zur Shop-Detailseite</button>
+		<button class="modern-btn" (click)="router.navigate(['/gallery'])">Zur Gallery</button>
+		<button class="modern-btn" (click)="router.navigate(['/afroshop', afroshop.id])">Zum Shop</button>
 		<!-- Bouton Appeler : icône seule -->
 		<button *ngIf="!isShopOwner() && afroshop.phone" class="modern-btn call-header-btn" (click)="openUrl('tel:' + afroshop.phone, '_self')">📞</button>
 		<button *ngIf="canEdit()" class="modern-btn primary" (click)="goToAddProduct()">➕ Produkte hinzufügen</button>

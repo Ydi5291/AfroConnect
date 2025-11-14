@@ -132,17 +132,12 @@ export class AddAfroshopComponent {
     private firestore: Firestore
   ) { }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     // Vérifier si l'utilisateur est admin via Firestore (modular)
-    this.authService.user$.subscribe(async user => {
+    this.authService.user$.subscribe(user => {
       console.log('Mon UID:', user?.uid);
       if (user?.uid) {
-        const adminDocRef = doc(this.firestore, 'roles/admins');
-        const adminDocSnap = await getDoc(adminDocRef);
-        const adminDoc = adminDocSnap.data() as { uids: string[] } | undefined;
-        console.log('UIDs Firestore:', adminDoc?.uids);
-        this.isAdmin = adminDoc?.uids?.includes(user.uid) ?? false;
-        console.log('isAdmin:', this.isAdmin);
+        this.checkAdminStatus(user.uid);
       } else {
         this.isAdmin = false;
       }
@@ -154,6 +149,21 @@ export class AddAfroshopComponent {
       this.isEditMode = true;
       this.editingId = id;
       this.loadAfroshopForEdit(id);
+    }
+  }
+
+  // Méthode séparée pour vérifier le statut admin
+  private async checkAdminStatus(uid: string): Promise<void> {
+    try {
+      const adminDocRef = doc(this.firestore, 'roles/admins');
+      const adminDocSnap = await getDoc(adminDocRef);
+      const adminDoc = adminDocSnap.data() as { uids: string[] } | undefined;
+      console.log('UIDs Firestore:', adminDoc?.uids);
+      this.isAdmin = adminDoc?.uids?.includes(uid) ?? false;
+      console.log('isAdmin:', this.isAdmin);
+    } catch (error) {
+      console.error('Erreur lors de la vérification admin:', error);
+      this.isAdmin = false;
     }
   }
 
@@ -185,6 +195,12 @@ export class AddAfroshopComponent {
           impressumPhone: afroshop.impressumPhone || '',
           impressumText: afroshop.impressumText || ''
         };
+        
+        // Si street, plz ou city sont vides mais address existe, parser l'adresse
+        if ((!this.afroshop.street || !this.afroshop.plz || !this.afroshop.city) && this.afroshop.address) {
+          this.parseAddressFromString(this.afroshop.address);
+        }
+        
         this.imagePreview = afroshop.image || null;
 
         // Parser les heures d'ouverture pour l'interface
@@ -448,6 +464,13 @@ export class AddAfroshopComponent {
         console.log('🔄 Mise à jour Afroshop:', updateData);
         await this.firebaseService.updateAfroshop(this.editingId, updateData);
         this.successMessage = '✅ Afroshop erfolgreich aktualisiert!';
+        
+        // Redirection vers la page de détail du shop édité
+        console.log('🔀 Navigation vers le shop:', this.editingId);
+        setTimeout(() => {
+          this.router.navigate(['/afroshop', this.editingId]);
+        }, 1500);
+        
       } else {
         // Mode ajout : créer un nouvel Afroshop
         const newAfroshop = {
@@ -461,15 +484,15 @@ export class AddAfroshopComponent {
         console.log('➕ Création Afroshop:', newAfroshop);
         const docId = await this.firebaseService.addAfroshop(newAfroshop);
         this.successMessage = '✅ Afroshop erfolgreich hinzugefügt! ID: ' + docId;
+        
+        // Redirection vers la page de détail du nouveau shop créé
+        console.log('🔀 Navigation vers le nouveau shop:', docId);
+        setTimeout(() => {
+          this.router.navigate(['/afroshop', docId]);
+        }, 1500);
       }
 
       this.resetForm();
-
-      // Log avant routage
-      console.log('🔀 Navigation vers la galerie...');
-      setTimeout(() => {
-        this.router.navigate(['/gallery']);
-      }, 2000);
 
     } catch (error) {
       console.error('Fehler:', error);
@@ -919,40 +942,130 @@ export class AddAfroshopComponent {
     this.openingHours.saturday.isOpen = false;
     this.openingHours.sunday.isOpen = false;
 
-    const dayEntries = hoursString.split(',');
+    // Split par virgule ou newline
+    const dayEntries = hoursString.split(/[,\n]/).map(e => e.trim()).filter(e => e);
 
     dayEntries.forEach(entry => {
       const trimmed = entry.trim();
-      const match = trimmed.match(/^(\w+):\s*(\d{2}:\d{2})-(\d{2}:\d{2})$/);
+      
+      // Essayer différents formats:
+      // Format 1: "Mo: 10:00-20:00"
+      // Format 2: "Mo-Fr: 09:00-18:00"
+      // Format 3: "Montag: 10:00-20:00"
+      
+      const match = trimmed.match(/^(\w+)(?:-(\w+))?\s*:\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/);
 
       if (match) {
-        const [, dayAbbr, openTime, closeTime] = match;
-
-        switch (dayAbbr.toLowerCase()) {
-          case 'mo':
-            this.openingHours.monday = { isOpen: true, open: openTime, close: closeTime };
-            break;
-          case 'di':
-            this.openingHours.tuesday = { isOpen: true, open: openTime, close: closeTime };
-            break;
-          case 'mi':
-            this.openingHours.wednesday = { isOpen: true, open: openTime, close: closeTime };
-            break;
-          case 'do':
-            this.openingHours.thursday = { isOpen: true, open: openTime, close: closeTime };
-            break;
-          case 'fr':
-            this.openingHours.friday = { isOpen: true, open: openTime, close: closeTime };
-            break;
-          case 'sa':
-            this.openingHours.saturday = { isOpen: true, open: openTime, close: closeTime };
-            break;
-          case 'so':
-            this.openingHours.sunday = { isOpen: true, open: openTime, close: closeTime };
-            break;
+        const [, startDay, endDay, openTime, closeTime] = match;
+        
+        // Si c'est une plage (Mo-Fr)
+        if (endDay) {
+          const dayRange = this.getDayRange(startDay, endDay);
+          dayRange.forEach(dayKey => {
+            if (dayKey && this.openingHours[dayKey as keyof typeof this.openingHours]) {
+              this.openingHours[dayKey as keyof typeof this.openingHours] = { 
+                isOpen: true, 
+                open: openTime, 
+                close: closeTime 
+              };
+            }
+          });
+        } else {
+          // Jour unique
+          const dayKey = this.getDayKey(startDay);
+          if (dayKey && this.openingHours[dayKey as keyof typeof this.openingHours]) {
+            this.openingHours[dayKey as keyof typeof this.openingHours] = { 
+              isOpen: true, 
+              open: openTime, 
+              close: closeTime 
+            };
+          }
         }
       }
     });
+  }
+
+  // Obtenir la clé du jour depuis différents formats
+  private getDayKey(dayStr: string): string | null {
+    const dayMap: {[key: string]: string} = {
+      'mo': 'monday', 'montag': 'monday', 'monday': 'monday',
+      'di': 'tuesday', 'dienstag': 'tuesday', 'tuesday': 'tuesday',
+      'mi': 'wednesday', 'mittwoch': 'wednesday', 'wednesday': 'wednesday',
+      'do': 'thursday', 'donnerstag': 'thursday', 'thursday': 'thursday',
+      'fr': 'friday', 'freitag': 'friday', 'friday': 'friday',
+      'sa': 'saturday', 'samstag': 'saturday', 'saturday': 'saturday',
+      'so': 'sunday', 'sonntag': 'sunday', 'sunday': 'sunday'
+    };
+    return dayMap[dayStr.toLowerCase()] || null;
+  }
+
+  // Obtenir une plage de jours (ex: Mo-Fr retourne ['monday', 'tuesday', ...])
+  private getDayRange(startDay: string, endDay: string): string[] {
+    const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const startKey = this.getDayKey(startDay);
+    const endKey = this.getDayKey(endDay);
+    
+    if (!startKey || !endKey) return [];
+    
+    const startIndex = daysOrder.indexOf(startKey);
+    const endIndex = daysOrder.indexOf(endKey);
+    
+    if (startIndex === -1 || endIndex === -1) return [];
+    
+    const result: string[] = [];
+    if (startIndex <= endIndex) {
+      for (let i = startIndex; i <= endIndex; i++) {
+        result.push(daysOrder[i]);
+      }
+    } else {
+      // Plage qui traverse la semaine (ex: Sa-So)
+      for (let i = startIndex; i < daysOrder.length; i++) {
+        result.push(daysOrder[i]);
+      }
+      for (let i = 0; i <= endIndex; i++) {
+        result.push(daysOrder[i]);
+      }
+    }
+    return result;
+  }
+
+  // Parser une adresse complète en street, plz et city
+  private parseAddressFromString(address: string): void {
+    if (!address) return;
+    
+    // Formats possibles :
+    // "Virchowstr 6, 46047 Oberhausen"
+    // "Müllerstraße 123, 13349 Berlin"
+    // "Hauptstr. 45, 59457 Werl"
+    
+    // Regex pour extraire: rue, PLZ (5 chiffres), ville
+    const match = address.match(/^(.+?),?\s*(\d{5})\s+(.+)$/);
+    
+    if (match) {
+      const [, street, plz, city] = match;
+      if (!this.afroshop.street) this.afroshop.street = street.trim();
+      if (!this.afroshop.plz) this.afroshop.plz = plz.trim();
+      if (!this.afroshop.city) this.afroshop.city = city.trim();
+      
+      console.log('✅ Adresse parsée:', { street: this.afroshop.street, plz: this.afroshop.plz, city: this.afroshop.city });
+    } else {
+      console.warn('⚠️ Format d\'adresse non reconnu:', address);
+      // Fallback : essayer de deviner
+      const parts = address.split(',').map(p => p.trim());
+      if (parts.length >= 2) {
+        // Première partie = rue
+        if (!this.afroshop.street) this.afroshop.street = parts[0];
+        
+        // Deuxième partie contient PLZ et ville
+        const secondPart = parts[1];
+        const plzMatch = secondPart.match(/(\d{5})/);
+        if (plzMatch) {
+          if (!this.afroshop.plz) this.afroshop.plz = plzMatch[1];
+          const cityPart = secondPart.replace(plzMatch[1], '').trim();
+          if (!this.afroshop.city && cityPart) this.afroshop.city = cityPart;
+        }
+      }
+    }
   }
 
   goBack(): void {

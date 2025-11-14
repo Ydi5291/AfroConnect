@@ -93,13 +93,41 @@
 <div class="impressum-modal" *ngIf="showImpressum">
   <div class="impressum-modal-content">
     <button class="close-btn" (click)="showImpressum = false">✖</button>
-    <h3>Impressum</h3>
-    <div *ngIf="afroshop.impressumName"><strong>Name/Firma:</strong> {{ afroshop.impressumName }}</div>
-    <div *ngIf="afroshop.impressumAddress"><strong>Adresse:</strong> {{ afroshop.impressumAddress }}</div>
-    <div *ngIf="afroshop.impressumEmail"><strong>E-Mail:</strong> <a href="mailto:{{afroshop.impressumEmail}}">{{ afroshop.impressumEmail }}</a></div>
-    <div *ngIf="afroshop.impressumPhone"><strong>Telefon:</strong> <a href="tel:{{afroshop.impressumPhone}}">{{ afroshop.impressumPhone }}</a></div>
-    <div *ngIf="afroshop.impressumText"><strong>Weitere Angaben:</strong><br>{{ afroshop.impressumText }}</div>
-    <small class="form-hint">Dieses Impressum wurde vom Shop-Betreiber hinterlegt. Angaben ohne Gewähr.</small>
+    <h3>📋 Impressum</h3>
+    
+    <!-- Clause de non-responsabilité AfroConnect -->
+    <div class="afroconnect-disclaimer">
+      <p><strong>⚠️ Hinweis</strong></p>
+      <p>Dieses Geschäft wird von <strong>{{ afroshop.impressumName || '[Betreiber]' }}</strong> betrieben. 
+      AfroConnect ist nicht Verkäufer.</p>
+    </div>
+    
+    <hr>
+    
+    <div class="impressum-info-container">
+      <div *ngIf="afroshop.impressumName">
+        <strong>👤 Name/Firma:</strong> 
+        <span>{{ afroshop.impressumName }}</span>
+      </div>
+      <div *ngIf="afroshop.impressumAddress">
+        <strong>📍 Adresse:</strong> 
+        <span>{{ afroshop.impressumAddress }}</span>
+      </div>
+      <div *ngIf="afroshop.impressumEmail">
+        <strong>📧 E-Mail:</strong> 
+        <span><a href="mailto:{{afroshop.impressumEmail}}">{{ afroshop.impressumEmail }}</a></span>
+      </div>
+      <div *ngIf="afroshop.impressumPhone">
+        <strong>📞 Telefon:</strong> 
+        <span><a href="tel:{{afroshop.impressumPhone}}">{{ afroshop.impressumPhone }}</a></span>
+      </div>
+      <div *ngIf="afroshop.impressumText">
+        <strong>📝 Weitere Angaben:</strong>
+        <span style="display: block; margin-top: 0.5rem; white-space: pre-line;">{{ afroshop.impressumText }}</span>
+      </div>
+    </div>
+    
+    <small class="form-hint">💡 Dieses Impressum wurde vom Shop-Betreiber hinterlegt. Angaben ohne Gewähr.</small>
   </div>
   <div class="impressum-modal-backdrop" (click)="showImpressum = false"></div>
 </div>
