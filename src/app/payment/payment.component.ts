@@ -17,6 +17,7 @@ import { AuthService } from '../services/auth.service';
 export class PaymentComponent {
   shopId: string | null = null;
   selectedMethod: string = '';
+  deliveryType: 'abholung' | 'lieferung' = 'abholung'; // Par défaut: enlèvement
   paymentConfirmed = false;
   confirmationMessage = '';
   iban: string = '';
@@ -116,6 +117,7 @@ export class PaymentComponent {
       products,
       total,
       paymentMethod: this.selectedMethod,
+      deliveryType: this.deliveryType, // Enlèvement ou livraison
       createdAt: new Date(),
       shopOwnerId: shopOwnerId // Ajout systématique pour diagnostic
     };
@@ -129,7 +131,11 @@ export class PaymentComponent {
     }
     this.paymentConfirmed = true;
     if (this.selectedMethod === 'bar') {
-      this.confirmationMessage = 'Ihre Bestellung wurde gespeichert. Bitte bezahlen Sie bar bei Abholung im Geschäft.';
+      if (this.deliveryType === 'abholung') {
+        this.confirmationMessage = 'Ihre Bestellung wurde gespeichert. Bitte bezahlen Sie bar bei Abholung im Geschäft.';
+      } else {
+        this.confirmationMessage = 'Ihre Bestellung wurde gespeichert. Bitte bezahlen Sie bar bei Lieferung.';
+      }
     } else if (this.selectedMethod === 'vorkasse') {
       if (this.iban && this.bic) {
         this.confirmationMessage = 'Ihre Bestellung wurde gespeichert. Vielen Dank für Ihren Einkauf!<br>Bitte überweisen Sie den Gesamtbetrag auf das folgende Konto:<br><b>IBAN: ' + this.iban + '</b><br><b>BIC: ' + this.bic + '</b><br><small>Ihre Bestellung wird nach Zahlungseingang bearbeitet.</small>';

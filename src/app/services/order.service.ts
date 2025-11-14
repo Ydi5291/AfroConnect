@@ -19,6 +19,7 @@ export interface OrderData {
   products: Array<{ id: string; name: string; price: number; quantity: number }>;
   total: number;
   paymentMethod: string;
+  deliveryType: 'abholung' | 'lieferung'; // Enlèvement ou livraison
   createdAt: any;
 }
 

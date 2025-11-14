@@ -11,46 +11,59 @@
     </p>
   </div>
   <div class="dashboard-table-wrapper" *ngIf="orders.length > 0">
-    <table class="dashboard-table">
-      <thead>
-        <tr>
-          <th>Datum</th>
-          <th>Kunde</th>
-          <th>Produkte</th>
-          <th>Menge</th>
-          <th>Gesamtbetrag (€)</th>
-          <th>Zahlungsart</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let order of orders">
-          <td>{{ order.createdAt?.toDate() | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>
-            <ng-container *ngIf="order.clientInfo; else noClientInfo">
-              <strong>{{ order.clientInfo.firstName }} {{ order.clientInfo.lastName }}</strong><br>
-              {{ order.clientInfo.street }} {{ order.clientInfo.number }}<br>
-              {{ order.clientInfo.plz }} {{ order.clientInfo.city }}<br>
-              Tel: {{ order.clientInfo.phone }}<br>
-              <span *ngIf="order.clientInfo.email">E-Mail: {{ order.clientInfo.email }}</span>
-            </ng-container>
-            <ng-template #noClientInfo>
-              <span style="color:#888">Aucune info client</span>
-            </ng-template>
-          </td>
-          <td>
-            <ul>
-              <li *ngFor="let product of order.products">{{ product.name }}</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li *ngFor="let product of order.products">{{ product.quantity }}</li>
-            </ul>
-          </td>
-          <td>€{{ order.total.toFixed(2) }}</td>
-          <td>{{ order.paymentMethod }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <ng-container *ngFor="let group of groupedOrders">
+      <div class="date-separator">
+        <h3>{{ group.label }}</h3>
+        <span class="order-count">{{ group.orders.length }} Bestellung(en)</span>
+      </div>
+      
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Uhrzeit</th>
+            <th>Kunde</th>
+            <th>Produkte</th>
+            <th>Menge</th>
+            <th>Gesamtbetrag (€)</th>
+            <th>Zahlungsart</th>
+            <th>Lieferart</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of group.orders">
+            <td><strong>{{ order.createdAt?.toDate() | date:'HH:mm' }}</strong></td>
+            <td>
+              <ng-container *ngIf="order.clientInfo; else noClientInfo">
+                <strong>{{ order.clientInfo.firstName }} {{ order.clientInfo.lastName }}</strong><br>
+                {{ order.clientInfo.street }} {{ order.clientInfo.number }}<br>
+                {{ order.clientInfo.plz }} {{ order.clientInfo.city }}<br>
+                Tel: {{ order.clientInfo.phone }}<br>
+                <span *ngIf="order.clientInfo.email">E-Mail: {{ order.clientInfo.email }}</span>
+              </ng-container>
+              <ng-template #noClientInfo>
+                <span style="color:#888">Aucune info client</span>
+              </ng-template>
+            </td>
+            <td>
+              <ul>
+                <li *ngFor="let product of order.products">{{ product.name }}</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li *ngFor="let product of order.products">{{ product.quantity }}</li>
+              </ul>
+            </td>
+            <td>€{{ order.total.toFixed(2) }}</td>
+            <td>{{ order.paymentMethod }}</td>
+            <td>
+              <span *ngIf="order.deliveryType === 'abholung'" style="color: #1a8917;">🏪 Abholung</span>
+              <span *ngIf="order.deliveryType === 'lieferung'" style="color: #ff6b35;">🚚 Lieferung</span>
+              <span *ngIf="!order.deliveryType" style="color: #888;">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
   </div>
 </div>

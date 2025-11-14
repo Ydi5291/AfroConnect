@@ -7,6 +7,21 @@
   </div>
   <p>Wählen Sie Ihre bevorzugte Zahlungsmethode aus und bestätigen Sie Ihre Bestellung.</p>
   <form class="payment-methods" (ngSubmit)="confirmPayment()">
+    <!-- Choix du type de livraison -->
+    <div class="delivery-type-section">
+      <h3>Lieferart</h3>
+      <div class="delivery-options">
+        <label class="delivery-option">
+          <input type="radio" name="deliveryType" [(ngModel)]="deliveryType" value="abholung" required>
+          <span>🏪 Abholung im Geschäft</span>
+        </label>
+        <label class="delivery-option">
+          <input type="radio" name="deliveryType" [(ngModel)]="deliveryType" value="lieferung">
+          <span>🚚 Lieferung nach Hause</span>
+        </label>
+      </div>
+    </div>
+
     <div class="payment-options-list">
       <label class="payment-option">
         <input type="radio" name="payment" [(ngModel)]="selectedMethod" value="bar" required>

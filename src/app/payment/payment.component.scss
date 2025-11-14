@@ -71,3 +71,49 @@
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
+
+// Section choix de livraison
+.delivery-type-section {
+  margin-bottom: 1.5rem;
+  
+  h3 {
+    color: #1a8917;
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+}
+
+.delivery-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.delivery-option {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.08rem;
+  background: #f0f8f0;
+  border: 2px solid #d4e9d4;
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    background: #e0f2e9;
+    border-color: #1a8917;
+  }
+  
+  input[type="radio"] {
+    accent-color: #1a8917;
+    width: 1.3em;
+    height: 1.3em;
+  }
+  
+  span {
+    font-weight: 500;
+  }
+}
+

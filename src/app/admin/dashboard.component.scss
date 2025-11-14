@@ -29,17 +29,46 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Séparateur de date */
+.date-separator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #1a8917 0%, #27ae60 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  margin: 1.5rem 0 1rem 0;
+  box-shadow: 0 4px 12px rgba(26, 137, 23, 0.2);
+  
+  &:first-child {
+    margin-top: 0;
+  }
+  
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  
+  .order-count {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+}
+
 /* Wrapper that provides both vertical and horizontal scrolling when needed */
 .dashboard-table-wrapper {
   width: 100%;
   overflow-x: auto; /* scroll horizontal */
-  overflow-y: auto; /* scroll vertical */
+  overflow-y: visible; /* Permettre aux tables de s'empiler verticalement */
   -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
   border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  padding: 1rem;
-  max-height: calc(100vh - 200px); /* hauteur max pour scroll vertical */
+  background: transparent;
+  padding: 0;
   position: relative;
   
   /* Scrollbar styling */
@@ -79,6 +108,11 @@
   min-width: 800px; /* largeur minimale pour forcer scroll horizontal si nécessaire */
   table-layout: auto;
   white-space: nowrap; /* empêcher le retour à la ligne dans les cellules par défaut */
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
 }
 
 .dashboard-table thead th,

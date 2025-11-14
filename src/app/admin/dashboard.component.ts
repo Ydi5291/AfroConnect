@@ -14,6 +14,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class DashboardComponent implements OnInit {
   currentUid: string | null = null;
   orders: OrderData[] = [];
+  groupedOrders: { date: string, orders: OrderData[], label: string }[] = [];
   shopId: string = '';
   myShop: any = null;
 
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnInit {
       // 🔹 Récupérer les commandes de ce shop
       this.orderService.getOrdersByShop(this.shopId).subscribe(orders => {
         this.orders = orders;
+        this.groupOrdersByDay();
       });
     });
   }
@@ -58,5 +60,40 @@ export class DashboardComponent implements OnInit {
     } else {
       this.router.navigate(['/gallery']);
     }
+  }
+
+  groupOrdersByDay() {
+    const groups = new Map<string, OrderData[]>();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    this.orders.forEach(order => {
+      const orderDate = order.createdAt?.toDate();
+      if (!orderDate) return;
+      
+      const dateKey = orderDate.toLocaleDateString('de-DE');
+      if (!groups.has(dateKey)) {
+        groups.set(dateKey, []);
+      }
+      groups.get(dateKey)!.push(order);
+    });
+
+    this.groupedOrders = Array.from(groups.entries()).map(([date, orders]) => {
+      const firstOrderDate = orders[0].createdAt?.toDate();
+      firstOrderDate?.setHours(0, 0, 0, 0);
+      
+      let label = date;
+      if (firstOrderDate?.getTime() === today.getTime()) {
+        label = '📅 Heute - ' + date;
+      } else if (firstOrderDate?.getTime() === yesterday.getTime()) {
+        label = '📅 Gestern - ' + date;
+      } else {
+        label = '📅 ' + date;
+      }
+      
+      return { date, orders, label };
+    });
   }
 }
