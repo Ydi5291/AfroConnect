@@ -97,11 +97,14 @@
 	overflow-y: hidden;
 	-webkit-overflow-scrolling: touch; /* scroll fluide sur iOS */
 	scroll-snap-type: x proximity;
-	padding: 0.8rem 0.5rem;
+	padding: 0.8rem 1rem;
 	position: relative;
-	/* Cacher la scrollbar mais garder la fonctionnalité */
+	background: linear-gradient(to right, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+	/* Scrollbar visible mais stylée */
 	scrollbar-width: thin;
-	scrollbar-color: rgba(0,0,0,0.2) transparent;
+	scrollbar-color: rgba(30, 136, 229, 0.4) rgba(0,0,0,0.05);
 }
 
 .shop-header-btns .modern-btn {
@@ -124,32 +127,47 @@
 @media (max-width: 800px) {
   .shop-header-btns {
     gap: 0.6rem;
-    padding: 0.6rem 0.5rem;
+    padding: 0.8rem 0.8rem;
+    margin: 0.5rem;
+    /* Ajouter des ombres pour indiquer qu'on peut scroller */
+    background: 
+      linear-gradient(90deg, white 30%, rgba(255,255,255,0)),
+      linear-gradient(90deg, rgba(255,255,255,0), white 70%) 100% 0,
+      radial-gradient(farthest-side at 0% 50%, rgba(0,0,0,.15), rgba(0,0,0,0)),
+      radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.15), rgba(0,0,0,0)) 100% 0;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll;
   }
 
   .shop-header-btns .modern-btn {
-    font-size: 0.9rem; /* légèrement plus petit sur mobile */
-    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    padding: 0.7rem 1.1rem;
+    /* S'assurer que les boutons sont tous visibles */
+    min-width: max-content;
   }
 }
 
 /* Style de la scrollbar */
 .shop-header-btns::-webkit-scrollbar {
-  height: 6px;
+  height: 8px;
 }
 
 .shop-header-btns::-webkit-scrollbar-thumb {
-  background: rgba(30, 136, 229, 0.3);
+  background: rgba(30, 136, 229, 0.5);
   border-radius: 10px;
+  border: 1px solid rgba(30, 136, 229, 0.2);
 }
 
 .shop-header-btns::-webkit-scrollbar-thumb:hover {
-  background: rgba(30, 136, 229, 0.5);
+  background: rgba(30, 136, 229, 0.7);
 }
 
 .shop-header-btns::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.05);
+  background: rgba(0,0,0,0.08);
   border-radius: 10px;
+  margin: 0 0.5rem;
 }
 
 .cart-float-global {
