@@ -508,7 +508,7 @@
 @media (max-width: 500px) {
   .impressum-modal-content {
     width: 95vw;
-    max-height: 85vh;
+    max-height: 95vh;
     border-radius: 16px;
     display: flex;
     flex-direction: column;
