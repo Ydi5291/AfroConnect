@@ -13,7 +13,7 @@
     <div class="controls-row">
       <div class="filter-gps-column">
         <div class="type-filter-group">
-          <label for="type-filter" class="unified-label">{{ texts.filterByType }}</label>
+          <label for="type-filter" class="unified-label type-filter-label">{{ texts.filterByType }}</label>
           <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="unified-select type-select-compact">
             <option value="">{{ texts.allTypes }}</option>
             <option value="restaurant">{{ texts.restaurant }}</option>
