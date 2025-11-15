@@ -306,6 +306,8 @@
   position: relative;
   animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   border: 2px solid rgba(255, 255, 255, 0.8);
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .impressum-modal-content h3 {
@@ -330,6 +332,8 @@
   /* Scrollbar styling */
   scrollbar-width: thin;
   scrollbar-color: rgba(30, 136, 229, 0.3) rgba(0,0,0,0.05);
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .impressum-modal-scroll-wrapper::-webkit-scrollbar {

@@ -91,7 +91,7 @@
 
 <!-- Modale Impressum -->
 <div class="impressum-modal" *ngIf="showImpressum">
-  <div class="impressum-modal-content">
+  <div class="impressum-modal-content" (click)="$event.stopPropagation()">
     <button class="close-btn" (click)="showImpressum = false">✖</button>
     <h3>📋 {{ texts.impressumTitle }}</h3>
     
