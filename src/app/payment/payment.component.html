@@ -1,23 +1,23 @@
 <div class="payment-container">
-  <h2>Zahlung</h2>
+  <h2>{{ texts.title }}</h2>
   <div *ngIf="iban || bic" class="bank-details" style="background:#f8f8f8; border-radius:6px; padding:1em; margin-bottom:1em;">
-    <strong>Bankverbindung des Shops:</strong><br>
+    <strong>{{ texts.bankDetails }}</strong><br>
     <span *ngIf="iban">IBAN: <b>{{ iban }}</b></span><br>
     <span *ngIf="bic">BIC: <b>{{ bic }}</b></span>
   </div>
-  <p>Wählen Sie Ihre bevorzugte Zahlungsmethode aus und bestätigen Sie Ihre Bestellung.</p>
+  <p>{{ texts.subtitle }}</p>
   <form class="payment-methods" (ngSubmit)="confirmPayment()">
     <!-- Choix du type de livraison -->
     <div class="delivery-type-section">
-      <h3>Lieferart</h3>
+      <h3>{{ texts.deliveryType }}</h3>
       <div class="delivery-options">
         <label class="delivery-option">
           <input type="radio" name="deliveryType" [(ngModel)]="deliveryType" value="abholung" required>
-          <span>🏪 Abholung im Geschäft</span>
+          <span>🏪 {{ texts.pickup }}</span>
         </label>
         <label class="delivery-option">
           <input type="radio" name="deliveryType" [(ngModel)]="deliveryType" value="lieferung">
-          <span>🚚 Lieferung nach Hause</span>
+          <span>🚚 {{ texts.delivery }}</span>
         </label>
       </div>
     </div>
@@ -25,59 +25,59 @@
     <div class="payment-options-list">
       <label class="payment-option">
         <input type="radio" name="payment" [(ngModel)]="selectedMethod" value="bar" required>
-        <span>Barzahlung bei Abholung</span>
+        <span>{{ texts.cash }}</span>
       </label>
       <label class="payment-option">
         <input type="radio" name="payment" [(ngModel)]="selectedMethod" value="karte">
-        <span>EC-/Kreditkarte vor Ort</span>
+        <span>{{ texts.card }}</span>
       </label>
       <label class="payment-option">
         <input type="radio" name="payment" [(ngModel)]="selectedMethod" value="paypal">
-        <span>PayPal</span>
+        <span>{{ texts.paypal }}</span>
       </label>
       <label class="payment-option">
         <input type="radio" name="payment" [(ngModel)]="selectedMethod" value="sofort">
-        <span>Sofortüberweisung (Klarna)</span>
+        <span>{{ texts.sofort }}</span>
       </label>
       <label class="payment-option">
         <input type="radio" name="payment" [(ngModel)]="selectedMethod" value="vorkasse">
-        <span>Vorkasse/Überweisung</span>
+        <span>{{ texts.transfer }}</span>
       </label>
       <label class="payment-option">
         <input type="radio" name="payment" [(ngModel)]="selectedMethod" value="applepay">
-        <span>Apple Pay / Google Pay</span>
+        <span>{{ texts.applePay }}</span>
       </label>
     </div>
 
     <!-- Formulaire infos client -->
     <div class="client-info-form" *ngIf="selectedMethod">
-      <h3>Ihre Kontaktdaten</h3>
+      <h3>{{ texts.contactInfo }}</h3>
       <div class="form-group">
-        <label for="clientFirstName">Vorname *</label>
+        <label for="clientFirstName">{{ texts.firstName }} *</label>
         <input type="text" id="clientFirstName" name="clientFirstName" [(ngModel)]="clientInfo.firstName" required>
       </div>
       <div class="form-group">
-        <label for="clientLastName">Nachname *</label>
+        <label for="clientLastName">{{ texts.lastName }} *</label>
         <input type="text" id="clientLastName" name="clientLastName" [(ngModel)]="clientInfo.lastName" required>
       </div>
       <div class="form-group">
-        <label for="clientStreet">Straße *</label>
+        <label for="clientStreet">{{ texts.street }} *</label>
         <input type="text" id="clientStreet" name="clientStreet" [(ngModel)]="clientInfo.street" required>
       </div>
       <div class="form-group">
-        <label for="clientNumber">Hausnummer *</label>
+        <label for="clientNumber">{{ texts.houseNumber }} *</label>
         <input type="text" id="clientNumber" name="clientNumber" [(ngModel)]="clientInfo.number" required>
       </div>
       <div class="form-group">
-        <label for="clientPLZ">PLZ *</label>
+        <label for="clientPLZ">{{ texts.zip }} *</label>
         <input type="text" id="clientPLZ" name="clientPLZ" [(ngModel)]="clientInfo.plz" required>
       </div>
       <div class="form-group">
-        <label for="clientCity">Stadt *</label>
+        <label for="clientCity">{{ texts.city }} *</label>
         <input type="text" id="clientCity" name="clientCity" [(ngModel)]="clientInfo.city" required>
       </div>
       <div class="form-group">
-        <label for="clientPhone">Telefon *</label>
+        <label for="clientPhone">{{ texts.phone }} *</label>
         <input type="tel" id="clientPhone" name="clientPhone" [(ngModel)]="clientInfo.phone" required>
       </div>
       <div class="form-group">

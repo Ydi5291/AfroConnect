@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { LanguageService } from '../../services/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -10,21 +12,63 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
+  private langSub?: Subscription;
+  
   email = '';
   password = '';
   isLoading = false;
   errorMessage = '';
+  
+  texts = {
+    title: 'Anmeldung',
+    subtitle: 'Melden Sie sich bei Ihrem AfroConnect-Konto an',
+    email: 'E-Mail-Adresse',
+    password: 'Passwort',
+    submit: 'Anmelden',
+    loading: 'Anmeldung...',
+    googleBtn: 'Mit Google fortfahren',
+    googleLoading: 'Google-Anmeldung...',
+    noAccount: 'Noch kein Konto?',
+    register: 'Registrieren',
+    or: 'oder',
+    fillFields: 'Bitte füllen Sie alle Felder aus'
+  };
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private languageService: LanguageService
   ) {}
+  
+  ngOnInit() {
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+  }
+  
+  updateTranslations() {
+    this.texts = {
+      title: this.languageService.translate('login.title'),
+      subtitle: this.languageService.translate('login.subtitle'),
+      email: this.languageService.translate('login.email'),
+      password: this.languageService.translate('login.password'),
+      submit: this.languageService.translate('login.submit'),
+      loading: this.languageService.translate('login.loading'),
+      googleBtn: this.languageService.translate('login.googleBtn'),
+      googleLoading: this.languageService.translate('login.googleLoading'),
+      noAccount: this.languageService.translate('login.noAccount'),
+      register: this.languageService.translate('login.register'),
+      or: this.languageService.translate('login.or'),
+      fillFields: this.languageService.translate('login.fillFields')
+    };
+  }
 
   async onSubmit(): Promise<void> {
     if (!this.email || !this.password) {
-      this.errorMessage = 'Bitte füllen Sie alle Felder aus';
+      this.errorMessage = this.texts.fillFields;
       return;
     }
 
@@ -108,12 +152,16 @@ export class LoginComponent {
       '3. Rechargez la page si nécessaire\n\n' +
       'Réessayer maintenant?'
     )) {
-      // Petit délai pour laisser le temps d\'autoriser
+      // Petit délai pour laisser le temps d'autoriser
       setTimeout(() => {
         this.loginWithGoogle();
       }, 1000);
     } else {
       this.errorMessage = 'Utilisez la connexion par email/mot de passe en attendant';
     }
+  }
+  
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

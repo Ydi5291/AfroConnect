@@ -1,13 +1,13 @@
 <div class="auth-container">
   <div class="auth-card">
     <div class="auth-header">
-      <h2>🔐 Anmeldung</h2>
-      <p>Melden Sie sich bei Ihrem AfroConnect-Konto an</p>
+      <h2>🔐 {{ texts.title }}</h2>
+      <p>{{ texts.subtitle }}</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
-        <label for="email">E-Mail-Adresse</label>
+        <label for="email">{{ texts.email }}</label>
         <input
           type="email"
           id="email"
@@ -20,7 +20,7 @@
       </div>
 
       <div class="form-group">
-        <label for="password">Passwort</label>
+        <label for="password">{{ texts.password }}</label>
         <input
           type="password"
           id="password"
@@ -40,26 +40,26 @@
         type="submit" 
         class="auth-btn"
         [disabled]="isLoading || !email || !password">
-        <span *ngIf="!isLoading">Anmelden</span>
-        <span *ngIf="isLoading">⏳ Anmeldung...</span>
+        <span *ngIf="!isLoading">{{ texts.submit }}</span>
+        <span *ngIf="isLoading">⏳ {{ texts.loading }}</span>
       </button>
     </form>
 
     <div class="divider">
-      <span>oder</span>
+      <span>{{ texts.or }}</span>
     </div>
 
     <button 
       (click)="loginWithGoogle()" 
       class="google-btn"
       [disabled]="isLoading">
-      <span *ngIf="!isLoading">🔍 Mit Google fortfahren</span>
-      <span *ngIf="isLoading">⏳ Google-Anmeldung...</span>
+      <span *ngIf="!isLoading">🔍 {{ texts.googleBtn }}</span>
+      <span *ngIf="isLoading">⏳ {{ texts.googleLoading }}</span>
     </button>
 
     <div class="auth-footer">
-      <p>Noch kein Konto? 
-        <a routerLink="/register" class="auth-link">Registrieren</a>
+      <p>{{ texts.noAccount }} 
+        <a routerLink="/register" class="auth-link">{{ texts.register }}</a>
       </p>
     </div>
   </div>

@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { OrderService } from '../services/order.service';
 import { AuthService } from '../services/auth.service';
+import { LanguageService } from '../services/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-payment',
@@ -14,7 +16,9 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./payment.component.scss']
 })
 
-export class PaymentComponent {
+export class PaymentComponent implements OnInit, OnDestroy {
+  private langSub?: Subscription;
+  
   shopId: string | null = null;
   selectedMethod: string = '';
   deliveryType: 'abholung' | 'lieferung' = 'abholung'; // Par défaut: enlèvement
@@ -22,6 +26,32 @@ export class PaymentComponent {
   confirmationMessage = '';
   iban: string = '';
   bic: string = '';
+  
+  texts = {
+    title: 'Zahlung',
+    subtitle: 'Wählen Sie Ihre bevorzugte Zahlungsmethode aus und bestätigen Sie Ihre Bestellung.',
+    bankDetails: 'Bankverbindung des Shops:',
+    deliveryType: 'Lieferart',
+    pickup: 'Abholung im Geschäft',
+    delivery: 'Lieferung nach Hause',
+    cash: 'Barzahlung bei Abholung',
+    card: 'EC-/Kreditkarte vor Ort',
+    paypal: 'PayPal',
+    sofort: 'Sofortüberweisung (Klarna)',
+    transfer: 'Vorkasse/Überweisung',
+    applePay: 'Apple Pay / Google Pay',
+    contactInfo: 'Ihre Kontaktdaten',
+    firstName: 'Vorname',
+    lastName: 'Nachname',
+    street: 'Straße',
+    houseNumber: 'Hausnummer',
+    zip: 'PLZ',
+    city: 'Stadt',
+    phone: 'Telefon',
+    email: 'E-Mail',
+    confirm: 'Bestellung bestätigen',
+    total: 'Gesamt'
+  };
 
   clientInfo = {
     firstName: '',
@@ -48,10 +78,18 @@ export class PaymentComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private languageService: LanguageService,
     private firebaseService: FirebaseAfroshopService,
     private orderService: OrderService,
     private authService: AuthService
-  ) {
+  ) {}
+  
+  ngOnInit() {
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+    
     this.route.queryParamMap.subscribe(async params => {
       this.shopId = params.get('shopId');
       if (this.shopId) {
@@ -60,6 +98,34 @@ export class PaymentComponent {
         this.bic = afroshop?.bic || '';
       }
     });
+  }
+  
+  updateTranslations() {
+    this.texts = {
+      title: this.languageService.translate('payment.title'),
+      subtitle: this.languageService.translate('payment.subtitle'),
+      bankDetails: this.languageService.translate('payment.bankDetails'),
+      deliveryType: this.languageService.translate('payment.deliveryType'),
+      pickup: this.languageService.translate('payment.pickup'),
+      delivery: this.languageService.translate('payment.delivery'),
+      cash: this.languageService.translate('payment.cash'),
+      card: this.languageService.translate('payment.card'),
+      paypal: this.languageService.translate('payment.paypal'),
+      sofort: this.languageService.translate('payment.sofort'),
+      transfer: this.languageService.translate('payment.transfer'),
+      applePay: this.languageService.translate('payment.applePay'),
+      contactInfo: this.languageService.translate('payment.contactInfo'),
+      firstName: this.languageService.translate('payment.firstName'),
+      lastName: this.languageService.translate('payment.lastName'),
+      street: this.languageService.translate('payment.street'),
+      houseNumber: this.languageService.translate('payment.houseNumber'),
+      zip: this.languageService.translate('payment.zip'),
+      city: this.languageService.translate('payment.city'),
+      phone: this.languageService.translate('payment.phone'),
+      email: this.languageService.translate('payment.email'),
+      confirm: this.languageService.translate('payment.confirm'),
+      total: this.languageService.translate('payment.total')
+    };
   }
 
   goBackToShop() {
@@ -145,5 +211,9 @@ export class PaymentComponent {
     } else {
       this.confirmationMessage = 'Ihre Bestellung wurde gespeichert. Vielen Dank für Ihren Einkauf!';
     }
+  }
+  
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }
