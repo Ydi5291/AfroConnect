@@ -17,6 +17,7 @@ import { ShopComponent } from './shop/shop.component';
 import { PaymentComponent } from './payment/payment.component';
 import { DashboardComponent } from './admin/dashboard.component';
 import { SuperDashboardComponent } from './admin/super-dashboard.component';
+import { PricingComponent } from './pricing/pricing.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/gallery', pathMatch: 'full' },
@@ -25,6 +26,7 @@ export const routes: Routes = [
   { path: 'kontakt', loadComponent: () => import('./kontakt.component').then(m => m.KontaktComponent) },
   { path: 'hilfe', loadComponent: () => import('./hilfe.component').then(m => m.HilfeComponent) },
   { path: 'gallery', component: GalleryComponent },
+  { path: 'pricing', component: PricingComponent },
   { path: 'afroshop/:id', component: ImageDetailComponent },
   { 
     path: 'add-afroshop', 

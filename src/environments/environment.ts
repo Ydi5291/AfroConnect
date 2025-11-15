@@ -8,5 +8,9 @@ export const environment = {
     messagingSenderId: "341889512681",
     appId: "1:341889512681:web:e4073a27dded8eae9e2c78"
   },
-  googleMapsApiKey: "AIzaSyAVTCyd8uLieVgnMHEygb5mm1xQKcjiOVk"
+  googleMapsApiKey: "AIzaSyAVTCyd8uLieVgnMHEygb5mm1xQKcjiOVk",
+  // Stripe Configuration (à remplir avec vos vraies clés)
+  stripePublishableKey: "pk_test_YOUR_PUBLISHABLE_KEY",
+  stripePremiumPriceId: "price_YOUR_PREMIUM_PRICE_ID",
+  cloudFunctionsUrl: "https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net"
 };

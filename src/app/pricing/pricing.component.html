@@ -1,0 +1,72 @@
+<div class="pricing-container">
+  <div class="pricing-header">
+    <button class="back-btn" (click)="goBack()">← {{ texts.title }}</button>
+    <h1>💎 {{ texts.title }}</h1>
+    <p class="subtitle">{{ texts.subtitle }}</p>
+  </div>
+
+  <div class="pricing-cards">
+    <!-- Plan Gratuit -->
+    <div class="pricing-card free-card" [class.current]="!isPremium()">
+      <div class="card-header">
+        <h2>🆓 {{ texts.freePlan }}</h2>
+        <div class="price">
+          <span class="amount">{{ texts.freePrice }}</span>
+        </div>
+      </div>
+      
+      <ul class="features-list">
+        <li>✅ {{ texts.freeFeature1 }}</li>
+        <li>✅ {{ texts.freeFeature2 }}</li>
+        <li>✅ {{ texts.freeFeature3 }}</li>
+        <li>✅ {{ texts.freeFeature4 }}</li>
+        <li class="disabled">❌ {{ texts.premiumFeature2 }}</li>
+        <li class="disabled">❌ {{ texts.premiumFeature3 }}</li>
+      </ul>
+
+      <button class="select-btn free-btn" *ngIf="!isPremium()" disabled>
+        {{ texts.currentPlan }}
+      </button>
+      <button class="select-btn free-btn" *ngIf="isPremium()" disabled>
+        {{ texts.selectFree }}
+      </button>
+    </div>
+
+    <!-- Plan Premium -->
+    <div class="pricing-card premium-card" [class.current]="isPremium()">
+      <div class="card-badge">⭐ {{ texts.premiumPlan }}</div>
+      <div class="card-header">
+        <h2>💎 {{ texts.premiumPlan }}</h2>
+        <div class="price">
+          <span class="amount">15,00€</span>
+          <span class="period">/ {{ texts.perMonth }}</span>
+        </div>
+      </div>
+      
+      <ul class="features-list">
+        <li>✅ {{ texts.premiumFeature1 }}</li>
+        <li>✅ {{ texts.premiumFeature2 }}</li>
+        <li>✅ {{ texts.premiumFeature3 }}</li>
+        <li>✅ {{ texts.premiumFeature4 }}</li>
+        <li>✅ {{ texts.premiumFeature5 }}</li>
+        <li>✅ {{ texts.premiumFeature6 }}</li>
+      </ul>
+
+      <button class="select-btn premium-btn" 
+              *ngIf="!isPremium()" 
+              (click)="selectPremium()"
+              [disabled]="isLoading">
+        <span *ngIf="!isLoading">🚀 {{ texts.selectPremium }}</span>
+        <span *ngIf="isLoading">⏳ {{ texts.processing }}</span>
+      </button>
+      <button class="select-btn premium-btn current" *ngIf="isPremium()" disabled>
+        ✨ {{ texts.currentPlan }}
+      </button>
+    </div>
+  </div>
+
+  <div class="pricing-footer">
+    <p>💳 Paiement sécurisé avec Stripe</p>
+    <p>🔒 Annulation possible à tout moment</p>
+  </div>
+</div>
