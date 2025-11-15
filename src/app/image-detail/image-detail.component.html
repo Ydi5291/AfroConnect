@@ -1,10 +1,10 @@
 <div class="detail-container" *ngIf="afroshop">
   <div class="detail-header flex-header">
     <button class="back-button" (click)="goBack()">
-      ← Zurück zur Übersicht
+      ← {{ texts.backToOverview }}
     </button>
-    <button *ngIf="canEdit()" class="add-product-btn" (click)="editProducts()" title="Produkte hinzufügen">
-      bearbeiten
+    <button *ngIf="canEdit()" class="add-product-btn" (click)="editProducts()" [title]="texts.edit">
+      {{ texts.edit }}
     </button>
   </div>
 
@@ -17,7 +17,7 @@
         <div class="no-image-placeholder"
           style="background: #f5f5f5; padding: 2rem; text-align: center; border-radius: 8px;">
           <div style="font-size: 3rem;">📷</div>
-          <p>Kein Bild verfügbar</p>
+          <p>{{ texts.noImage }}</p>
           <small>{{ afroshop.image ? 'Fehler beim Laden: ' + afroshop.image : 'Keine Bild-URL gespeichert' }}</small>
         </div>
       </ng-template>
@@ -37,31 +37,31 @@
           ⭐ {{ afroshop.rating || '—' }}/5 • {{ getPriceLevel(afroshop.priceLevel || 1) }}
         </div>
         <div class="cuisine-info" *ngIf="afroshop.cuisine">
-          🍽️ {{ afroshop.cuisine || '—' }} Küche
+          🍽️ {{ afroshop.cuisine || '—' }} {{ texts.cuisine }}
         </div>
       </div>
 
       <!-- Kontakt und Standort -->
       <div class="contact-section">
         <div class="contact-item">
-          <strong>📍 Adresse:</strong>
+          <strong>📍 {{ texts.address }}</strong>
           <p>{{ afroshop.address }}</p>
         </div>
 
         <div class="contact-item">
-          <strong>📞 Telefon:</strong>
+          <strong>📞 {{ texts.phone }}</strong>
           <p *ngIf="afroshop.phone; else noPhone">
             <a href="tel:{{ afroshop.phone }}" class="phone-link">
               {{ afroshop.phone }}
             </a>
           </p>
           <ng-template #noPhone>
-            <span style="color:#888">Non renseigné</span>
+            <span style="color:#888">{{ texts.notProvided }}</span>
           </ng-template>
         </div>
 
         <div class="contact-item">
-          <strong>🕒 Öffnungszeiten:</strong>
+          <strong>🕒 {{ texts.openingHours }}</strong>
           <div class="opening-hours-display">
             <div *ngFor="let dayInfo of formattedHours" class="day-row" [class.closed]="!dayInfo.isOpen"
               [class.open]="dayInfo.isOpen">
@@ -76,60 +76,59 @@
 
       <!-- Beschreibung -->
       <div class="description">
-        <h3>Über uns</h3>
+        <h3>{{ texts.aboutUs }}</h3>
         <p>{{ afroshop.description }}</p>
       </div>
 
       <!-- Aktionen -->
       <div class="actions">
-        <button class="action-btn call" (click)="callPhone(afroshop.phone)">📞 Anrufen</button>
+        <button class="action-btn call" (click)="callPhone(afroshop.phone)">📞 {{ texts.call }}</button>
         <!-- <button class="action-btn maps" (click)="openInMaps()">🗺️ Auf Karte anzeigen</button> -->
         <!-- <button class="action-btn route" (click)="getDirections()">🧭 Route</button> -->
-        <button class="action-btn cart" (click)="goToShop()" title="Zum Shop">🛒 Einkaufen</button>
-        <button class="action-btn impressum" (click)="showImpressum = true">📝 Impressum</button>
-        <button class="action-btn secondary" (click)="goBack()">← Zurück</button>
+        <button class="action-btn cart" (click)="goToShop()" title="Zum Shop">🛒 {{ texts.shop }}</button>
+        <button class="action-btn impressum" (click)="showImpressum = true">📝 {{ texts.impressumTitle }}</button>
+        <button class="action-btn secondary" (click)="goBack()">← {{ texts.back }}</button>
 
 <!-- Modale Impressum -->
 <div class="impressum-modal" *ngIf="showImpressum">
   <div class="impressum-modal-content">
     <button class="close-btn" (click)="showImpressum = false">✖</button>
-    <h3>📋 Impressum</h3>
+    <h3>📋 {{ texts.impressumTitle }}</h3>
     
     <!-- Wrapper scrollable pour tout le contenu -->
     <div class="impressum-modal-scroll-wrapper">
       <!-- Clause de non-responsabilité AfroConnect -->
       <div class="afroconnect-disclaimer">
-        <p><strong>⚠️ Hinweis</strong></p>
-        <p>Dieses Geschäft wird von <strong>{{ afroshop.impressumName || '[Betreiber]' }}</strong> betrieben. 
-        AfroConnect ist nicht Verkäufer.</p>
+        <p><strong>⚠️ {{ texts.impressumNotice }}</strong></p>
+        <p>{{ texts.impressumDisclaimer }} <strong>{{ afroshop.impressumName || '[Betreiber]' }}</strong>{{ texts.impressumNotSeller }}</p>
       </div>
       
       <hr>
       
       <div class="impressum-info-container">
         <div *ngIf="afroshop.impressumName">
-          <strong>👤 Name/Firma:</strong> 
+          <strong>👤 {{ texts.impressumName }}</strong> 
           <span>{{ afroshop.impressumName }}</span>
         </div>
         <div *ngIf="afroshop.impressumAddress">
-          <strong>📍 Adresse:</strong> 
+          <strong>📍 {{ texts.impressumAddress }}</strong> 
           <span>{{ afroshop.impressumAddress }}</span>
         </div>
         <div *ngIf="afroshop.impressumEmail">
-          <strong>📧 E-Mail:</strong> 
+          <strong>📧 {{ texts.impressumEmail }}</strong> 
           <span><a href="mailto:{{afroshop.impressumEmail}}">{{ afroshop.impressumEmail }}</a></span>
         </div>
         <div *ngIf="afroshop.impressumPhone">
-          <strong>📞 Telefon:</strong> 
+          <strong>📞 {{ texts.impressumPhone }}</strong> 
           <span><a href="tel:{{afroshop.impressumPhone}}">{{ afroshop.impressumPhone }}</a></span>
         </div>
         <div *ngIf="afroshop.impressumText">
-          <strong>📝 Weitere Angaben:</strong>
+          <strong>📝 {{ texts.impressumAdditional }}</strong>
           <span style="display: block; margin-top: 0.5rem; white-space: pre-line;">{{ afroshop.impressumText }}</span>
         </div>
       </div>
       
-      <small class="form-hint">💡 Dieses Impressum wurde vom Shop-Betreiber hinterlegt. Angaben ohne Gewähr.</small>
+      <small class="form-hint">💡 {{ texts.impressumHint }}</small>
     </div>
   </div>
   <div class="impressum-modal-backdrop" (click)="showImpressum = false"></div>
@@ -143,9 +142,9 @@
 
 
 <div class="error-container" *ngIf="!afroshop">
-  <h2>❌ Geschäft nicht gefunden</h2>
-  <p>Das gesuchte Geschäft existiert nicht.</p>
+  <h2>❌ {{ texts.impressumNotFound }}</h2>
+  <p>{{ texts.impressumNotFoundMsg }}</p>
   <button class="back-button" (click)="goBack()">
-    ← Zurück zur Übersicht
+    ← {{ texts.backToOverview }}
   </button>
 </div>

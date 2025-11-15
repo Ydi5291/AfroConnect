@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -6,7 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
+import { LanguageService } from '../services/language.service';
 import { AfroshopService, AfroshopData, Product } from '../services/image.service';
+import { Subscription } from 'rxjs';
 
 // Minimal local type definitions to satisfy the component's usage.
 // If you already have these types defined elsewhere in the project,
@@ -22,7 +24,45 @@ import { AfroshopService, AfroshopData, Product } from '../services/image.servic
   styleUrls: ['./image-detail.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class ImageDetailComponent implements OnInit { 
+export class ImageDetailComponent implements OnInit, OnDestroy { 
+  private langSub?: Subscription;
+
+  texts = {
+    backToOverview: 'Zurück zur Übersicht',
+    edit: 'bearbeiten',
+    noImage: 'Kein Bild verfügbar',
+    address: 'Adresse:',
+    phone: 'Telefon:',
+    notProvided: 'Non renseigné',
+    openingHours: 'Öffnungszeiten:',
+    aboutUs: 'Über uns',
+    cuisine: 'Küche',
+    monday: 'Montag',
+    tuesday: 'Dienstag',
+    wednesday: 'Mittwoch',
+    thursday: 'Donnerstag',
+    friday: 'Freitag',
+    saturday: 'Samstag',
+    sunday: 'Sonntag',
+    closed: 'Geschlossen',
+    // Action buttons
+    call: 'Anrufen',
+    shop: 'Einkaufen',
+    back: 'Zurück',
+    // Impressum modal
+    impressumTitle: 'Impressum',
+    impressumNotice: 'Hinweis',
+    impressumDisclaimer: 'Dieses Geschäft wird von',
+    impressumNotSeller: 'betrieben. AfroConnect ist nicht Verkäufer.',
+    impressumName: 'Name/Firma:',
+    impressumAddress: 'Adresse:',
+    impressumEmail: 'E-Mail:',
+    impressumPhone: 'Telefon:',
+    impressumAdditional: 'Weitere Angaben:',
+    impressumHint: 'Dieses Impressum wurde vom Shop-Betreiber hinterlegt. Angaben ohne Gewähr.',
+    impressumNotFound: 'Geschäft nicht gefunden',
+    impressumNotFoundMsg: 'Das gesuchte Geschäft existiert nicht.'
+  };
 
   showImpressum = false;
   afroshop: AfroshopData | undefined;
@@ -43,6 +83,7 @@ export class ImageDetailComponent implements OnInit {
     private afroshopService: AfroshopService,
     private firebaseService: FirebaseAfroshopService,
     private authService: AuthService,
+    private languageService: LanguageService,
     private title: Title,
     private meta: Meta
   ) {}
@@ -55,6 +96,12 @@ export class ImageDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Language subscription
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+
     // Récupérer l'ID depuis l'URL
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -228,24 +275,24 @@ export class ImageDetailComponent implements OnInit {
 
     // Mapping des jours allemands
     const dayMapping: {[key: string]: string} = {
-      'Mo': 'Montag',
-      'Di': 'Dienstag', 
-      'Mi': 'Mittwoch',
-      'Do': 'Donnerstag',
-      'Fr': 'Freitag',
-      'Sa': 'Samstag',
-      'So': 'Sonntag'
+      'Mo': this.texts.monday,
+      'Di': this.texts.tuesday, 
+      'Mi': this.texts.wednesday,
+      'Do': this.texts.thursday,
+      'Fr': this.texts.friday,
+      'Sa': this.texts.saturday,
+      'So': this.texts.sunday
     };
 
     // Split par virgule pour avoir chaque période
     const periods = hoursString.split(',').map(p => p.trim());
     
     // Initialiser tous les jours comme fermés
-    const weekDays = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+    const weekDays = [this.texts.monday, this.texts.tuesday, this.texts.wednesday, this.texts.thursday, this.texts.friday, this.texts.saturday, this.texts.sunday];
     const dayStatus: {[key: string]: {isOpen: boolean, hours: string}} = {};
     
     weekDays.forEach(day => {
-      dayStatus[day] = {isOpen: false, hours: 'Geschlossen'};
+      dayStatus[day] = {isOpen: false, hours: this.texts.closed};
     });
 
     // Parser chaque période (ex: "Mo-Fr: 12:00-22:00")
@@ -312,5 +359,53 @@ export class ImageDetailComponent implements OnInit {
   // Redirige vers la page Shop du commerce concerné
   goToShop(): void {
     this.router.navigate(['/shop', this.shopId]);
+  }
+
+  updateTranslations() {
+    this.texts = {
+      backToOverview: this.languageService.translate('detail.backToOverview'),
+      edit: this.languageService.translate('detail.edit'),
+      noImage: this.languageService.translate('detail.noImage'),
+      address: this.languageService.translate('detail.address'),
+      phone: this.languageService.translate('detail.phone'),
+      notProvided: this.languageService.translate('detail.notProvided'),
+      openingHours: this.languageService.translate('detail.openingHours'),
+      aboutUs: this.languageService.translate('detail.aboutUs'),
+      cuisine: this.languageService.translate('detail.cuisine'),
+      monday: this.languageService.translate('day.monday'),
+      tuesday: this.languageService.translate('day.tuesday'),
+      wednesday: this.languageService.translate('day.wednesday'),
+      thursday: this.languageService.translate('day.thursday'),
+      friday: this.languageService.translate('day.friday'),
+      saturday: this.languageService.translate('day.saturday'),
+      sunday: this.languageService.translate('day.sunday'),
+      closed: this.languageService.translate('day.closed'),
+      // Action buttons
+      call: this.languageService.translate('btn.call'),
+      shop: this.languageService.translate('btn.shop'),
+      back: this.languageService.translate('btn.back'),
+      // Impressum modal
+      impressumTitle: this.languageService.translate('impressum.title'),
+      impressumNotice: this.languageService.translate('impressum.notice'),
+      impressumDisclaimer: this.languageService.translate('impressum.disclaimer'),
+      impressumNotSeller: this.languageService.translate('impressum.notSeller'),
+      impressumName: this.languageService.translate('impressum.name'),
+      impressumAddress: this.languageService.translate('impressum.address'),
+      impressumEmail: this.languageService.translate('impressum.email'),
+      impressumPhone: this.languageService.translate('impressum.phone'),
+      impressumAdditional: this.languageService.translate('impressum.additional'),
+      impressumHint: this.languageService.translate('impressum.hint'),
+      impressumNotFound: this.languageService.translate('impressum.notFound'),
+      impressumNotFoundMsg: this.languageService.translate('impressum.notFoundMsg')
+    };
+    
+    // Reparse opening hours with new translations
+    if (this.afroshop?.hours) {
+      this.parseOpeningHours(this.afroshop.hours);
+    }
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

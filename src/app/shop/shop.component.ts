@@ -1,5 +1,5 @@
 // ...existing code...
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,8 @@ import { AfroshopService, AfroshopData } from '../services/image.service';
 import type { Product } from '../services/image.service';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
+import { LanguageService } from '../services/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-shop',
@@ -15,7 +17,23 @@ import { AuthService } from '../services/auth.service';
 	templateUrl: './shop.component.html',
 	styleUrls: ['./shop.component.scss']
 })
-export class ShopComponent implements OnInit {
+export class ShopComponent implements OnInit, OnDestroy {
+	private langSub?: Subscription;
+
+	texts = {
+		toGallery: 'Zur Gallery',
+		toShopInfo: 'Zur Shop-infos',
+		addProducts: 'Produkte hinzufügen',
+		dashboard: 'Dashboard',
+		notice: 'Hinweis:',
+		noOnlineOrder: 'Dieser Shop bietet keinen Online-Bestellservice an. Bitte besuchen Sie das Geschäft vor Ort oder rufen Sie an.',
+		myCart: 'Mein Warenkorb',
+		total: 'Gesamt:',
+		checkout: 'Zur Kasse',
+		close: 'Schließen',
+		remove: 'Entfernen'
+	};
+
 	openUrl(url: string, target: string = '_blank') {
 		window.open(url, target);
 	}
@@ -59,7 +77,8 @@ export class ShopComponent implements OnInit {
 			public router: Router,
 			private afroshopService: AfroshopService,
 			private firebaseService: FirebaseAfroshopService,
-			private authService: AuthService
+			private authService: AuthService,
+			private languageService: LanguageService
 		) {}
 	goToAddProduct(): void {
 		this.router.navigate(['/add-product'], { queryParams: { afroshopId: this.shopId } });
@@ -85,6 +104,12 @@ export class ShopComponent implements OnInit {
 		}
 
 		ngOnInit(): void {
+			// Language subscription
+			this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+				this.updateTranslations();
+			});
+			this.updateTranslations();
+
 			this.route.paramMap.subscribe(params => {
 				const id = params.get('id');
 				if (!id) return;
@@ -155,5 +180,25 @@ export class ShopComponent implements OnInit {
     if (!currentUser || !this.afroshop) return false;
     return (this.afroshop as any).createdBy === currentUser.uid;
   }
+
+	updateTranslations() {
+		this.texts = {
+			toGallery: this.languageService.translate('shop.toGallery'),
+			toShopInfo: this.languageService.translate('shop.toShopInfo'),
+			addProducts: this.languageService.translate('shop.addProducts'),
+			dashboard: this.languageService.translate('shop.dashboard'),
+			notice: this.languageService.translate('shop.notice'),
+			noOnlineOrder: this.languageService.translate('shop.noOnlineOrder'),
+			myCart: this.languageService.translate('shop.myCart'),
+			total: this.languageService.translate('shop.total'),
+			checkout: this.languageService.translate('shop.checkout'),
+			close: this.languageService.translate('shop.close'),
+			remove: this.languageService.translate('shop.remove')
+		};
+	}
+
+	ngOnDestroy() {
+		this.langSub?.unsubscribe();
+	}
 }
 

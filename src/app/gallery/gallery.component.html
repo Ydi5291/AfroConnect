@@ -1,9 +1,9 @@
 <section class="intro-section">
   <div class="intro-message">
-    🌍 Entdecke {{ allAfroshops.length }} afrikanische Geschäfte in deiner Nähe
+    🌍 {{ texts.discover }} {{ allAfroshops.length }} {{ texts.shopsNearYou }}
   </div>
   <div class="intro-actions">
-  <button class="add-shop-btn" (click)="goToAddAfroshop()">➕ Geschäft hinzufügen</button>
+  <button class="add-shop-btn" (click)="goToAddAfroshop()">➕ {{ texts.addShopBtn }}</button>
   <button class="settings-btn" (click)="openSettings()" *ngIf="isAdmin">⚙️</button>
   </div>
 </section>
@@ -13,36 +13,36 @@
     <div class="controls-row">
       <div class="filter-gps-column">
         <div class="type-filter-group">
-          <label for="type-filter" class="unified-label">Nach Type filtern:</label>
+          <label for="type-filter" class="unified-label">{{ texts.filterByType }}</label>
           <select id="type-filter" [(ngModel)]="selectedType" (change)="onTypeFilterChange()" class="unified-select type-select-compact">
-            <option value="">Alle Typen</option>
-            <option value="restaurant">Restaurant</option>
-            <option value="epicerie">Lebensmittelgeschäft</option>
-            <option value="coiffeur">Friseur</option>
-            <option value="vetement">Bekleidung</option>
-            <option value="services">Dienstleistungen</option>
+            <option value="">{{ texts.allTypes }}</option>
+            <option value="restaurant">{{ texts.restaurant }}</option>
+            <option value="epicerie">{{ texts.epicerie }}</option>
+            <option value="coiffeur">{{ texts.coiffeur }}</option>
+            <option value="vetement">{{ texts.vetement }}</option>
+            <option value="services">{{ texts.services }}</option>
           </select>
         </div>
         <div class="gps-group">
-          <button (click)="useCurrentLocation()" class="location-btn gps-btn-desktop" title="GPS aktivieren und Standort verwenden">
-            📡 GPS aktivieren
+          <button (click)="useCurrentLocation()" class="location-btn gps-btn-desktop" [title]="texts.activateGPS">
+            📡 {{ texts.activateGPS }}
           </button>
         </div>
       </div>
   <div class="radius-info" *ngIf="userLocation || selectedCity">
         <div class="radius-indicator">
-          🎯 Suche in 50km Umkreis
-          <span *ngIf="selectedCity" class="city-name">um {{ getSelectedCityName() }}</span>
-          <span *ngIf="!selectedCity" class="current-location">um deinen Standort</span>
+          🎯 {{ texts.searchRadius }}
+          <span *ngIf="selectedCity" class="city-name">{{ texts.around }} {{ getSelectedCityName() }}</span>
+          <span *ngIf="!selectedCity" class="current-location">{{ texts.around }} {{ texts.yourLocation }}</span>
         </div>
         <div class="results-count">
-          {{ filteredAfroshops.length }} von {{ allAfroshops.length }} Afroshops angezeigt
+          {{ filteredAfroshops.length }} {{ texts.resultsCount }} {{ allAfroshops.length }} {{ texts.shopsDisplayed }}
         </div>
       </div>
     </div>
     <div class="controls-row">
       <div class="location-container">
-        <label for="city-input" class="unified-label">📍 Deine Stadt:</label>
+        <label for="city-input" class="unified-label">📍 {{ texts.yourCity }}</label>
         <div class="city-search-group">
           <div class="unified-input-group">
             <input 
@@ -50,7 +50,7 @@
               id="city-input"
               [(ngModel)]="customCityName"
               name="cityInput"
-              placeholder="Jede deutsche Stadt..."
+              [placeholder]="texts.anyCityPlaceholder"
               class="unified-input city-input-compact"
               (keyup.enter)="searchCity()"
             />
@@ -58,15 +58,15 @@
               (click)="searchCity()" 
               class="unified-btn search-btn"
               [disabled]="!customCityName || !customCityName.trim()"
-              title="Stadt suchen">
-              🔍 Suchen
+              [title]="texts.search">
+              🔍 {{ texts.search }}
             </button>
           </div>
         </div>
         <div class="quick-cities-group">
           <div class="unified-input-group">
             <select [(ngModel)]="selectedCity" class="unified-select city-select-compact">
-              <option value="">Beliebte Städte...</option>
+              <option value="">{{ texts.popularCities }}</option>
               <option value="berlin">Berlin</option>
               <option value="hamburg">Hamburg</option>
               <option value="münchen">München</option>
@@ -84,8 +84,8 @@
               (click)="onCityChange()" 
               class="unified-btn confirm-btn"
               [disabled]="!selectedCity"
-              title="Ausgewählte Stadt bestätigen">
-              ✓ Bestätigen
+              [title]="texts.confirm">
+              ✓ {{ texts.confirm }}
             </button>
           </div>
         </div>
@@ -113,11 +113,11 @@
           *ngIf="canEditAfroshop(shop)" 
           (click)="editAfroshop($event, shop.id)" 
           class="edit-btn"
-          title="Bearbeiten">
+          [title]="texts.edit">
           ✏️
         </button>
         <div class="image-overlay">
-          <span class="click-hint">📍 Details ansehen</span>
+          <span class="click-hint">📍 {{ texts.viewDetails }}</span>
         </div>
       </div>
       <!-- Toujours visible -->
@@ -138,8 +138,8 @@
           </span>
         </div>
         <div class="map-buttons">
-          <a [href]="getGoogleMapsUrl(shop.address)" target="_blank" class="map-btn">🗺️ Karte anzeigen</a>
-          <a [href]="getGoogleMapsRouteUrl(shop.address)" target="_blank" class="route-btn">🚗 Route</a>
+          <a [href]="getGoogleMapsUrl(shop.address)" target="_blank" class="map-btn">🗺️ {{ texts.showOnMap }}</a>
+          <a [href]="getGoogleMapsRouteUrl(shop.address)" target="_blank" class="route-btn">🚗 {{ texts.route }}</a>
         </div>
       </div>
     </div>

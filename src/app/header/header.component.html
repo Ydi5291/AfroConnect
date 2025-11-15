@@ -14,9 +14,10 @@
       <div class="header-welcome" *ngIf="displayName">
         <span class="welcome-text">Hallo {{ displayName }}</span>
       </div>
-      <p class="welcome-message">Verbinde dich mit der afrikanischen Community in Deutschland</p>
+      <p class="welcome-message">{{ welcomeMessage }}</p>
     </div>
     <div class="header-right">
+      <app-language-selector></app-language-selector>
       <ng-content></ng-content>
     </div>
   </div>

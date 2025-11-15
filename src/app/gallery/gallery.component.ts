@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -8,9 +8,10 @@ import { GeocodingService } from '../services/geocoding.service';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
 import { TranslationService } from '../services/translation.service';
+import { LanguageService } from '../services/language.service';
 import { MapComponent } from '../map/map.component';
 import { GeolocationService } from '../services/geolocation.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from '@angular/fire/auth';
 
 @Component({
@@ -20,7 +21,38 @@ import { User } from '@angular/fire/auth';
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css']
 })
-export class GalleryComponent implements OnInit {
+export class GalleryComponent implements OnInit, OnDestroy {
+  private langSub?: Subscription;
+  
+  // Translated texts
+  texts = {
+    discover: 'Entdecke',
+    shopsNearYou: 'afrikanische Geschäfte in deiner Nähe',
+    addShopBtn: 'Geschäft hinzufügen',
+    filterByType: 'Nach Type filtern:',
+    allTypes: 'Alle Typen',
+    activateGPS: 'GPS aktivieren',
+    searchRadius: 'Suche in 50km Umkreis',
+    around: 'um',
+    yourLocation: 'deinen Standort',
+    resultsCount: 'von',
+    shopsDisplayed: 'Afroshops angezeigt',
+    yourCity: 'Deine Stadt:',
+    anyCityPlaceholder: 'Jede deutsche Stadt...',
+    search: 'Suchen',
+    popularCities: 'Beliebte Städte...',
+    confirm: 'Bestätigen',
+    viewDetails: 'Details ansehen',
+    showOnMap: 'Karte anzeigen',
+    route: 'Route',
+    edit: 'Bearbeiten',
+    restaurant: 'Restaurant',
+    epicerie: 'Lebensmittelgeschäft',
+    coiffeur: 'Friseur',
+    vetement: 'Bekleidung',
+    services: 'Dienstleistungen'
+  };
+  
   getGoogleMapsUrl(address: string): string {
     if (!address) return 'https://maps.google.com';
     const encoded = encodeURIComponent(address);
@@ -82,6 +114,7 @@ export class GalleryComponent implements OnInit {
     private firebaseService: FirebaseAfroshopService,
     private authService: AuthService,
     private translationService: TranslationService,
+    private languageService: LanguageService,
     private router: Router,
     private geolocationService: GeolocationService,
     private geocodingService: GeocodingService,
@@ -91,6 +124,12 @@ export class GalleryComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    // Subscribe to language changes
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+    
     // Vérification admin via Firestore (modular)
     this.authService.user$.subscribe(async user => {
       if (user?.uid) {
@@ -805,5 +844,39 @@ export class GalleryComponent implements OnInit {
     }
     
     return null;
+  }
+
+  updateTranslations() {
+    this.texts = {
+      discover: this.languageService.translate('gallery.discover'),
+      shopsNearYou: this.languageService.translate('gallery.shopsNearYou'),
+      addShopBtn: this.languageService.translate('gallery.addShopBtn'),
+      filterByType: this.languageService.translate('gallery.filterByType'),
+      allTypes: this.languageService.translate('gallery.allTypes'),
+      activateGPS: this.languageService.translate('gallery.activateGPS'),
+      searchRadius: this.languageService.translate('gallery.searchRadius'),
+      around: this.languageService.translate('gallery.around'),
+      yourLocation: this.languageService.translate('gallery.yourLocation'),
+      resultsCount: this.languageService.translate('gallery.resultsCount'),
+      shopsDisplayed: this.languageService.translate('gallery.shopsDisplayed'),
+      yourCity: this.languageService.translate('gallery.yourCity'),
+      anyCityPlaceholder: this.languageService.translate('gallery.anyCityPlaceholder'),
+      search: this.languageService.translate('gallery.search'),
+      popularCities: this.languageService.translate('gallery.popularCities'),
+      confirm: this.languageService.translate('gallery.confirm'),
+      viewDetails: this.languageService.translate('gallery.viewDetails'),
+      showOnMap: this.languageService.translate('gallery.showOnMap'),
+      route: this.languageService.translate('gallery.route'),
+      edit: this.languageService.translate('gallery.edit'),
+      restaurant: this.languageService.translate('type.restaurant'),
+      epicerie: this.languageService.translate('type.epicerie'),
+      coiffeur: this.languageService.translate('type.coiffeur'),
+      vetement: this.languageService.translate('type.vetement'),
+      services: this.languageService.translate('type.services')
+    };
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

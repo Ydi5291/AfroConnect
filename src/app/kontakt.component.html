@@ -1,27 +1,27 @@
 <div class="kontakt-container">
-  <h1>Kontakt</h1>
-  <p>Du hast Fragen, Feedback oder möchtest mitmachen? Schreib uns direkt über das Formular!</p>
+  <h1>{{ texts.title }}</h1>
+  <p>{{ texts.intro }}</p>
   <form *ngIf="!submitted" (ngSubmit)="submitForm()" #kontaktForm="ngForm">
     <div class="form-group">
-      <label for="name">Name</label>
+      <label for="name">{{ texts.name }}</label>
       <input id="name" name="name" [(ngModel)]="name" required class="form-control" />
     </div>
     <div class="form-group">
-      <label for="email">E-Mail</label>
+      <label for="email">{{ texts.email }}</label>
       <input id="email" name="email" [(ngModel)]="email" required type="email" class="form-control" />
     </div>
     <div class="form-group">
-      <label for="message">Nachricht</label>
+      <label for="message">{{ texts.message }}</label>
       <textarea id="message" name="message" [(ngModel)]="message" required rows="5" class="form-control"></textarea>
     </div>
-    <button type="submit" class="submit-btn">Absenden</button>
+    <button type="submit" class="submit-btn">{{ texts.submit }}</button>
   </form>
   <div *ngIf="submitted" class="success-message">
-    <h2>Danke für deine Nachricht!</h2>
-    <p>Wir melden uns so schnell wie möglich bei dir.</p>
+    <h2>{{ texts.thankYou }}</h2>
+    <p>{{ texts.response }}</p>
   </div>
   <div class="kontakt-suggestions">
-    <h3>Weitere Kontaktmöglichkeiten</h3>
+    <h3>{{ texts.otherOptions }}</h3>
     <ul>
   <li>E-Mail: <a href="mailto:lamaid0502&#64;gmail.com">lamaid0502&#64;gmail.com</a></li>
   <li>Instagram: <a href="https://instagram.com/afroconnect.de" target="_blank">&#64;afroconnect.de</a></li>

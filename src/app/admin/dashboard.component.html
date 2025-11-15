@@ -1,13 +1,13 @@
 <div class="dashboard-container">
 
-  <h2><span style="font-size:1.5em;">📊</span> Bestellungen für Ihren Shop</h2>
-  <button class="modern-btn dashboard-return" style="margin-bottom:1.5rem;" (click)="goToShop()" [disabled]="!shopIdReady">← Zurück zum Shop</button>
+  <h2><span style="font-size:1.5em;">📊</span> {{ texts.title }}</h2>
+  <button class="modern-btn dashboard-return" style="margin-bottom:1.5rem;" (click)="goToShop()" [disabled]="!shopIdReady">← {{ texts.backToShop }}</button>
   <div *ngIf="orders.length === 0" class="dashboard-empty">
-    <p>Keine Bestellungen gefunden.</p>
+    <p>{{ texts.noOrders }}</p>
   </div>
   <div class="dashboard-info" *ngIf="orders.length > 0">
     <p style="color: #1e88e5; font-size: 0.9rem; margin-bottom: 0.5rem;">
-      💡 <em>Tipp: Wischen Sie nach links/rechts und oben/unten, um alle Informationen zu sehen.</em>
+      💡 <em>{{ texts.tip }}</em>
     </p>
   </div>
   <div class="dashboard-table-wrapper" *ngIf="orders.length > 0">
@@ -15,20 +15,20 @@
       <div class="date-separator">
         <h3>
           {{ group.label }}
-          <span class="order-count">{{ group.orders.length }} Bestellung(en)</span>
+          <span class="order-count">{{ group.orders.length }} {{ texts.orders }}</span>
         </h3>
       </div>
       
       <table class="dashboard-table">
         <thead>
           <tr>
-            <th>Uhrzeit</th>
-            <th>Kunde</th>
-            <th>Produkte</th>
-            <th>Menge</th>
-            <th>Gesamtbetrag (€)</th>
-            <th>Zahlungsart</th>
-            <th>Lieferart</th>
+            <th>{{ texts.time }}</th>
+            <th>{{ texts.customer }}</th>
+            <th>{{ texts.products }}</th>
+            <th>{{ texts.quantity }}</th>
+            <th>{{ texts.totalAmount }}</th>
+            <th>{{ texts.paymentMethod }}</th>
+            <th>{{ texts.deliveryType }}</th>
           </tr>
         </thead>
         <tbody>
@@ -43,7 +43,7 @@
                 <span *ngIf="order.clientInfo.email">E-Mail: {{ order.clientInfo.email }}</span>
               </ng-container>
               <ng-template #noClientInfo>
-                <span style="color:#888">Aucune info client</span>
+                <span style="color:#888">{{ texts.noClientInfo }}</span>
               </ng-template>
             </td>
             <td>
@@ -59,8 +59,8 @@
             <td>€{{ order.total.toFixed(2) }}</td>
             <td>{{ order.paymentMethod }}</td>
             <td>
-              <span *ngIf="order.deliveryType === 'abholung'" style="color: #1a8917;">🏪 Abholung</span>
-              <span *ngIf="order.deliveryType === 'lieferung'" style="color: #ff6b35;">🚚 Lieferung</span>
+              <span *ngIf="order.deliveryType === 'abholung'" style="color: #1a8917;">🏪 {{ texts.pickup }}</span>
+              <span *ngIf="order.deliveryType === 'lieferung'" style="color: #ff6b35;">🚚 {{ texts.delivery }}</span>
               <span *ngIf="!order.deliveryType" style="color: #888;">-</span>
             </td>
           </tr>

@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { AuthService, UserProfile } from './services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from '@angular/fire/auth';
 import { CookieConsentComponent } from './cookie-consent/cookie-consent.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { HeaderComponent } from './header/header.component';
 import { BurgerMenuComponent } from './burger-menu/burger-menu.component';
+import { LanguageService } from './services/language.service';
 
 @Component({
   selector: 'app-root',
@@ -18,13 +19,23 @@ import { BurgerMenuComponent } from './burger-menu/burger-menu.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private langSub?: Subscription;
+  
   showChat: boolean = false;
   title = 'AfroConnect';
   user$: Observable<User | null>;
 
   isMobile: boolean = false;
   isHilfePage: boolean = false;
+  
+  texts = {
+    copyright: 'Verbinde dich mit deiner Community',
+    privacy: 'Datenschutz',
+    terms: 'AGB',
+    imprint: 'Impressum',
+    contact: 'Kontakt'
+  };
 
   // slideshowImages = [
   //   'assets/header-bg/Alloco2.jpg',
@@ -44,7 +55,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private languageService: LanguageService
   ) {
     this.user$ = this.authService.user$;
     this.isMobile = window.innerWidth <= 768;
@@ -68,7 +80,24 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // ...autres initialisations...
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+  }
+  
+  updateTranslations() {
+    this.texts = {
+      copyright: this.languageService.translate('footer.copyright'),
+      privacy: this.languageService.translate('footer.privacy'),
+      terms: this.languageService.translate('footer.terms'),
+      imprint: this.languageService.translate('footer.imprint'),
+      contact: this.languageService.translate('footer.contact')
+    };
+  }
+  
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 
   async logout(): Promise<void> {

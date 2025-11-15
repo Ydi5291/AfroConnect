@@ -1,6 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { LanguageService } from '../services/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-burger-menu',
@@ -9,12 +11,54 @@ import { RouterModule } from '@angular/router';
   templateUrl: './burger-menu.component.html',
   styleUrls: ['./burger-menu.component.css']
 })
-export class BurgerMenuComponent {
+export class BurgerMenuComponent implements OnInit, OnDestroy {
   menuOpen = false;
+  private langSub?: Subscription;
+
+  menuItems = {
+    about: 'Über uns',
+    addShop: 'Geschäft hinzufügen',
+    gallery: 'Galerie',
+    contact: 'Kontakt',
+    impressum: 'Impressum',
+    terms: 'AGB',
+    privacy: 'Datenschutz',
+    help: 'Hilfe',
+    closeMenu: 'Menü schließen',
+    openMenu: 'Menü öffnen'
+  };
 
   @ViewChild('burgerBtn', { static: false }) burgerBtn!: ElementRef<HTMLButtonElement>;
   @ViewChild('menuPanel', { static: false }) menuPanel!: ElementRef<HTMLElement>;
   @ViewChild('closeBtn', { static: false }) closeBtn!: ElementRef<HTMLButtonElement>;
+
+  constructor(private languageService: LanguageService) {}
+
+  ngOnInit() {
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
+  }
+
+  updateTranslations() {
+    this.menuItems = {
+      about: this.languageService.translate('nav.about'),
+      addShop: this.languageService.translate('nav.addShop'),
+      gallery: this.languageService.translate('nav.gallery'),
+      contact: this.languageService.translate('nav.contact'),
+      impressum: this.languageService.translate('nav.impressum'),
+      terms: this.languageService.translate('nav.terms'),
+      privacy: this.languageService.translate('nav.privacy'),
+      help: this.languageService.translate('nav.help'),
+      closeMenu: this.languageService.translate('nav.closeMenu'),
+      openMenu: this.languageService.translate('nav.openMenu')
+    };
+  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

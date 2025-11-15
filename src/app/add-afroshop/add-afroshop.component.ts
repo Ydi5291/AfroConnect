@@ -39,7 +39,8 @@ export class AddAfroshopComponent {
     if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places.PlaceAutocompleteElement) {
       // Crée dynamiquement l'élément PlaceAutocompleteElement
       const placeAutocompleteEl = document.createElement('gmp-place-autocomplete');
-      placeAutocompleteEl.setAttribute('componentRestrictions', JSON.stringify({ country: 'DE' }));
+      // Restriction élargie à toute l'Europe pour permettre commerces en Belgique, France, Suisse, etc.
+      placeAutocompleteEl.setAttribute('componentRestrictions', JSON.stringify({ country: ['DE', 'BE', 'FR', 'CH', 'LU', 'AT', 'NL'] }));
       placeAutocompleteEl.setAttribute('fields', 'address_components,formatted_address');
       placeAutocompleteEl.setAttribute('placeholder', inputElement.placeholder || 'Adresse');
       placeAutocompleteEl.setAttribute('inputMode', 'search');

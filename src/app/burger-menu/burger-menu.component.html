@@ -1,21 +1,21 @@
 <div class="burger-menu-container">
-    <button #burgerBtn class="burger-icon" (click)="toggleMenu()" aria-label="Menü öffnen" [attr.aria-expanded]="menuOpen">
+    <button #burgerBtn class="burger-icon" (click)="toggleMenu()" [attr.aria-label]="menuItems.openMenu" [attr.aria-expanded]="menuOpen">
         <span></span>
         <span></span>
         <span></span>
     </button>
     <div class="menu-overlay" *ngIf="menuOpen" (click)="closeMenu()"></div>
     <nav #menuPanel class="menu-panel" *ngIf="menuOpen" [attr.aria-hidden]="!menuOpen">
-        <button #closeBtn class="close-menu" (click)="closeMenu()" aria-label="Menü schließen">×</button>
+        <button #closeBtn class="close-menu" (click)="closeMenu()" [attr.aria-label]="menuItems.closeMenu">×</button>
         <ul>
-            <li><a routerLink="/about" (click)="closeMenu()" tabindex="0">Über uns</a></li>
-            <li><a routerLink="/add-afroshop" (click)="closeMenu()" tabindex="0">Geschäft hinzufügen</a></li>
-            <li><a routerLink="/gallery" (click)="closeMenu()" tabindex="0">Galerie</a></li>
-            <li><a routerLink="/kontakt" (click)="closeMenu()" tabindex="0">Kontakt</a></li>
-            <li><a routerLink="/impressum" (click)="closeMenu()" tabindex="0">Impressum</a></li>
-            <li><a routerLink="/terms" (click)="closeMenu()" tabindex="0">AGB</a></li>
-            <li><a routerLink="/privacy" (click)="closeMenu()" tabindex="0">Datenschutz</a></li>
-            <li><a routerLink="/hilfe" (click)="closeMenu()" tabindex="0">Hilfe</a></li>
+            <li><a routerLink="/about" (click)="closeMenu()" tabindex="0">{{ menuItems.about }}</a></li>
+            <li><a routerLink="/add-afroshop" (click)="closeMenu()" tabindex="0">{{ menuItems.addShop }}</a></li>
+            <li><a routerLink="/gallery" (click)="closeMenu()" tabindex="0">{{ menuItems.gallery }}</a></li>
+            <li><a routerLink="/kontakt" (click)="closeMenu()" tabindex="0">{{ menuItems.contact }}</a></li>
+            <li><a routerLink="/impressum" (click)="closeMenu()" tabindex="0">{{ menuItems.impressum }}</a></li>
+            <li><a routerLink="/terms" (click)="closeMenu()" tabindex="0">{{ menuItems.terms }}</a></li>
+            <li><a routerLink="/privacy" (click)="closeMenu()" tabindex="0">{{ menuItems.privacy }}</a></li>
+            <li><a routerLink="/hilfe" (click)="closeMenu()" tabindex="0">{{ menuItems.help }}</a></li>
 
         </ul>
     </nav>

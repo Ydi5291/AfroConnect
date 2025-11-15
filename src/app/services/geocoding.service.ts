@@ -116,7 +116,7 @@ export class GeocodingService {
       format: 'json',
       addressdetails: '1',
       limit: '1',
-      countrycodes: 'de'
+      countrycodes: 'de,be,fr,ch,lu,at,nl'
     };
 
     return this.http.get<any[]>(NOMINATIM_URL, { params }).pipe(

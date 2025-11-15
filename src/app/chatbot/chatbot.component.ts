@@ -3,6 +3,8 @@ import { Component, HostListener, OnInit, OnDestroy, Input, Output, EventEmitter
 import { Router } from '@angular/router';
 import { AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { LanguageService } from '../services/language.service';
+import { Subscription } from 'rxjs';
 
 export interface ChatbotMessage {
   from: string;
@@ -18,26 +20,35 @@ export interface ChatbotMessage {
   styleUrls: ['./chatbot.component.css']
 })
 export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, OnChanges {
+  private langSub?: Subscription;
+  
+  texts = {
+    greeting: 'Hallo! Ich bin Diamal, dein Assistent. Ich erkläre dir, warum und wie du Popups aktivierst und warum Cookies wichtig sind.',
+    prompt: 'Stelle mir eine Frage oder wähle ein Thema:',
+    topic1: 'Warum Popups aktivieren?',
+    topic2: 'Wie Popups aktivieren?',
+    topic3: 'Warum Cookies akzeptieren?',
+    topic4: 'Möchten Sie uns kontaktieren?',
+    answer1: 'Popups ermöglichen wichtige Benachrichtigungen, Angebote und Infos. Sie sind nötig für Funktionen wie Login, Warnungen und mehr.',
+    answer2: 'Um Popups zu aktivieren, prüfe die Einstellungen deines Browsers oder Geräts. Erlaube Benachrichtigungen für AfroConnect.',
+    answer3: 'Cookies helfen, deine Erfahrung zu personalisieren, Einstellungen zu speichern und die Sicherheit zu gewährleisten. Sie sind für die Funktion der Seite wichtig.',
+    answer4: 'Super! Ich leite Sie direkt zum Kontaktformular weiter.',
+    linkText: 'Hier findest du eine Anleitung für Chrome und andere Browser (Google Support)'
+  };
+  
   // ...existing code...
   ngOnDestroy(): void {
     console.log('[Chatbot] ngOnDestroy appelé, composant démonté. isMobile:', this.isMobile, 'showChat:', this.showChat);
+    this.langSub?.unsubscribe();
   }
   @ViewChild('messagesEnd') messagesEnd!: ElementRef;
   isMobile = false;
   @Input() showChat = false;
   @Output() toggleChat = new EventEmitter<void>();
-  messages: ChatbotMessage[] = [
-    { from: 'bot', text: 'Hallo! Ich bin Diamal, dein Assistent. Ich erkläre dir, warum und wie du Popups aktivierst und warum Cookies wichtig sind.' },
-    { from: 'bot', text: 'Stelle mir eine Frage oder wähle ein Thema:' },
-  ];
-  topics = [
-    'Warum Popups aktivieren?',
-    'Wie Popups aktivieren?',
-    'Warum Cookies akzeptieren?',
-    'Möchten Sie uns kontaktieren?'
-  ];
+  messages: ChatbotMessage[] = [];
+  topics: string[] = [];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private languageService: LanguageService) {
     this.isMobile = window.innerWidth < 600;
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -47,9 +58,44 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
   }
 
   ngOnInit() {
-  this.isMobile = window.innerWidth < 600;
-  console.log('[Chatbot] ngOnInit, isMobile:', this.isMobile, 'showChat:', this.showChat);
-  // Ne pas toucher à showChat ici, laisse le contrôle à l'utilisateur
+    this.isMobile = window.innerWidth < 600;
+    console.log('[Chatbot] ngOnInit, isMobile:', this.isMobile, 'showChat:', this.showChat);
+    
+    // Language subscription
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+  }
+
+  updateTranslations() {
+    this.texts = {
+      greeting: this.languageService.translate('chatbot.greeting'),
+      prompt: this.languageService.translate('chatbot.prompt'),
+      topic1: this.languageService.translate('chatbot.topic1'),
+      topic2: this.languageService.translate('chatbot.topic2'),
+      topic3: this.languageService.translate('chatbot.topic3'),
+      topic4: this.languageService.translate('chatbot.topic4'),
+      answer1: this.languageService.translate('chatbot.answer1'),
+      answer2: this.languageService.translate('chatbot.answer2'),
+      answer3: this.languageService.translate('chatbot.answer3'),
+      answer4: this.languageService.translate('chatbot.answer4'),
+      linkText: this.languageService.translate('chatbot.linkText')
+    };
+    
+    // Reset messages with new translations
+    this.messages = [
+      { from: 'bot', text: this.texts.greeting },
+      { from: 'bot', text: this.texts.prompt }
+    ];
+    
+    // Update topics
+    this.topics = [
+      this.texts.topic1,
+      this.texts.topic2,
+      this.texts.topic3,
+      this.texts.topic4
+    ];
   }
 
 
@@ -62,18 +108,20 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
   selectTopic(topic: string) {
     this.messages.push({ from: 'user', text: topic });
     let answer = '';
-    if (topic === this.topics[0]) {
-      answer = 'Popups ermöglichen wichtige Benachrichtigungen, Angebote und Infos. Sie sind nötig für Funktionen wie Login, Warnungen und mehr.';
-    } else if (topic === this.topics[1]) {
-      answer = `Um Popups zu aktivieren, prüfe die Einstellungen deines Browsers oder Geräts. Erlaube Benachrichtigungen für AfroConnect.<br><a href="https://support.google.com/chrome/answer/95472?hl=de" target="_blank" rel="noopener">Hier findest du eine Anleitung für Chrome und andere Browser (Google Support)</a>`;
-    } else if (topic === this.topics[2]) {
-      answer = 'Cookies helfen, deine Erfahrung zu personalisieren, Einstellungen zu speichern und die Sicherheit zu gewährleisten. Sie sind für die Funktion der Seite wichtig.';
-    } else if (topic === this.topics[3]) {
-      answer = 'Super! Ich leite Sie direkt zum Kontaktformular weiter.';
+    
+    if (topic === this.texts.topic1) {
+      answer = this.texts.answer1;
+    } else if (topic === this.texts.topic2) {
+      answer = `${this.texts.answer2}<br><a href="https://support.google.com/chrome/answer/95472?hl=de" target="_blank" rel="noopener">${this.texts.linkText}</a>`;
+    } else if (topic === this.texts.topic3) {
+      answer = this.texts.answer3;
+    } else if (topic === this.texts.topic4) {
+      answer = this.texts.answer4;
       this.router.navigate(['/kontakt']);
     }
+    
     if (answer) {
-      this.messages.push({ from: 'bot', text: answer, isHtml: topic === this.topics[1] });
+      this.messages.push({ from: 'bot', text: answer, isHtml: topic === this.texts.topic2 });
     }
     setTimeout(() => this.scrollToBottom(), 100);
   }

@@ -2,20 +2,26 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
+import { LanguageService } from '../services/language.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LanguageSelectorComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   slideshowImages = [
     '/assets/header-bg/Alloco2.jpg',
+    '/assets/header-bg/Atchieke.jpg',
+    '/assets/header-bg/Attieke.jpeg',
     '/assets/header-bg/Avocados.jpg',
     '/assets/header-bg/Bissap.png',
     '/assets/header-bg/Chips2.jpg',
+    '/assets/header-bg/foutou.jpg',
+    '/assets/header-bg/fufu.jpg',
     '/assets/header-bg/Guinness.jpg',
     '/assets/header-bg/Ignam.jpg',
     '/assets/header-bg/NIDO.jpg',
@@ -28,9 +34,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentSlide = 0;
 
   displayName: string | null = null;
+  welcomeMessage: string = 'Verbinde dich mit der afrikanischen Community in Deutschland';
   private userSub: Subscription | null = null;
+  private langSub: Subscription | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private languageService: LanguageService
+  ) {}
 
   ngOnInit() {
     setInterval(() => {
@@ -45,9 +56,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.displayName = null;
       }
     });
+
+    // Souscription aux changements de langue
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateWelcomeMessage();
+    });
+  }
+
+  updateWelcomeMessage() {
+    const messages = {
+      'de': 'Verbinde dich mit der afrikanischen Community in Europa',
+      'en': 'Connect with the African community in Europe',
+      'fr': 'Connectez-vous avec la communauté africaine en Europe'
+    };
+    this.welcomeMessage = messages[this.languageService.getCurrentLanguage()];
   }
 
   ngOnDestroy() {
     this.userSub?.unsubscribe();
+    this.langSub?.unsubscribe();
   }
 }

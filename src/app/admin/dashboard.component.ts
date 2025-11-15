@@ -1,9 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService, OrderData } from '../services/order.service';
 import { AuthService } from '../services/auth.service';
 import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
+import { LanguageService } from '../services/language.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +13,27 @@ import { Router, ActivatedRoute } from '@angular/router';
   imports: [CommonModule],
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+  private langSub?: Subscription;
+
+  texts = {
+    title: 'Bestellungen für Ihren Shop',
+    backToShop: 'Zurück zum Shop',
+    noOrders: 'Keine Bestellungen gefunden.',
+    tip: 'Tipp: Wischen Sie nach links/rechts und oben/unten, um alle Informationen zu sehen.',
+    orders: 'Bestellung(en)',
+    time: 'Uhrzeit',
+    customer: 'Kunde',
+    products: 'Produkte',
+    quantity: 'Menge',
+    totalAmount: 'Gesamtbetrag (€)',
+    paymentMethod: 'Zahlungsart',
+    deliveryType: 'Lieferart',
+    pickup: 'Abholung',
+    delivery: 'Lieferung',
+    noClientInfo: 'Aucune info client'
+  };
+
   currentUid: string | null = null;
   orders: OrderData[] = [];
   groupedOrders: { date: string, orders: OrderData[], label: string }[] = [];
@@ -21,10 +43,17 @@ export class DashboardComponent implements OnInit {
   private orderService = inject(OrderService);
   private authService = inject(AuthService);
   private afroshopService = inject(FirebaseAfroshopService);
+  private languageService = inject(LanguageService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   ngOnInit() {
+    // Language subscription
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+
     // 🔹 Observer l'utilisateur connecté
     this.authService.user$.subscribe(user => {
       this.currentUid = user?.uid || null;
@@ -95,5 +124,29 @@ export class DashboardComponent implements OnInit {
       
       return { date, orders, label };
     });
+  }
+
+  updateTranslations() {
+    this.texts = {
+      title: this.languageService.translate('dashboard.title'),
+      backToShop: this.languageService.translate('dashboard.backToShop'),
+      noOrders: this.languageService.translate('dashboard.noOrders'),
+      tip: this.languageService.translate('dashboard.tip'),
+      orders: this.languageService.translate('dashboard.orders'),
+      time: this.languageService.translate('dashboard.time'),
+      customer: this.languageService.translate('dashboard.customer'),
+      products: this.languageService.translate('dashboard.products'),
+      quantity: this.languageService.translate('dashboard.quantity'),
+      totalAmount: this.languageService.translate('dashboard.totalAmount'),
+      paymentMethod: this.languageService.translate('dashboard.paymentMethod'),
+      deliveryType: this.languageService.translate('dashboard.deliveryType'),
+      pickup: this.languageService.translate('dashboard.pickup'),
+      delivery: this.languageService.translate('dashboard.delivery'),
+      noClientInfo: this.languageService.translate('dashboard.noClientInfo')
+    };
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

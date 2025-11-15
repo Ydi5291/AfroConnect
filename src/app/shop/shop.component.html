@@ -1,17 +1,17 @@
 <div class="shop-container" *ngIf="afroshop">
 	<div class="shop-header-btns">
-		<button class="modern-btn" (click)="router.navigate(['/gallery'])">Zur Gallery</button>
-		<button class="modern-btn" (click)="router.navigate(['/afroshop', afroshop.id])">Zur Shop-infos</button>
+		<button class="modern-btn" (click)="router.navigate(['/gallery'])">{{ texts.toGallery }}</button>
+		<button class="modern-btn" (click)="router.navigate(['/afroshop', afroshop.id])">{{ texts.toShopInfo }}</button>
 		<!-- Bouton Appeler : icône seule -->
 		<button *ngIf="!isShopOwner() && afroshop.phone" class="modern-btn call-header-btn" (click)="openUrl('tel:' + afroshop.phone, '_self')">📞</button>
-		<button *ngIf="canEdit()" class="modern-btn primary" (click)="goToAddProduct()">➕ Produkte hinzufügen</button>
-		<button *ngIf="canEdit() && afroshop" class="modern-btn dashboard" (click)="goToDashboard(afroshop.id)">📊 Dashboard</button>
+		<button *ngIf="canEdit()" class="modern-btn primary" (click)="goToAddProduct()">➕ {{ texts.addProducts }}</button>
+		<button *ngIf="canEdit() && afroshop" class="modern-btn dashboard" (click)="goToDashboard(afroshop.id)">📊 {{ texts.dashboard }}</button>
 	</div>
 
        <!-- ...modale Impressum supprimée, à placer dans image-detail.component.html... -->
 
 	<div *ngIf="!afroshop.products || afroshop.products.length === 0" class="info-message">
-		<span style="color:#d32f2f;font-weight:600;">Hinweis:</span> Dieser Shop bietet keinen Online-Bestellservice an. Bitte besuchen Sie das Geschäft vor Ort oder rufen Sie an.
+		<span style="color:#d32f2f;font-weight:600;">{{ texts.notice }}</span> {{ texts.noOnlineOrder }}
 	</div>
 	<div class="products-grid">
 		<div class="product-card" *ngFor="let product of afroshop.products">
@@ -40,7 +40,7 @@
 <div class="cart-overlay" *ngIf="cartOpen">
 	<div class="cart-float-panel modern-cart">
 		<div class="cart-header">
-			<span class="cart-title">🛒 Mein Warenkorb</span>
+			<span class="cart-title">🛍️ {{ texts.myCart }}</span>
 			<span class="cart-badge">{{ getCartItemCount() }}</span>
 		</div>
 		<ul class="cart-list">
@@ -60,12 +60,12 @@
 			</li>
 		</ul>
 		<div class="cart-total-row">
-			<span>Gesamt:</span>
+			<span>{{ texts.total }}</span>
 			<strong class="cart-total">{{ getCartTotal() | currency:'EUR' }}</strong>
 		</div>
 			<div class="cart-actions">
-				<button class="cart-order-btn" (click)="goToPayment()" [disabled]="getCartItemCount() === 0">Zur Kasse</button>
-				<button class="close-cart-btn" (click)="toggleCart()">Schließen</button>
+				<button class="cart-order-btn" (click)="goToPayment()" [disabled]="getCartItemCount() === 0">{{ texts.checkout }}</button>
+				<button class="close-cart-btn" (click)="toggleCart()">{{ texts.close }}</button>
 			</div>
 	</div>
 </div>
