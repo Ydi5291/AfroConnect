@@ -2,13 +2,12 @@
   <div class="form-header">
     <div class="header-content">
       <div class="header-text">
-        <h2>{{ isEditMode ? '✏️ Geschäft bearbeiten' : '🏪 Neues Geschäft hinzufügen' }}</h2>
-        <p>{{ isEditMode ? 'Aktualisieren Sie die Informationen' : 'Teilen Sie Ihren Lieblings-Afroshop mit der
-          Community!' }}</p>
+        <h2>{{ isEditMode ? '✏️ ' + texts.titleEdit : '🏪 ' + texts.titleAdd }}</h2>
+        <p>{{ isEditMode ? texts.subtitleEdit : texts.subtitleAdd }}</p>
       </div>
       <div class="header-actions">
-        <a routerLink="/gallery" class="back-btn">← Galerie</a>
-        <a routerLink="/admin" class="back-btn" *ngIf="isAdmin">⚙️ Paramètre</a>
+        <a routerLink="/gallery" class="back-btn">← {{ texts.backToGallery }}</a>
+        <a routerLink="/admin" class="back-btn" *ngIf="isAdmin">⚙️ {{ texts.settings }}</a>
       </div>
       <!-- Fin du champ rue -->
     </div>
@@ -24,22 +23,21 @@
       </div>
       <!-- Geocoding Warnung -->
       <div class="message warning" *ngIf="geocodingWarning">
-        ⚠️ {{ geocodingWarning || 'Achtung: Die Adresse konnte nicht genau lokalisiert werden. Bitte überprüfen Sie die
-        Eingabe.' }}
+        ⚠️ {{ geocodingWarning || texts.warningAddress }}
       </div>
 
       <!-- Geschäftsname -->
       <div class="form-group">
-        <label for="name">Name des Geschäfts *</label>
-        <input type="text" id="name" [(ngModel)]="afroshop.name" name="name" placeholder="z.B. Mama Afrika Restaurant"
+        <label for="name">{{ texts.shopName }} *</label>
+        <input type="text" id="name" [(ngModel)]="afroshop.name" name="name" [placeholder]="texts.shopNamePlaceholder"
           required class="form-input">
       </div>
 
       <!-- Type -->
       <div class="form-group">
-        <label for="type">Typ *</label>
+        <label for="type">{{ texts.type }} *</label>
         <select id="type" [(ngModel)]="afroshop.type" name="type" required class="form-select">
-          <option value="">Typ auswählen</option>
+          <option value="">{{ texts.selectType }}</option>
           <option *ngFor="let type of getAllBusinessTypes()" [value]="type.value">
             {{type.icon}} {{type.label}}
           </option>
@@ -48,15 +46,15 @@
 
       <!-- Upload d'image -->
       <div class="form-group">
-        <label for="image">📸 Bild hochladen</label>
+        <label for="image">📸 {{ texts.uploadImage }}</label>
         <div class="image-upload-section">
           <input type="file" id="image" (change)="onFileSelected($event)" accept="image/*" class="file-input"
             #fileInput>
 
           <button type="button" (click)="fileInput.click()" class="upload-btn" [disabled]="isUploadingImage">
-            <span *ngIf="!imagePreview && !isUploadingImage">📁 Bild auswählen</span>
-            <span *ngIf="imagePreview && !isUploadingImage">🔄 Anderes Bild wählen</span>
-            <span *ngIf="isUploadingImage">⏳ Wird bearbeitet...</span>
+            <span *ngIf="!imagePreview && !isUploadingImage">📁 {{ texts.selectImage }}</span>
+            <span *ngIf="imagePreview && !isUploadingImage">🔄 {{ texts.changeImage }}</span>
+            <span *ngIf="isUploadingImage">⏳ {{ texts.processing }}</span>
           </button>
 
           <!-- Indicateur de progression -->
@@ -64,47 +62,47 @@
             <div class="progress-bar">
               <div class="progress-fill"></div>
             </div>
-            <small>Bild wird komprimiert und vorbereitet...</small>
+            <small>{{ texts.compressing }}</small>
           </div>
 
           <!-- Bildvorschau -->
           <div *ngIf="imagePreview" class="image-preview-container">
             <img [src]="imagePreview" alt="Preview" class="image-preview">
             <button type="button" (click)="imagePreview = null; selectedFile = null; fileInput.value = ''"
-              class="remove-image-btn" title="Bild entfernen">
+              class="remove-image-btn" [title]="texts.removeImage">
               ✕
             </button>
           </div>
 
-          <small class="form-hint">Max. 5MB - Wird automatisch komprimiert und optimiert</small>
+          <small class="form-hint">{{ texts.maxSize }}</small>
         </div>
       </div>
 
       <!-- Adresse séparée -->
       <div class="form-group">
-        <label for="street">Straße und Hausnr. *</label>
-        <input type="text" id="street" [(ngModel)]="afroshop.street" name="street" placeholder="z.B. Müllerstraße 123"
+        <label for="street">{{ texts.streetAndNumber }} *</label>
+        <input type="text" id="street" [(ngModel)]="afroshop.street" name="street" [placeholder]="texts.streetPlaceholder"
           required class="form-input" #streetInput (focus)="initStreetAutocomplete(streetInput)"
           (input)="onAddressChange()">
-        <small class="form-hint">Adresse wird automatisch vorgeschlagen (Google Maps Autocomplete)</small>
+        <small class="form-hint">{{ texts.autocompleteHint }}</small>
       </div>
       <div class="form-group">
-        <label for="plz">PLZ *</label>
-        <input type="text" id="plz" [(ngModel)]="afroshop.plz" name="plz" placeholder="z.B. 13349" required
+        <label for="plz">{{ texts.zip }} *</label>
+        <input type="text" id="plz" [(ngModel)]="afroshop.plz" name="plz" [placeholder]="texts.zipPlaceholder" required
           pattern="\d{5}" maxlength="5" class="form-input" (input)="onAddressChange()">
-        <small class="form-hint">5-stellige Postleitzahl</small>
+        <small class="form-hint">{{ texts.zipHint }}</small>
       </div>
       <div class="form-group">
-        <label for="city">Stadt *</label>
-        <input type="text" id="city" [(ngModel)]="afroshop.city" name="city" placeholder="z.B. Berlin" required
+        <label for="city">{{ texts.city }} *</label>
+        <input type="text" id="city" [(ngModel)]="afroshop.city" name="city" [placeholder]="texts.cityPlaceholder" required
           pattern="[A-Za-zäöüÄÖÜß\-\s]+" class="form-input" (input)="onAddressChange()">
-        <small class="form-hint">Nur Buchstaben und Bindestriche</small>
+        <small class="form-hint">{{ texts.cityHint }}</small>
       </div>
       <!-- Fin du champ ville -->
       <div class="form-group">
-        <small>Bitte geben Sie Straße, PLZ und Stadt an</small>
+        <small>{{ texts.addressInstruction }}</small>
         <div *ngIf="isGeocoding" class="geocoding-indicator">
-          🗺️ Adresse wird georeferenziert...
+          🗺️ {{ texts.geocoding }}
         </div>
         <div *ngIf="afroshop.coordinates.lat !== 0 && afroshop.coordinates.lng !== 0" class="geocoding-success">
           ✅ Standort gefunden: {{afroshop.coordinates.lat.toFixed(4)}}, {{afroshop.coordinates.lng.toFixed(4)}}
@@ -113,38 +111,38 @@
 
       <!-- Telefon -->
       <div class="form-group">
-        <label for="phone">Telefon *</label>
-        <input type="tel" id="phone" [(ngModel)]="afroshop.phone" name="phone" placeholder="+49 30 12345678" required
+        <label for="phone">{{ texts.phone }}</label>
+        <input type="tel" id="phone" [(ngModel)]="afroshop.phone" name="phone" [placeholder]="texts.phonePlaceholder" required
           class="form-input">
       </div>
 
       <!-- Beschreibung -->
       <div class="form-group">
-        <label for="description">Beschreibung *</label>
+        <label for="description">{{ texts.description }}</label>
         <textarea id="description" [(ngModel)]="afroshop.description" name="description"
-          placeholder="Beschreiben Sie das Geschäft, Spezialitäten, Atmosphäre..." required rows="4"
+          [placeholder]="texts.descriptionPlaceholder" required rows="4"
           class="form-textarea"></textarea>
       </div>
 
       <!-- Cuisine (nur für Restaurants) -->
       <div class="form-group" *ngIf="afroshop.type === 'restaurant'">
-        <label for="cuisine">Küche</label>
+        <label for="cuisine">{{ texts.cuisine }}</label>
         <input type="text" id="cuisine" [(ngModel)]="afroshop.cuisine" name="cuisine"
-          placeholder="z.B. Westafrikanische, Äthiopische, Nigerianische, Senegalesische" class="form-input">
-        <small class="form-hint">Spezifizieren Sie die Art der afrikanischen Küche</small>
+          [placeholder]="texts.cuisinePlaceholder" class="form-input">
+        <small class="form-hint">{{ texts.cuisineHint }}</small>
       </div>
 
       <!-- Öffnungszeiten -->
       <div class="form-group">
-        <label>Öffnungszeiten</label>
+        <label>{{ texts.openingHours }}</label>
         <div class="opening-hours-container">
 
           <!-- Montag -->
           <div class="day-hours">
-            <div class="day-label">Montag:</div>
+            <div class="day-label">{{ texts.monday }}:</div>
             <div class="hours-controls">
               <input type="checkbox" id="mon-open" [(ngModel)]="openingHours.monday.isOpen" name="mon-open">
-              <label for="mon-open" class="checkbox-label">Geöffnet</label>
+              <label for="mon-open" class="checkbox-label">{{ texts.dayOpen }}</label>
               <div *ngIf="openingHours.monday.isOpen" class="time-selectors">
                 <select [(ngModel)]="openingHours.monday.open" name="mon-open-time" class="time-select">
                   <option value="06:00">06:00</option>
@@ -166,7 +164,7 @@
                   <option value="22:00">22:00</option>
                   <option value="23:00">23:00</option>
                 </select>
-                <span class="time-separator">bis</span>
+                <span class="time-separator">{{ texts.dayTo }}</span>
                 <select [(ngModel)]="openingHours.monday.close" name="mon-close-time" class="time-select">
                   <option value="06:00">06:00</option>
                   <option value="07:00">07:00</option>
@@ -193,10 +191,10 @@
 
           <!-- Dienstag -->
           <div class="day-hours">
-            <div class="day-label">Dienstag:</div>
+            <div class="day-label">{{ texts.tuesday }}:</div>
             <div class="hours-controls">
               <input type="checkbox" id="tue-open" [(ngModel)]="openingHours.tuesday.isOpen" name="tue-open">
-              <label for="tue-open" class="checkbox-label">Geöffnet</label>
+              <label for="tue-open" class="checkbox-label">{{ texts.dayOpen }}</label>
               <div *ngIf="openingHours.tuesday.isOpen" class="time-selectors">
                 <select [(ngModel)]="openingHours.tuesday.open" name="tue-open-time" class="time-select">
                   <option value="06:00">06:00</option>
@@ -218,7 +216,7 @@
                   <option value="22:00">22:00</option>
                   <option value="23:00">23:00</option>
                 </select>
-                <span class="time-separator">bis</span>
+                <span class="time-separator">{{ texts.dayTo }}</span>
                 <select [(ngModel)]="openingHours.tuesday.close" name="tue-close-time" class="time-select">
                   <option value="06:00">06:00</option>
                   <option value="07:00">07:00</option>
@@ -245,10 +243,10 @@
 
           <!-- Mittwoch -->
           <div class="day-hours">
-            <div class="day-label">Mittwoch:</div>
+            <div class="day-label">{{ texts.wednesday }}:</div>
             <div class="hours-controls">
               <input type="checkbox" id="wed-open" [(ngModel)]="openingHours.wednesday.isOpen" name="wed-open">
-              <label for="wed-open" class="checkbox-label">Geöffnet</label>
+              <label for="wed-open" class="checkbox-label">{{ texts.dayOpen }}</label>
               <div *ngIf="openingHours.wednesday.isOpen" class="time-selectors">
                 <select [(ngModel)]="openingHours.wednesday.open" name="wed-open-time" class="time-select">
                   <option value="06:00">06:00</option>
@@ -270,7 +268,7 @@
                   <option value="22:00">22:00</option>
                   <option value="23:00">23:00</option>
                 </select>
-                <span class="time-separator">bis</span>
+                <span class="time-separator">{{ texts.dayTo }}</span>
                 <select [(ngModel)]="openingHours.wednesday.close" name="wed-close-time" class="time-select">
                   <option value="06:00">06:00</option>
                   <option value="07:00">07:00</option>
@@ -297,10 +295,10 @@
 
           <!-- Donnerstag -->
           <div class="day-hours">
-            <div class="day-label">Donnerstag:</div>
+            <div class="day-label">{{ texts.thursday }}:</div>
             <div class="hours-controls">
               <input type="checkbox" id="thu-open" [(ngModel)]="openingHours.thursday.isOpen" name="thu-open">
-              <label for="thu-open" class="checkbox-label">Geöffnet</label>
+              <label for="thu-open" class="checkbox-label">{{ texts.dayOpen }}</label>
               <div *ngIf="openingHours.thursday.isOpen" class="time-selectors">
                 <select [(ngModel)]="openingHours.thursday.open" name="thu-open-time" class="time-select">
                   <option value="06:00">06:00</option>
@@ -322,7 +320,7 @@
                   <option value="22:00">22:00</option>
                   <option value="23:00">23:00</option>
                 </select>
-                <span class="time-separator">bis</span>
+                <span class="time-separator">{{ texts.dayTo }}</span>
                 <select [(ngModel)]="openingHours.thursday.close" name="thu-close-time" class="time-select">
                   <option value="06:00">06:00</option>
                   <option value="07:00">07:00</option>
@@ -349,10 +347,10 @@
 
           <!-- Freitag -->
           <div class="day-hours">
-            <div class="day-label">Freitag:</div>
+            <div class="day-label">{{ texts.friday }}:</div>
             <div class="hours-controls">
               <input type="checkbox" id="fri-open" [(ngModel)]="openingHours.friday.isOpen" name="fri-open">
-              <label for="fri-open" class="checkbox-label">Geöffnet</label>
+              <label for="fri-open" class="checkbox-label">{{ texts.dayOpen }}</label>
               <div *ngIf="openingHours.friday.isOpen" class="time-selectors">
                 <select [(ngModel)]="openingHours.friday.open" name="fri-open-time" class="time-select">
                   <option value="06:00">06:00</option>
@@ -374,7 +372,7 @@
                   <option value="22:00">22:00</option>
                   <option value="23:00">23:00</option>
                 </select>
-                <span class="time-separator">bis</span>
+                <span class="time-separator">{{ texts.dayTo }}</span>
                 <select [(ngModel)]="openingHours.friday.close" name="fri-close-time" class="time-select">
                   <option value="06:00">06:00</option>
                   <option value="07:00">07:00</option>
@@ -401,10 +399,10 @@
 
           <!-- Samstag -->
           <div class="day-hours">
-            <div class="day-label">Samstag:</div>
+            <div class="day-label">{{ texts.saturday }}:</div>
             <div class="hours-controls">
               <input type="checkbox" id="sat-open" [(ngModel)]="openingHours.saturday.isOpen" name="sat-open">
-              <label for="sat-open" class="checkbox-label">Geöffnet</label>
+              <label for="sat-open" class="checkbox-label">{{ texts.dayOpen }}</label>
               <div *ngIf="openingHours.saturday.isOpen" class="time-selectors">
                 <select [(ngModel)]="openingHours.saturday.open" name="sat-open-time" class="time-select">
                   <option value="06:00">06:00</option>
@@ -426,7 +424,7 @@
                   <option value="22:00">22:00</option>
                   <option value="23:00">23:00</option>
                 </select>
-                <span class="time-separator">bis</span>
+                <span class="time-separator">{{ texts.dayTo }}</span>
                 <select [(ngModel)]="openingHours.saturday.close" name="sat-close-time" class="time-select">
                   <option value="06:00">06:00</option>
                   <option value="07:00">07:00</option>
@@ -453,10 +451,10 @@
 
           <!-- Sonntag -->
           <div class="day-hours">
-            <div class="day-label">Sonntag:</div>
+            <div class="day-label">{{ texts.sunday }}:</div>
             <div class="hours-controls">
               <input type="checkbox" id="sun-open" [(ngModel)]="openingHours.sunday.isOpen" name="sun-open">
-              <label for="sun-open" class="checkbox-label">Geöffnet</label>
+              <label for="sun-open" class="checkbox-label">{{ texts.dayOpen }}</label>
               <div *ngIf="openingHours.sunday.isOpen" class="time-selectors">
                 <select [(ngModel)]="openingHours.sunday.open" name="sun-open-time" class="time-select">
                   <option value="06:00">06:00</option>
@@ -478,7 +476,7 @@
                   <option value="22:00">22:00</option>
                   <option value="23:00">23:00</option>
                 </select>
-                <span class="time-separator">bis</span>
+                <span class="time-separator">{{ texts.dayTo }}</span>
                 <select [(ngModel)]="openingHours.sunday.close" name="sun-close-time" class="time-select">
                   <option value="06:00">06:00</option>
                   <option value="07:00">07:00</option>
@@ -510,49 +508,49 @@
 
       <!-- Website -->
       <div class="form-group">
-        <label for="website">Website</label>
+        <label for="website">{{ texts.website }}</label>
         <input type="url" id="website" [(ngModel)]="afroshop.website" name="website"
-          placeholder="https://www.beispiel.com" class="form-input">
-        <small class="form-hint">Optional: Offizielle Website oder Social Media Profil</small>
+          [placeholder]="texts.websitePlaceholder" class="form-input">
+        <small class="form-hint">{{ texts.websiteHint }}</small>
       </div>
 
 
       <!-- IMPRESSUM (gesetzlich vorgeschrieben) -->
       <div class="form-group impressum-group">
-        <h3>📝 Impressum <span class="required">(Pflichtfeld)</span></h3>
-        <h3 class="impressum-legal-title">Angaben gemäß § 5 TMG:</h3>
+        <h3>📝 {{ texts.impressumTitle }} <span class="required">({{ texts.impressumRequired }})</span></h3>
+        <h3 class="impressum-legal-title">{{ texts.impressumLegal }}</h3>
         <div class="form-group">
-          <label for="impressumName">Name/Firma *</label>
-          <input type="text" id="impressumName" [(ngModel)]="afroshop.impressumName" name="impressumName" required class="form-input" placeholder="z.B. Max Mustermann oder Firma GmbH">
+          <label for="impressumName">{{ texts.impressumName }}</label>
+          <input type="text" id="impressumName" [(ngModel)]="afroshop.impressumName" name="impressumName" required class="form-input" [placeholder]="texts.impressumNamePlaceholder">
         </div>
         <div class="form-group">
-          <label for="impressumAddress">Adresse *</label>
-          <input type="text" id="impressumAddress" [(ngModel)]="afroshop.impressumAddress" name="impressumAddress" required class="form-input" placeholder="Straße, PLZ, Stadt">
+          <label for="impressumAddress">{{ texts.impressumAddress }}</label>
+          <input type="text" id="impressumAddress" [(ngModel)]="afroshop.impressumAddress" name="impressumAddress" required class="form-input" [placeholder]="texts.impressumAddressPlaceholder">
         </div>
         <div class="form-group">
-          <label for="impressumEmail">E-Mail *</label>
-          <input type="email" id="impressumEmail" [(ngModel)]="afroshop.impressumEmail" name="impressumEmail" required class="form-input" placeholder="info@beispiel.de">
+          <label for="impressumEmail">{{ texts.impressumEmail }}</label>
+          <input type="email" id="impressumEmail" [(ngModel)]="afroshop.impressumEmail" name="impressumEmail" required class="form-input" [placeholder]="texts.impressumEmailPlaceholder">
         </div>
         <div class="form-group">
-          <label for="impressumPhone">Telefon *</label>
-          <input type="tel" id="impressumPhone" [(ngModel)]="afroshop.impressumPhone" name="impressumPhone" required class="form-input" placeholder="z.B. +49 30 12345678">
+          <label for="impressumPhone">{{ texts.impressumPhone }}</label>
+          <input type="tel" id="impressumPhone" [(ngModel)]="afroshop.impressumPhone" name="impressumPhone" required class="form-input" [placeholder]="texts.impressumPhonePlaceholder">
         </div>
         <div class="form-group">
-          <label for="impressumText">Weitere Angaben (z.B. USt-ID, Vertretungsberechtigter, Handelsregister, etc.) *</label>
-          <textarea id="impressumText" [(ngModel)]="afroshop.impressumText" name="impressumText" required rows="3" class="form-textarea" placeholder="Bitte geben Sie alle gesetzlich erforderlichen Angaben ein."></textarea>
+          <label for="impressumText">{{ texts.impressumText }}</label>
+          <textarea id="impressumText" [(ngModel)]="afroshop.impressumText" name="impressumText" required rows="3" class="form-textarea" [placeholder]="texts.impressumTextPlaceholder"></textarea>
         </div>
-        <small class="form-hint">Das Impressum ist in Deutschland für alle Online-Shops gesetzlich vorgeschrieben. Alle Felder sind Pflichtfelder.</small>
+        <small class="form-hint">{{ texts.impressumHint }}</small>
       </div>
 
       <!-- Preisstufe -->
       <div class="form-group">
-        <label for="priceLevel">Preisstufe</label>
+        <label for="priceLevel">{{ texts.priceLevel }}</label>
         <select id="priceLevel" [(ngModel)]="afroshop.priceLevel" name="priceLevel" class="form-select">
-          <option value="">-- Bitte wählen --</option>
-          <option value="1">€ - Günstig (unter 10€)</option>
-          <option value="2">€€ - Moderat (10-20€)</option>
-          <option value="3">€€€ - Gehoben (20-40€)</option>
-          <option value="4">€€€€ - Hochpreisig (über 40€)</option>
+          <option value="">{{ texts.priceLevelSelect }}</option>
+          <option value="1">{{ texts.priceLevel1 }}</option>
+          <option value="2">{{ texts.priceLevel2 }}</option>
+          <option value="3">{{ texts.priceLevel3 }}</option>
+          <option value="4">{{ texts.priceLevel4 }}</option>
         </select>
       </div>
 
@@ -560,15 +558,13 @@
       <div class="form-actions">
         <button type="button" (click)="goBack()" class="btn btn-secondary"
           [disabled]="isSubmitting || isUploadingImage">
-          <span *ngIf="!isSubmitting && !isUploadingImage">❌ Abbrechen</span>
-          <span *ngIf="isSubmitting || isUploadingImage">⏳ Warten...</span>
+          <span *ngIf="!isSubmitting && !isUploadingImage">❌ {{ texts.cancelBtn }}</span>
+          <span *ngIf="isSubmitting || isUploadingImage">⏳ {{ texts.waiting }}</span>
         </button>
         <button type="submit" [disabled]="isSubmitting || isUploadingImage" class="btn btn-primary">
-          <span *ngIf="isSubmitting && !isUploadingImage">{{ isEditMode ? '⏳ Wird aktualisiert...' : '⏳ Wird
-            hinzugefügt...' }}</span>
-          <span *ngIf="isUploadingImage">📤 Bild wird hochgeladen...</span>
-          <span *ngIf="!isSubmitting && !isUploadingImage">{{ isEditMode ? '💾 Änderungen speichern' : '🏪 Afroshop
-            hinzufügen' }}</span>
+          <span *ngIf="isSubmitting && !isUploadingImage">{{ isEditMode ? '⏳ ' + texts.updating : '⏳ ' + texts.adding }}</span>
+          <span *ngIf="isUploadingImage">📤 {{ texts.uploadingImage }}</span>
+          <span *ngIf="!isSubmitting && !isUploadingImage">{{ isEditMode ? '💾 ' + texts.saveChanges : '🏪 ' + texts.submitBtn }}</span>
         </button>
       </div>
     </form>

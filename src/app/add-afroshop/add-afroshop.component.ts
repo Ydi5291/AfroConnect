@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,8 @@ import { AuthService } from '../services/auth.service';
 import { TranslationService } from '../services/translation.service';
 import { AfroshopData } from '../services/image.service';
 import { GeocodingService, GeocodeResult } from '../services/geocoding.service';
+import { LanguageService } from '../services/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-afroshop',
@@ -15,7 +17,11 @@ import { GeocodingService, GeocodeResult } from '../services/geocoding.service';
   templateUrl: './add-afroshop.component.html',
   styleUrl: './add-afroshop.component.css'
 })
-export class AddAfroshopComponent {
+export class AddAfroshopComponent implements OnInit, OnDestroy {
+  private langSub?: Subscription;
+  
+  texts: any = {};
+  
   geocodingWarning: string = '';
   // Initialise Google Maps Autocomplete sur le champ de rue
   initStreetAutocomplete(inputElement: HTMLInputElement): void {
@@ -130,10 +136,17 @@ export class AddAfroshopComponent {
     private geocodingService: GeocodingService,
     private router: Router,
     private route: ActivatedRoute,
-    private firestore: Firestore
+    private firestore: Firestore,
+    private languageService: LanguageService
   ) { }
 
   ngOnInit(): void {
+    // Subscribe to language changes
+    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+      this.updateTranslations();
+    });
+    this.updateTranslations();
+    
     // Vérifier si l'utilisateur est admin via Firestore (modular)
     this.authService.user$.subscribe(user => {
       console.log('Mon UID:', user?.uid);
@@ -151,6 +164,108 @@ export class AddAfroshopComponent {
       this.editingId = id;
       this.loadAfroshopForEdit(id);
     }
+  }
+  
+  updateTranslations() {
+    const t = (key: string) => this.languageService.translate(key);
+    this.texts = {
+      titleAdd: t('addShop.titleAdd'),
+      titleEdit: t('addShop.titleEdit'),
+      subtitleAdd: t('addShop.subtitleAdd'),
+      subtitleEdit: t('addShop.subtitleEdit'),
+      backToGallery: t('addShop.backToGallery'),
+      settings: t('addShop.settings'),
+      warningAddress: t('addShop.warningAddress'),
+      shopName: t('addShop.shopName'),
+      shopNamePlaceholder: t('addShop.shopNamePlaceholder'),
+      type: t('addShop.type'),
+      selectType: t('addShop.selectType'),
+      uploadImage: t('addShop.uploadImage'),
+      selectImage: t('addShop.selectImage'),
+      changeImage: t('addShop.changeImage'),
+      processing: t('addShop.processing'),
+      compressing: t('addShop.compressing'),
+      removeImage: t('addShop.removeImage'),
+      maxSize: t('addShop.maxSize'),
+      streetAndNumber: t('addShop.streetAndNumber'),
+      streetPlaceholder: t('addShop.streetPlaceholder'),
+      autocompleteHint: t('addShop.autocompleteHint'),
+      zip: t('addShop.zip'),
+      zipPlaceholder: t('addShop.zipPlaceholder'),
+      zipHint: t('addShop.zipHint'),
+      city: t('addShop.city'),
+      cityPlaceholder: t('addShop.cityPlaceholder'),
+      cityHint: t('addShop.cityHint'),
+      addressInstruction: t('addShop.addressInstruction'),
+      geocoding: t('addShop.geocoding'),
+      phone: t('addShop.phone'),
+      phonePlaceholder: t('addShop.phonePlaceholder'),
+      description: t('addShop.description'),
+      descriptionPlaceholder: t('addShop.descriptionPlaceholder'),
+      cuisine: t('addShop.cuisine'),
+      cuisinePlaceholder: t('addShop.cuisinePlaceholder'),
+      cuisineHint: t('addShop.cuisineHint'),
+      openingHours: t('addShop.openingHours'),
+      openingHoursPlaceholder: t('addShop.openingHoursPlaceholder'),
+      website: t('addShop.website'),
+      websitePlaceholder: t('addShop.websitePlaceholder'),
+      websiteHint: t('addShop.websiteHint'),
+      facebook: t('addShop.facebook'),
+      facebookPlaceholder: t('addShop.facebookPlaceholder'),
+      instagram: t('addShop.instagram'),
+      instagramPlaceholder: t('addShop.instagramPlaceholder'),
+      products: t('addShop.products'),
+      productsHint: t('addShop.productsHint'),
+      productsPlaceholder: t('addShop.productsPlaceholder'),
+      paymentMethods: t('addShop.paymentMethods'),
+      paymentHint: t('addShop.paymentHint'),
+      cash: t('addShop.cash'),
+      card: t('addShop.card'),
+      paypal: t('addShop.paypal'),
+      bankTransfer: t('addShop.bankTransfer'),
+      iban: t('addShop.iban'),
+      ibanPlaceholder: t('addShop.ibanPlaceholder'),
+      bic: t('addShop.bic'),
+      bicPlaceholder: t('addShop.bicPlaceholder'),
+      bankHint: t('addShop.bankHint'),
+      impressumTitle: t('addShop.impressumTitle'),
+      impressumRequired: t('addShop.impressumRequired'),
+      impressumLegal: t('addShop.impressumLegal'),
+      impressumName: t('addShop.impressumName'),
+      impressumNamePlaceholder: t('addShop.impressumNamePlaceholder'),
+      impressumAddress: t('addShop.impressumAddress'),
+      impressumAddressPlaceholder: t('addShop.impressumAddressPlaceholder'),
+      impressumEmail: t('addShop.impressumEmail'),
+      impressumEmailPlaceholder: t('addShop.impressumEmailPlaceholder'),
+      impressumPhone: t('addShop.impressumPhone'),
+      impressumPhonePlaceholder: t('addShop.impressumPhonePlaceholder'),
+      impressumText: t('addShop.impressumText'),
+      impressumTextPlaceholder: t('addShop.impressumTextPlaceholder'),
+      impressumHint: t('addShop.impressumHint'),
+      submitBtn: t('addShop.submitBtn'),
+      saveChanges: t('addShop.saveChanges'),
+      updating: t('addShop.updating'),
+      adding: t('addShop.adding'),
+      uploadingImage: t('addShop.uploadingImage'),
+      cancelBtn: t('addShop.cancelBtn'),
+      waiting: t('addShop.waiting'),
+      // Days of week
+      monday: t('day.monday'),
+      tuesday: t('day.tuesday'),
+      wednesday: t('day.wednesday'),
+      thursday: t('day.thursday'),
+      friday: t('day.friday'),
+      saturday: t('day.saturday'),
+      sunday: t('day.sunday'),
+      dayOpen: t('day.open'),
+      dayTo: t('day.to'),
+      priceLevel: t('addShop.priceLevel'),
+      priceLevelSelect: t('addShop.priceLevelSelect'),
+      priceLevel1: t('addShop.priceLevel1'),
+      priceLevel2: t('addShop.priceLevel2'),
+      priceLevel3: t('addShop.priceLevel3'),
+      priceLevel4: t('addShop.priceLevel4')
+    };
   }
 
   // Méthode séparée pour vérifier le statut admin
@@ -1085,5 +1200,9 @@ export class AddAfroshopComponent {
   onAddProducts(): void {
     // Redirige vers la page d'ajout de produit
     this.router.navigate(['/add-product']);
+  }
+  
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }
