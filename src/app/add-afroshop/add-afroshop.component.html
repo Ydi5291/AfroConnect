@@ -15,29 +15,6 @@
 
     <form (ngSubmit)="onSubmit()" class="afroshop-form">
 
-      <!-- Import automatique depuis URL -->
-      <div class="auto-import-section">
-        <h3>🔗 Schnell hinzufügen</h3>
-        <p>Fügen Sie einen Link ein, um Informationen automatisch zu laden</p>
-
-        <div class="form-group">
-          <label for="importUrl">Google Maps, Facebook, Nextdoor oder Website URL</label>
-          <div class="url-input-group">
-            <input type="url" id="importUrl" [(ngModel)]="importUrl" name="importUrl"
-              placeholder="https://www.facebook.com/business... oder https://www.google.com/maps/place/..."
-              class="form-input url-input">
-            <button type="button" (click)="importFromUrl()" [disabled]="!importUrl || isImporting" class="import-btn">
-              <span *ngIf="!isImporting">📥 Importieren</span>
-              <span *ngIf="isImporting">⏳ Lädt...</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="divider">
-          <span>oder manuell eingeben</span>
-        </div>
-      </div>
-
       <!-- Messages -->
       <div class="message success" *ngIf="successMessage">
         ✅ {{ successMessage }}
