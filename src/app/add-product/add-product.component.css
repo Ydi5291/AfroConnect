@@ -95,3 +95,244 @@ img.preview {
   transform: translateY(-2px) scale(1.04);
   box-shadow: 0 4px 16px rgba(67,233,123,0.18);
 }
+
+/* 🚀 Modal Limitation Premium */
+.limit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.limit-modal {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0); 
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #e2e8f0;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #4a5568;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  background: #cbd5e0;
+  transform: rotate(90deg);
+}
+
+.modal-icon {
+  font-size: 4rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.limit-modal h2 {
+  text-align: center;
+  color: #2d3748;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.modal-message {
+  text-align: center;
+  color: #4a5568;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.modal-message strong {
+  color: #e53e3e;
+  font-weight: 700;
+}
+
+.limit-info {
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+  border-radius: 16px;
+  border: 2px solid #fc8181;
+}
+
+.limit-current,
+.limit-max {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.limit-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #e53e3e;
+}
+
+.limit-label {
+  font-size: 0.9rem;
+  color: #742a2a;
+  font-weight: 600;
+  text-align: center;
+}
+
+.premium-benefits {
+  background: linear-gradient(135deg, #fefcbf 0%, #faf089 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border: 2px solid #ecc94b;
+}
+
+.premium-benefits h3 {
+  color: #744210;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.premium-benefits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.premium-benefits li {
+  color: #744210;
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+  padding-left: 0.5rem;
+  font-weight: 500;
+}
+
+.premium-benefits li strong {
+  color: #d69e2e;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn-premium {
+  background: linear-gradient(90deg, #f6ad55 0%, #ed8936 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(237, 137, 54, 0.3);
+  transition: all 0.3s;
+}
+
+.btn-premium:hover {
+  background: linear-gradient(90deg, #ed8936 0%, #dd6b20 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(237, 137, 54, 0.4);
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #718096;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+  color: #4a5568;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .limit-modal {
+    padding: 2rem 1.5rem;
+    max-width: 95%;
+  }
+
+  .limit-modal h2 {
+    font-size: 1.5rem;
+  }
+
+  .modal-message {
+    font-size: 1rem;
+  }
+
+  .limit-info {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .limit-number {
+    font-size: 2rem;
+  }
+
+  .premium-benefits h3 {
+    font-size: 1.1rem;
+  }
+
+  .premium-benefits li {
+    font-size: 0.9rem;
+  }
+}

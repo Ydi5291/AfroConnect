@@ -118,30 +118,39 @@ export class PricingComponent implements OnInit, OnDestroy {
 
     try {
       // Créer une session Stripe Checkout
-      const response = await fetch(`${environment.cloudFunctionsUrl}/createCheckoutSession`, {
+      const url = `${environment.cloudFunctionsUrl}/createCheckoutSession`;
+      console.log('Calling Cloud Function:', url);
+      
+      const body = {
+        userId: this.currentUser.uid,
+        priceId: environment.stripePremiumPriceId,
+        successUrl: `${window.location.origin}/pricing?success=true`,
+        cancelUrl: `${window.location.origin}/pricing?canceled=true`
+      };
+      console.log('Request body:', body);
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userId: this.currentUser.uid,
-          priceId: environment.stripePremiumPriceId,
-          successUrl: `${window.location.origin}/pricing?success=true`,
-          cancelUrl: `${window.location.origin}/pricing?canceled=true`
-        })
+        body: JSON.stringify(body)
       });
 
+      console.log('Response status:', response.status);
       const session = await response.json();
+      console.log('Response data:', session);
 
       // Rediriger vers Stripe Checkout via l'URL de session
       if (session.url) {
         window.location.href = session.url;
       } else {
-        alert('Erreur: URL de paiement non reçue');
+        console.error('Session object:', session);
+        alert('Erreur: URL de paiement non reçue. Voir la console pour plus de détails.');
       }
     } catch (error) {
       console.error('Erreur lors de la création de la session:', error);
-      alert('Erreur lors de la création de la session de paiement');
+      alert('Erreur lors de la création de la session de paiement: ' + error);
     } finally {
       this.isLoading = false;
     }

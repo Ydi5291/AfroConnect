@@ -37,3 +37,49 @@
     </div>
   </div>
 </div>
+
+<!-- 🚀 Modal Limitation Premium -->
+<div *ngIf="showLimitModal" class="limit-modal-overlay" (click)="closeLimitModal()">
+  <div class="limit-modal" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeLimitModal()">✕</button>
+    
+    <div class="modal-icon">⚠️</div>
+    
+    <h2>Produktlimit erreicht</h2>
+    
+    <p class="modal-message">
+      Sie haben die maximale Anzahl von <strong>{{ FREE_PRODUCT_LIMIT }} Produktfotos</strong> 
+      im kostenlosen Plan erreicht.
+    </p>
+    
+    <div class="limit-info">
+      <div class="limit-current">
+        <span class="limit-number">{{ currentProductCount }}</span>
+        <span class="limit-label">Aktuelle Produkte</span>
+      </div>
+      <div class="limit-max">
+        <span class="limit-number">{{ FREE_PRODUCT_LIMIT }}</span>
+        <span class="limit-label">Kostenlos Maximum</span>
+      </div>
+    </div>
+    
+    <div class="premium-benefits">
+      <h3>🌟 Premium Vorteile:</h3>
+      <ul>
+        <li>✅ <strong>Unbegrenzte</strong> Produktfotos</li>
+        <li>✅ Höhere Priorität in Suchergebnissen</li>
+        <li>✅ Premium-Badge auf Ihrem Shop</li>
+        <li>✅ Erweiterte Statistiken</li>
+      </ul>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn-premium" (click)="goToPremium()">
+        🚀 Jetzt Premium werden
+      </button>
+      <button class="btn-cancel" (click)="closeLimitModal()">
+        Später
+      </button>
+    </div>
+  </div>
+</div>

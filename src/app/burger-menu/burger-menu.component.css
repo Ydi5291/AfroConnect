@@ -163,6 +163,20 @@
     transform: translateY(-2px);
   }
 
+  /* Style spécial pour le lien Premium */
+  .menu-panel a.pricing-link {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    font-weight: 700;
+  }
+
+  .menu-panel a.pricing-link:hover,
+  .menu-panel a.pricing-link:focus {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.15));
+    border-color: rgba(251, 191, 36, 0.5);
+    transform: translateY(-2px) scale(1.02);
+  }
+
   .close-menu {
     position: absolute;
     right: 1rem;

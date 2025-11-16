@@ -6,6 +6,8 @@ import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FieldValue, arrayUnion } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-add-product',
@@ -26,15 +28,26 @@ export class AddProductComponent {
   productImagePreview: string | null = null;
   productImageFile: File | null = null;
 
+  // Limitation produits
+  showLimitModal = false;
+  isPremium = false;
+  currentProductCount = 0;
+  readonly FREE_PRODUCT_LIMIT = 4; // 4 produits + 1 photo de profil = 5 photos total
+
   constructor(
     private firebaseService: FirebaseAfroshopService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private auth: Auth,
+    private firestore: Firestore
   ) {}
 
   productIdToEdit: string | null = null;
 
   async ngOnInit(): Promise<void> {
+    // Vérifier le statut Premium de l'utilisateur
+    await this.checkPremiumStatus();
+
     this.route.queryParams.subscribe(async params => {
       console.log('[AddProduct] QueryParams:', params);
       if (params['afroshopId']) {
@@ -47,6 +60,10 @@ export class AddProductComponent {
         } else {
           this.showBankForm = false;
         }
+
+        // Compter les produits existants
+        this.currentProductCount = afroshop?.products?.length || 0;
+        console.log(`[AddProduct] Produits actuels: ${this.currentProductCount}, Premium: ${this.isPremium}`);
       } else {
         console.warn('[AddProduct] Aucun afroshopId reçu dans les queryParams');
       }
@@ -88,6 +105,14 @@ export class AddProductComponent {
       return; // Bloquer si coordonnées non remplies
     }
     if (!this.newProduct.name || !this.newProduct.price || !this.newProduct.image) return;
+
+    // ⚠️ VÉRIFICATION LIMITE PRODUITS (uniquement pour ajout, pas modification)
+    if (!this.productIdToEdit && !this.isPremium && this.currentProductCount >= this.FREE_PRODUCT_LIMIT) {
+      console.warn(`[AddProduct] Limite atteinte: ${this.currentProductCount}/${this.FREE_PRODUCT_LIMIT}`);
+      this.showLimitModal = true;
+      return;
+    }
+
     let prod = { ...this.newProduct };
     // Si modification, remplacer le produit existant
     if (this.productIdToEdit && this.afroshopId) {
@@ -136,5 +161,42 @@ export class AddProductComponent {
 
   goToGallery(): void {
     this.router.navigate(['/gallery']);
+  }
+
+  // Vérifier le statut Premium de l'utilisateur
+  async checkPremiumStatus(): Promise<void> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      this.isPremium = false;
+      return;
+    }
+
+    try {
+      const subscriptionDoc = await getDoc(
+        doc(this.firestore, `users/${user.uid}/subscription/current`)
+      );
+
+      if (subscriptionDoc.exists()) {
+        const data = subscriptionDoc.data();
+        this.isPremium = data['plan'] === 'premium' && data['subscriptionStatus'] === 'active';
+        console.log('[AddProduct] Statut Premium:', this.isPremium);
+      } else {
+        this.isPremium = false;
+        console.log('[AddProduct] Pas de subscription trouvée, utilisateur gratuit');
+      }
+    } catch (error) {
+      console.error('[AddProduct] Erreur vérification Premium:', error);
+      this.isPremium = false;
+    }
+  }
+
+  // Fermer le modal de limitation
+  closeLimitModal(): void {
+    this.showLimitModal = false;
+  }
+
+  // Rediriger vers la page Premium
+  goToPremium(): void {
+    this.router.navigate(['/pricing']);
   }
 }

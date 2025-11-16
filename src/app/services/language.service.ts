@@ -18,6 +18,7 @@ export class LanguageService {
     de: {
       // Navigation
       'nav.gallery': 'Galerie',
+      'nav.pricing': 'Premium',
       'nav.about': 'Über uns',
       'nav.contact': 'Kontakt',
       'nav.help': 'Hilfe',
@@ -369,6 +370,7 @@ export class LanguageService {
     en: {
       // Navigation
       'nav.gallery': 'Gallery',
+      'nav.pricing': 'Premium',
       'nav.about': 'About us',
       'nav.contact': 'Contact',
       'nav.help': 'Help',
@@ -720,6 +722,7 @@ export class LanguageService {
     fr: {
       // Navigation
       'nav.gallery': 'Galerie',
+      'nav.pricing': 'Premium',
       'nav.about': 'À propos',
       'nav.contact': 'Contact',
       'nav.help': 'Aide',
