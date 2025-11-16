@@ -1,8 +1,9 @@
 import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { LanguageService } from '../services/language.service';
 import { Subscription } from 'rxjs';
+import { Auth, signOut } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-burger-menu',
@@ -25,21 +26,33 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     terms: 'AGB',
     privacy: 'Datenschutz',
     help: 'Hilfe',
+    logout: 'Abmelden',
     closeMenu: 'Menü schließen',
     openMenu: 'Menü öffnen'
   };
+
+  isLoggedIn = false;
 
   @ViewChild('burgerBtn', { static: false }) burgerBtn!: ElementRef<HTMLButtonElement>;
   @ViewChild('menuPanel', { static: false }) menuPanel!: ElementRef<HTMLElement>;
   @ViewChild('closeBtn', { static: false }) closeBtn!: ElementRef<HTMLButtonElement>;
 
-  constructor(private languageService: LanguageService) {}
+  constructor(
+    private languageService: LanguageService,
+    private auth: Auth,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.langSub = this.languageService.currentLanguage$.subscribe(() => {
       this.updateTranslations();
     });
     this.updateTranslations();
+    
+    // Vérifier l'état de connexion
+    this.auth.onAuthStateChanged(user => {
+      this.isLoggedIn = !!user;
+    });
   }
 
   ngOnDestroy() {
@@ -57,6 +70,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
       terms: this.languageService.translate('nav.terms'),
       privacy: this.languageService.translate('nav.privacy'),
       help: this.languageService.translate('nav.help'),
+      logout: this.languageService.translate('nav.logout'),
       closeMenu: this.languageService.translate('nav.closeMenu'),
       openMenu: this.languageService.translate('nav.openMenu')
     };
@@ -138,6 +152,18 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
       } catch (e) {
         // noop
       }
+    }
+  }
+
+  // Déconnexion de l'utilisateur
+  async logout() {
+    try {
+      await signOut(this.auth);
+      this.closeMenu();
+      this.router.navigate(['/']);
+      console.log('Déconnexion réussie');
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
     }
   }
 }

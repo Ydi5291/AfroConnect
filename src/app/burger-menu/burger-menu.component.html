@@ -17,7 +17,14 @@
             <li><a routerLink="/terms" (click)="closeMenu()" tabindex="0">{{ menuItems.terms }}</a></li>
             <li><a routerLink="/privacy" (click)="closeMenu()" tabindex="0">{{ menuItems.privacy }}</a></li>
             <li><a routerLink="/hilfe" (click)="closeMenu()" tabindex="0">{{ menuItems.help }}</a></li>
-
         </ul>
+        
+        <!-- Bouton de déconnexion en bas -->
+        <div class="menu-logout" *ngIf="isLoggedIn">
+            <button class="logout-btn" (click)="logout()" tabindex="0">
+                <span class="logout-icon">🚪</span>
+                {{ menuItems.logout }}
+            </button>
+        </div>
     </nav>
 </div>
