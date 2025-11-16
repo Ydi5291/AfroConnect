@@ -8,11 +8,18 @@ if (fs.existsSync('.env')) {
   console.log('No .env file found — continuing using process.env (Netlify env vars).');
 }
 
-const firebaseApiKey = process.env.NG_APP_FIREBASE_API_KEY;
-const googleMapsApiKey = process.env.NG_APP_GOOGLE_MAPS_API_KEY;
+const firebaseApiKey = process.env.FIREBASE_API_KEY || process.env.NG_APP_FIREBASE_API_KEY;
+const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.NG_APP_GOOGLE_MAPS_API_KEY;
+const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+const stripePremiumPriceId = process.env.STRIPE_PREMIUM_PRICE_ID;
 
 if (!firebaseApiKey || !googleMapsApiKey) {
-  console.error('❌ Les variables NG_APP_FIREBASE_API_KEY ou NG_APP_GOOGLE_MAPS_API_KEY sont manquantes.');
+  console.error('❌ Les variables FIREBASE_API_KEY ou GOOGLE_MAPS_API_KEY sont manquantes.');
+  process.exit(1);
+}
+
+if (!stripePublishableKey || !stripePremiumPriceId) {
+  console.error('❌ Les variables STRIPE_PUBLISHABLE_KEY ou STRIPE_PREMIUM_PRICE_ID sont manquantes.');
   process.exit(1);
 }
 
@@ -30,7 +37,10 @@ const envContent = `export const environment = {
   adminConfig: {
     adminEmails: [] // Vide en production - géré côté serveur
   },
-  googleMapsApiKey: "${googleMapsApiKey}"
+  googleMapsApiKey: "${googleMapsApiKey}",
+  stripePublishableKey: "${stripePublishableKey}",
+  stripePremiumPriceId: "${stripePremiumPriceId}",
+  cloudFunctionsUrl: "https://us-central1-afroconnect-a53a5.cloudfunctions.net"
 };
 `;
 
