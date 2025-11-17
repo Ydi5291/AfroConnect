@@ -87,9 +87,29 @@ import { LanguageService, Language } from '../services/language.service';
       border-radius: 10px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       min-width: 180px;
-      overflow: hidden;
+      max-height: 320px;
+      overflow-y: auto;
       z-index: 1000;
       animation: slideDown 0.3s ease;
+    }
+    
+    /* Style de la scrollbar */
+    .lang-dropdown::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .lang-dropdown::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    .lang-dropdown::-webkit-scrollbar-thumb {
+      background: #1a8917;
+      border-radius: 10px;
+    }
+    
+    .lang-dropdown::-webkit-scrollbar-thumb:hover {
+      background: #146d12;
     }
 
     @keyframes slideDown {
@@ -106,14 +126,14 @@ import { LanguageService, Language } from '../services/language.service';
     .lang-option {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.7rem;
       width: 100%;
-      padding: 0.9rem 1.2rem;
+      padding: 0.75rem 1rem;
       border: none;
       background: white;
       cursor: pointer;
       transition: all 0.2s ease;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       text-align: left;
       color: #333;
     }
@@ -128,18 +148,21 @@ import { LanguageService, Language } from '../services/language.service';
     }
 
     .flag {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
+      line-height: 1;
     }
 
     .lang-name {
       flex: 1;
       font-weight: 500;
+      line-height: 1.2;
     }
 
     .checkmark {
       color: #1a8917;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      line-height: 1;
     }
 
     @media (max-width: 768px) {
