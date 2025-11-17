@@ -6,6 +6,7 @@
 		<button *ngIf="!isShopOwner() && afroshop.phone" class="modern-btn call-header-btn" (click)="openUrl('tel:' + afroshop.phone, '_self')">📞</button>
 		<button *ngIf="canEdit()" class="modern-btn primary" (click)="goToAddProduct()">➕ {{ texts.addProducts }}</button>
 		<button *ngIf="canEdit() && afroshop" class="modern-btn dashboard" (click)="goToDashboard(afroshop.id)">📊 {{ texts.dashboard }}</button>
+		<button *ngIf="isShopOwner()" class="modern-btn danger" (click)="openDeleteModal()">🗑️ {{ texts.deleteShop }}</button>
 	</div>
 
        <!-- ...modale Impressum supprimée, à placer dans image-detail.component.html... -->
@@ -70,3 +71,39 @@
 	</div>
 </div>
 
+<!-- 🗑️ Modal de confirmation de suppression -->
+<div *ngIf="showDeleteModal" class="delete-modal-overlay" (click)="closeDeleteModal()">
+	<div class="delete-modal" (click)="$event.stopPropagation()">
+		<button class="modal-close" (click)="closeDeleteModal()">✕</button>
+		
+		<div class="modal-icon">⚠️</div>
+		
+		<h2 class="modal-title">{{ texts.deleteConfirmTitle }}</h2>
+		
+		<p class="modal-message">{{ texts.deleteConfirmMessage }}</p>
+		
+		<div class="modal-warning">
+			<strong>Gelöscht werden:</strong>
+			<ul>
+				<li>✅ Shop-Profil</li>
+				<li>✅ {{ afroshop?.products?.length || 0 }} Produkt(e)</li>
+				<li>✅ Alle Produktbilder</li>
+				<li>✅ Shop-Profilbild</li>
+			</ul>
+		</div>
+		
+		<div class="modal-actions">
+			<button 
+				class="btn-delete" 
+				(click)="confirmDeleteShop()"
+				[disabled]="deleteCountdown > 0 || deleteInProgress">
+				<span *ngIf="deleteCountdown > 0">⏳ {{ deleteCountdown }}s</span>
+				<span *ngIf="deleteCountdown <= 0 && !deleteInProgress">{{ texts.deleteConfirmButton }}</span>
+				<span *ngIf="deleteInProgress">{{ texts.deleteWait }}</span>
+			</button>
+			<button class="btn-cancel" (click)="closeDeleteModal()" [disabled]="deleteInProgress">
+				{{ texts.deleteCancel }}
+			</button>
+		</div>
+	</div>
+</div>

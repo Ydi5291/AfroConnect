@@ -9,6 +9,7 @@ import { FirebaseAfroshopService } from '../services/firebase-afroshop.service';
 import { AuthService } from '../services/auth.service';
 import { LanguageService } from '../services/language.service';
 import { Subscription } from 'rxjs';
+import { Storage, ref, deleteObject } from '@angular/fire/storage';
 
 @Component({
 	selector: 'app-shop',
@@ -31,8 +32,19 @@ export class ShopComponent implements OnInit, OnDestroy {
 		total: 'Gesamt:',
 		checkout: 'Zur Kasse',
 		close: 'Schließen',
-		remove: 'Entfernen'
+		remove: 'Entfernen',
+		deleteShop: 'Shop löschen',
+		deleteConfirmTitle: 'Shop dauerhaft löschen?',
+		deleteConfirmMessage: 'Diese Aktion kann nicht rückgängig gemacht werden. Alle Produkte und Bilder werden gelöscht.',
+		deleteConfirmButton: 'Löschen',
+		deleteCancel: 'Abbrechen',
+		deleteWait: 'Bitte warten...'
 	};
+
+	// Modal de suppression
+	showDeleteModal = false;
+	deleteCountdown = 3;
+	deleteInProgress = false;
 
 	openUrl(url: string, target: string = '_blank') {
 		window.open(url, target);
@@ -78,7 +90,8 @@ export class ShopComponent implements OnInit, OnDestroy {
 			private afroshopService: AfroshopService,
 			private firebaseService: FirebaseAfroshopService,
 			private authService: AuthService,
-			private languageService: LanguageService
+			private languageService: LanguageService,
+			private storage: Storage
 		) {}
 	goToAddProduct(): void {
 		this.router.navigate(['/add-product'], { queryParams: { afroshopId: this.shopId } });
@@ -193,8 +206,85 @@ export class ShopComponent implements OnInit, OnDestroy {
 			total: this.languageService.translate('shop.total'),
 			checkout: this.languageService.translate('shop.checkout'),
 			close: this.languageService.translate('shop.close'),
-			remove: this.languageService.translate('shop.remove')
+			remove: this.languageService.translate('shop.remove'),
+			deleteShop: this.languageService.translate('shop.deleteShop'),
+			deleteConfirmTitle: this.languageService.translate('shop.deleteConfirmTitle'),
+			deleteConfirmMessage: this.languageService.translate('shop.deleteConfirmMessage'),
+			deleteConfirmButton: this.languageService.translate('shop.deleteConfirmButton'),
+			deleteCancel: this.languageService.translate('shop.deleteCancel'),
+			deleteWait: this.languageService.translate('shop.deleteWait')
 		};
+	}
+
+	// Ouvrir le modal de confirmation de suppression
+	openDeleteModal(): void {
+		this.showDeleteModal = true;
+		this.deleteCountdown = 3;
+		this.startCountdown();
+	}
+
+	// Fermer le modal
+	closeDeleteModal(): void {
+		this.showDeleteModal = false;
+		this.deleteCountdown = 3;
+	}
+
+	// Compte à rebours avant activation du bouton de suppression
+	private startCountdown(): void {
+		const interval = setInterval(() => {
+			this.deleteCountdown--;
+			if (this.deleteCountdown <= 0) {
+				clearInterval(interval);
+			}
+		}, 1000);
+	}
+
+	// Supprimer le shop définitivement
+	async confirmDeleteShop(): Promise<void> {
+		if (this.deleteCountdown > 0 || this.deleteInProgress || !this.afroshop) return;
+
+		this.deleteInProgress = true;
+
+		try {
+			// 1. Supprimer toutes les images des produits
+			if (this.afroshop.products && this.afroshop.products.length > 0) {
+				for (const product of this.afroshop.products) {
+					if (product.image) {
+						try {
+							const imageRef = ref(this.storage, product.image);
+							await deleteObject(imageRef);
+						} catch (error) {
+							console.warn('Erreur suppression image produit:', error);
+						}
+					}
+				}
+			}
+
+			// 2. Supprimer l'image de profil du shop
+			if (this.afroshop.image) {
+				try {
+					const shopImageRef = ref(this.storage, this.afroshop.image);
+					await deleteObject(shopImageRef);
+				} catch (error) {
+					console.warn('Erreur suppression image shop:', error);
+				}
+			}
+
+			// 3. Supprimer le document Firestore
+			await this.firebaseService.deleteAfroshop(String(this.afroshop.id));
+
+			// 4. Supprimer le panier du localStorage
+			localStorage.removeItem(this.getCartKey());
+
+			console.log('Shop supprimé avec succès');
+
+			// 5. Rediriger vers la galerie
+			this.router.navigate(['/gallery']);
+		} catch (error) {
+			console.error('Erreur lors de la suppression du shop:', error);
+			alert('Fehler beim Löschen des Shops. Bitte versuchen Sie es erneut.');
+			this.deleteInProgress = false;
+		}
 	}
 
 	ngOnDestroy() {

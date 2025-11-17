@@ -239,6 +239,12 @@ export class LanguageService {
       'shop.checkout': 'Zur Kasse',
       'shop.close': 'Schließen',
       'shop.remove': 'Entfernen',
+      'shop.deleteShop': 'Shop löschen',
+      'shop.deleteConfirmTitle': 'Shop dauerhaft löschen?',
+      'shop.deleteConfirmMessage': 'Diese Aktion kann nicht rückgängig gemacht werden. Alle Produkte und Bilder werden gelöscht.',
+      'shop.deleteConfirmButton': 'Löschen',
+      'shop.deleteCancel': 'Abbrechen',
+      'shop.deleteWait': 'Bitte warten...',
       
       // Pricing Page
       'pricing.title': 'Preise & Pläne',
@@ -591,6 +597,12 @@ export class LanguageService {
       'shop.checkout': 'Checkout',
       'shop.close': 'Close',
       'shop.remove': 'Remove',
+      'shop.deleteShop': 'Delete Shop',
+      'shop.deleteConfirmTitle': 'Permanently delete shop?',
+      'shop.deleteConfirmMessage': 'This action cannot be undone. All products and images will be deleted.',
+      'shop.deleteConfirmButton': 'Delete',
+      'shop.deleteCancel': 'Cancel',
+      'shop.deleteWait': 'Please wait...',
       
       // Pricing Page
       'pricing.title': 'Pricing & Plans',
@@ -943,6 +955,12 @@ export class LanguageService {
       'shop.checkout': 'Passer à la caisse',
       'shop.close': 'Fermer',
       'shop.remove': 'Retirer',
+      'shop.deleteShop': 'Supprimer le commerce',
+      'shop.deleteConfirmTitle': 'Supprimer définitivement le commerce ?',
+      'shop.deleteConfirmMessage': 'Cette action est irréversible. Tous les produits et images seront supprimés.',
+      'shop.deleteConfirmButton': 'Supprimer',
+      'shop.deleteCancel': 'Annuler',
+      'shop.deleteWait': 'Veuillez patienter...',
       
       // Pricing Page
       'pricing.title': 'Tarifs & Formules',
