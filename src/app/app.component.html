@@ -18,21 +18,51 @@
   </ng-container>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer Moderne -->
   <footer class="app-footer">
-    <div class="footer-content">
-      <div class="footer-main">
-        <p>&copy; 2025 AfroConnect - {{ texts.copyright }}</p>
+    <div class="footer-container">
+      <!-- Section Logo & Description -->
+      <div class="footer-section footer-brand">
+        <h3 class="footer-logo">AfroConnect</h3>
+        <p class="footer-description">{{ texts.copyright }}</p>
+        <div class="footer-year">&copy; 2025</div>
       </div>
-      <div class="footer-links">
-        <a routerLink="/privacy" class="footer-link">{{ texts.privacy }}</a>
-        <span class="footer-separator">|</span>
-        <a routerLink="/terms" class="footer-link">{{ texts.terms }}</a>
-        <span class="footer-separator">|</span>
-        <a routerLink="/impressum" class="footer-link">{{ texts.imprint }}</a>
-        <span class="footer-separator">|</span>
-  <a routerLink="/kontakt" class="footer-link">{{ texts.contact }}</a>
+
+      <!-- Section Liens Rapides -->
+      <div class="footer-section">
+        <h4 class="footer-title">{{ texts.quickLinks }}</h4>
+        <ul class="footer-list">
+          <li><a routerLink="/gallery" class="footer-link">🖼️ {{ texts.gallery }}</a></li>
+          <li><a routerLink="/about" class="footer-link">ℹ️ {{ texts.about }}</a></li>
+          <li><a routerLink="/add-afroshop" class="footer-link">➕ {{ texts.addShop }}</a></li>
+          <li><a routerLink="/kontakt" class="footer-link">📧 {{ texts.contact }}</a></li>
+        </ul>
       </div>
+
+      <!-- Section Légal -->
+      <div class="footer-section">
+        <h4 class="footer-title">{{ texts.legal }}</h4>
+        <ul class="footer-list">
+          <li><a routerLink="/impressum" class="footer-link">📋 {{ texts.imprint }}</a></li>
+          <li><a routerLink="/terms" class="footer-link">📄 {{ texts.terms }}</a></li>
+          <li><a routerLink="/privacy" class="footer-link">🔒 {{ texts.privacy }}</a></li>
+        </ul>
+      </div>
+
+      <!-- Section Premium -->
+      <div class="footer-section footer-premium">
+        <h4 class="footer-title">{{ texts.upgrade }}</h4>
+        <p class="footer-premium-text">{{ texts.premiumDescription }}</p>
+        <a routerLink="/pricing" class="footer-premium-btn">
+          <span class="premium-icon">💎</span>
+          {{ texts.goPremium }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p class="footer-bottom-text">Made with ❤️ in Germany</p>
     </div>
   </footer>
 

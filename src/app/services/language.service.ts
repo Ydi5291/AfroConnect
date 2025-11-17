@@ -318,6 +318,14 @@ export class LanguageService {
       'footer.terms': 'AGB',
       'footer.imprint': 'Impressum',
       'footer.contact': 'Kontakt',
+      'footer.quickLinks': 'Schnellzugriff',
+      'footer.legal': 'Rechtliches',
+      'footer.upgrade': 'Upgrade',
+      'footer.gallery': 'Galerie',
+      'footer.about': 'Über uns',
+      'footer.addShop': 'Shop hinzufügen',
+      'footer.premiumDescription': 'Unbegrenzte Produkte & mehr Features',
+      'footer.goPremium': 'Premium werden',
       
       // Impressum modal
       'impressum.title': 'Impressum',
@@ -676,6 +684,14 @@ export class LanguageService {
       'footer.terms': 'Terms',
       'footer.imprint': 'Imprint',
       'footer.contact': 'Contact',
+      'footer.quickLinks': 'Quick Links',
+      'footer.legal': 'Legal',
+      'footer.upgrade': 'Upgrade',
+      'footer.gallery': 'Gallery',
+      'footer.about': 'About',
+      'footer.addShop': 'Add Shop',
+      'footer.premiumDescription': 'Unlimited products & more features',
+      'footer.goPremium': 'Go Premium',
       
       // Impressum modal
       'impressum.title': 'Imprint',
@@ -1034,6 +1050,14 @@ export class LanguageService {
       'footer.terms': 'CGU',
       'footer.imprint': 'Mentions légales',
       'footer.contact': 'Contact',
+      'footer.quickLinks': 'Liens rapides',
+      'footer.legal': 'Mentions légales',
+      'footer.upgrade': 'Mise à niveau',
+      'footer.gallery': 'Galerie',
+      'footer.about': 'À propos',
+      'footer.addShop': 'Ajouter un commerce',
+      'footer.premiumDescription': 'Produits illimités & plus de fonctionnalités',
+      'footer.goPremium': 'Devenir Premium',
       
       // Impressum modal
       'impressum.title': 'Mentions légales',

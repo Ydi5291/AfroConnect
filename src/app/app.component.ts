@@ -34,7 +34,15 @@ export class AppComponent implements OnInit, OnDestroy {
     privacy: 'Datenschutz',
     terms: 'AGB',
     imprint: 'Impressum',
-    contact: 'Kontakt'
+    contact: 'Kontakt',
+    quickLinks: 'Schnellzugriff',
+    legal: 'Rechtliches',
+    upgrade: 'Upgrade',
+    gallery: 'Galerie',
+    about: 'Über uns',
+    addShop: 'Shop hinzufügen',
+    premiumDescription: 'Unbegrenzte Produkte & mehr Features',
+    goPremium: 'Premium werden'
   };
 
   // slideshowImages = [
@@ -92,7 +100,15 @@ export class AppComponent implements OnInit, OnDestroy {
       privacy: this.languageService.translate('footer.privacy'),
       terms: this.languageService.translate('footer.terms'),
       imprint: this.languageService.translate('footer.imprint'),
-      contact: this.languageService.translate('footer.contact')
+      contact: this.languageService.translate('footer.contact'),
+      quickLinks: this.languageService.translate('footer.quickLinks'),
+      legal: this.languageService.translate('footer.legal'),
+      upgrade: this.languageService.translate('footer.upgrade'),
+      gallery: this.languageService.translate('footer.gallery'),
+      about: this.languageService.translate('footer.about'),
+      addShop: this.languageService.translate('footer.addShop'),
+      premiumDescription: this.languageService.translate('footer.premiumDescription'),
+      goPremium: this.languageService.translate('footer.goPremium')
     };
   }
   
