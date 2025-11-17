@@ -93,6 +93,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
   }
 
   private cityCoordinates: { [key: string]: { lat: number; lng: number } } = {
+    // 🇩🇪 Allemagne
     'berlin': { lat: 52.5200, lng: 13.4050 },
     'hamburg': { lat: 53.5511, lng: 9.9937 },
     'münchen': { lat: 48.1351, lng: 11.5820 },
@@ -106,7 +107,61 @@ export class GalleryComponent implements OnInit, OnDestroy {
     'bremen': { lat: 53.0793, lng: 8.8017 },
     'dresden': { lat: 51.0504, lng: 13.7373 },
     'hannover': { lat: 52.3759, lng: 9.7320 },
-    'nürnberg': { lat: 49.4521, lng: 11.0767 }
+    'nürnberg': { lat: 49.4521, lng: 11.0767 },
+    
+    // 🇫🇷 France
+    'paris': { lat: 48.8566, lng: 2.3522 },
+    'marseille': { lat: 43.2965, lng: 5.3698 },
+    'lyon': { lat: 45.7640, lng: 4.8357 },
+    'toulouse': { lat: 43.6047, lng: 1.4442 },
+    'nice': { lat: 43.7102, lng: 7.2620 },
+    'nantes': { lat: 47.2184, lng: -1.5536 },
+    'strasbourg': { lat: 48.5734, lng: 7.7521 },
+    'montpellier': { lat: 43.6108, lng: 3.8767 },
+    'bordeaux': { lat: 44.8378, lng: -0.5792 },
+    'lille': { lat: 50.6292, lng: 3.0573 },
+    
+    // 🇧🇪 Belgique
+    'bruxelles': { lat: 50.8503, lng: 4.3517 },
+    'anvers': { lat: 51.2194, lng: 4.4025 },
+    'gand': { lat: 51.0543, lng: 3.7174 },
+    'charleroi': { lat: 50.4108, lng: 4.4446 },
+    'liège': { lat: 50.6326, lng: 5.5797 },
+    
+    // 🇳🇱 Pays-Bas (Hollande)
+    'amsterdam': { lat: 52.3676, lng: 4.9041 },
+    'rotterdam': { lat: 51.9225, lng: 4.47917 },
+    'la-haye': { lat: 52.0705, lng: 4.3007 },
+    'utrecht': { lat: 52.0907, lng: 5.1214 },
+    'eindhoven': { lat: 51.4416, lng: 5.4697 },
+    
+    // 🇨🇭 Suisse
+    'zurich': { lat: 47.3769, lng: 8.5417 },
+    'genève': { lat: 46.2044, lng: 6.1432 },
+    'bâle': { lat: 47.5596, lng: 7.5886 },
+    'berne': { lat: 46.9480, lng: 7.4474 },
+    'lausanne': { lat: 46.5197, lng: 6.6323 },
+    
+    // 🇱🇺 Luxembourg
+    'luxembourg': { lat: 49.6116, lng: 6.1319 },
+    
+    // 🇮🇹 Italie
+    'rome': { lat: 41.9028, lng: 12.4964 },
+    'milan': { lat: 45.4642, lng: 9.1900 },
+    'naples': { lat: 40.8518, lng: 14.2681 },
+    'turin': { lat: 45.0703, lng: 7.6869 },
+    'florence': { lat: 43.7696, lng: 11.2558 },
+    'bologne': { lat: 44.4949, lng: 11.3426 },
+    'venise': { lat: 45.4408, lng: 12.3155 },
+    
+    // 🇪🇸 Espagne
+    'madrid': { lat: 40.4168, lng: -3.7038 },
+    'barcelone': { lat: 41.3851, lng: 2.1734 },
+    'valence': { lat: 39.4699, lng: -0.3763 },
+    'séville': { lat: 37.3891, lng: -5.9845 },
+    'saragosse': { lat: 41.6488, lng: -0.8891 },
+    'malaga': { lat: 36.7213, lng: -4.4214 },
+    'bilbao': { lat: 43.2630, lng: -2.9350 }
   };
 
   constructor(
@@ -434,9 +489,15 @@ export class GalleryComponent implements OnInit, OnDestroy {
     const userChoice = prompt(
       `📍 Standort automatisch nicht möglich\n\n` +
       `Bitte gib deine Stadt ein für personalisierte Ergebnisse:\n\n` +
-      `Beispiele: Dortmund, Hamburg, München, Köln, Frankfurt, Stuttgart, Düsseldorf...\n\n` +
+      `🇩🇪 Deutschland: Berlin, Hamburg, München, Köln, Frankfurt...\n` +
+      `🇫🇷 France: Paris, Lyon, Marseille, Toulouse...\n` +
+      `🇮🇹 Italia: Roma, Milano, Torino, Napoli...\n` +
+      `🇪🇸 España: Madrid, Barcelona, Valencia...\n` +
+      `🇧🇪 Belgique: Bruxelles, Anvers, Gand...\n` +
+      `🇳🇱 Nederland: Amsterdam, Rotterdam, Utrecht...\n` +
+      `🇨🇭 Schweiz: Zürich, Genève, Basel...\n\n` +
       `Deine Stadt:`,
-      localStorage.getItem('afroconnect-user-city') || 'Dortmund' // Dortmund par défaut pour vous !
+      localStorage.getItem('afroconnect-user-city') || 'Berlin'
     );
 
     if (userChoice && userChoice.trim()) {
@@ -490,6 +551,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
   // Fonction helper pour formater les noms de ville
   private formatCityName(cityKey: string): string {
     const cityNames: { [key: string]: string } = {
+      // 🇩🇪 Allemagne
       'berlin': 'Berlin',
       'hamburg': 'Hamburg', 
       'münchen': 'München',
@@ -499,7 +561,65 @@ export class GalleryComponent implements OnInit, OnDestroy {
       'düsseldorf': 'Düsseldorf',
       'dortmund': 'Dortmund',
       'essen': 'Essen',
-      'leipzig': 'Leipzig'
+      'leipzig': 'Leipzig',
+      'bremen': 'Bremen',
+      'dresden': 'Dresden',
+      'hannover': 'Hannover',
+      'nürnberg': 'Nürnberg',
+      
+      // 🇫🇷 France
+      'paris': 'Paris',
+      'marseille': 'Marseille',
+      'lyon': 'Lyon',
+      'toulouse': 'Toulouse',
+      'nice': 'Nice',
+      'nantes': 'Nantes',
+      'strasbourg': 'Strasbourg',
+      'montpellier': 'Montpellier',
+      'bordeaux': 'Bordeaux',
+      'lille': 'Lille',
+      
+      // 🇧🇪 Belgique
+      'bruxelles': 'Bruxelles',
+      'anvers': 'Anvers',
+      'gand': 'Gand',
+      'charleroi': 'Charleroi',
+      'liège': 'Liège',
+      
+      // 🇳🇱 Pays-Bas
+      'amsterdam': 'Amsterdam',
+      'rotterdam': 'Rotterdam',
+      'la-haye': 'La Haye',
+      'utrecht': 'Utrecht',
+      'eindhoven': 'Eindhoven',
+      
+      // 🇨🇭 Suisse
+      'zurich': 'Zurich',
+      'genève': 'Genève',
+      'bâle': 'Bâle',
+      'berne': 'Berne',
+      'lausanne': 'Lausanne',
+      
+      // 🇱🇺 Luxembourg
+      'luxembourg': 'Luxembourg',
+      
+      // 🇮🇹 Italie
+      'rome': 'Rome',
+      'milan': 'Milan',
+      'naples': 'Naples',
+      'turin': 'Turin',
+      'florence': 'Florence',
+      'bologne': 'Bologne',
+      'venise': 'Venise',
+      
+      // 🇪🇸 Espagne
+      'madrid': 'Madrid',
+      'barcelone': 'Barcelone',
+      'valence': 'Valence',
+      'séville': 'Séville',
+      'saragosse': 'Saragosse',
+      'malaga': 'Málaga',
+      'bilbao': 'Bilbao'
     };
     return cityNames[cityKey] || cityKey.charAt(0).toUpperCase() + cityKey.slice(1);
   }

@@ -67,18 +67,84 @@
           <div class="unified-input-group">
             <select [(ngModel)]="selectedCity" class="unified-select city-select-compact">
               <option value="">{{ texts.popularCities }}</option>
-              <option value="berlin">Berlin</option>
-              <option value="hamburg">Hamburg</option>
-              <option value="münchen">München</option>
-              <option value="köln">Köln</option>
-              <option value="frankfurt">Frankfurt am Main</option>
-              <option value="stuttgart">Stuttgart</option>
-              <option value="düsseldorf">Düsseldorf</option>
-              <option value="dortmund">Dortmund</option>
-              <option value="essen">Essen</option>
-              <option value="leipzig">Leipzig</option>
-              <option value="bremen">Bremen</option>
-              <option value="hannover">Hannover</option>
+              
+              <optgroup label="🇩🇪 Deutschland / Allemagne / Germany">
+                <option value="berlin">Berlin</option>
+                <option value="hamburg">Hamburg</option>
+                <option value="münchen">München</option>
+                <option value="köln">Köln</option>
+                <option value="frankfurt">Frankfurt am Main</option>
+                <option value="stuttgart">Stuttgart</option>
+                <option value="düsseldorf">Düsseldorf</option>
+                <option value="dortmund">Dortmund</option>
+                <option value="essen">Essen</option>
+                <option value="leipzig">Leipzig</option>
+                <option value="bremen">Bremen</option>
+                <option value="dresden">Dresden</option>
+                <option value="hannover">Hannover</option>
+                <option value="nürnberg">Nürnberg</option>
+              </optgroup>
+              
+              <optgroup label="🇫🇷 France / Frankreich">
+                <option value="paris">Paris</option>
+                <option value="marseille">Marseille</option>
+                <option value="lyon">Lyon</option>
+                <option value="toulouse">Toulouse</option>
+                <option value="nice">Nice</option>
+                <option value="nantes">Nantes</option>
+                <option value="strasbourg">Strasbourg</option>
+                <option value="montpellier">Montpellier</option>
+                <option value="bordeaux">Bordeaux</option>
+                <option value="lille">Lille</option>
+              </optgroup>
+              
+              <optgroup label="🇧🇪 Belgique / België / Belgium">
+                <option value="bruxelles">Bruxelles / Brussel</option>
+                <option value="anvers">Anvers / Antwerpen</option>
+                <option value="gand">Gand / Gent</option>
+                <option value="charleroi">Charleroi</option>
+                <option value="liège">Liège / Luik</option>
+              </optgroup>
+              
+              <optgroup label="🇳🇱 Nederland / Pays-Bas / Netherlands">
+                <option value="amsterdam">Amsterdam</option>
+                <option value="rotterdam">Rotterdam</option>
+                <option value="la-haye">Den Haag / La Haye</option>
+                <option value="utrecht">Utrecht</option>
+                <option value="eindhoven">Eindhoven</option>
+              </optgroup>
+              
+              <optgroup label="🇨🇭 Schweiz / Suisse / Switzerland">
+                <option value="zurich">Zürich</option>
+                <option value="genève">Genève / Genf</option>
+                <option value="bâle">Basel / Bâle</option>
+                <option value="berne">Bern / Berne</option>
+                <option value="lausanne">Lausanne</option>
+              </optgroup>
+              
+              <optgroup label="🇱🇺 Luxembourg / Luxemburg">
+                <option value="luxembourg">Luxembourg</option>
+              </optgroup>
+              
+              <optgroup label="🇮🇹 Italia / Italie / Italy">
+                <option value="rome">Roma / Rome</option>
+                <option value="milan">Milano / Milan</option>
+                <option value="naples">Napoli / Naples</option>
+                <option value="turin">Torino / Turin</option>
+                <option value="florence">Firenze / Florence</option>
+                <option value="bologne">Bologna / Bologne</option>
+                <option value="venise">Venezia / Venise</option>
+              </optgroup>
+              
+              <optgroup label="🇪🇸 España / Espagne / Spain">
+                <option value="madrid">Madrid</option>
+                <option value="barcelone">Barcelona / Barcelone</option>
+                <option value="valence">Valencia / Valence</option>
+                <option value="séville">Sevilla / Séville</option>
+                <option value="saragosse">Zaragoza / Saragosse</option>
+                <option value="malaga">Málaga</option>
+                <option value="bilbao">Bilbao</option>
+              </optgroup>
             </select>
             <button 
               (click)="onCityChange()" 

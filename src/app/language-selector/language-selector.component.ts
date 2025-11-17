@@ -176,7 +176,7 @@ import { LanguageService, Language } from '../services/language.service';
 export class LanguageSelectorComponent {
   private languageService = inject(LanguageService);
   
-  languages: Language[] = ['de', 'en', 'fr'];
+  languages: Language[] = ['de', 'en', 'fr', 'it', 'es'];
   currentLanguage: Language = 'de';
   isOpen = false;
 
@@ -209,7 +209,9 @@ export class LanguageSelectorComponent {
     const names: Record<Language, string> = {
       'de': 'Deutsch',
       'en': 'English',
-      'fr': 'Français'
+      'fr': 'Français',
+      'it': 'Italiano',
+      'es': 'Español'
     };
     return names[lang];
   }
@@ -218,7 +220,9 @@ export class LanguageSelectorComponent {
     const flags: Record<Language, string> = {
       'de': '🇩🇪',
       'en': '🇬🇧',
-      'fr': '🇫🇷'
+      'fr': '🇫🇷',
+      'it': '🇮🇹',
+      'es': '🇪🇸'
     };
     return flags[lang];
   }

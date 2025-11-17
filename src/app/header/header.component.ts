@@ -67,7 +67,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const messages = {
       'de': 'Verbinde dich mit der afrikanischen Community in Europa',
       'en': 'Connect with the African community in Europe',
-      'fr': 'Connectez-vous avec la communauté africaine en Europe'
+      'fr': 'Connectez-vous avec la communauté africaine en Europe',
+      'it': 'Connettiti con la comunità africana in Europa',
+      'es': 'Conéctate con la comunidad africana en Europa'
     };
     this.welcomeMessage = messages[this.languageService.getCurrentLanguage()];
   }
