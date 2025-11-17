@@ -511,8 +511,8 @@
 
 @media (max-width: 500px) {
   .impressum-modal-content {
-    width: 95vw;
-    max-height: 95vh;
+    width: 96vw;
+    max-height: 88vh;
     border-radius: 16px;
     display: flex;
     flex-direction: column;
@@ -531,6 +531,7 @@
     -webkit-overflow-scrolling: touch;
     flex: 1;
     min-height: 0;
+    max-height: calc(88vh - 80px);
   }
   
   .impressum-info-container > div {
