@@ -18,6 +18,7 @@ import { PaymentComponent } from './payment/payment.component';
 import { DashboardComponent } from './admin/dashboard.component';
 import { SuperDashboardComponent } from './admin/super-dashboard.component';
 import { PricingComponent } from './pricing/pricing.component';
+import { JoinComponent } from './join/join.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/gallery', pathMatch: 'full' },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'hilfe', loadComponent: () => import('./hilfe.component').then(m => m.HilfeComponent) },
   { path: 'gallery', component: GalleryComponent },
   { path: 'pricing', component: PricingComponent },
+  { path: 'join', component: JoinComponent }, // 🌟 NEW: Landing page commerçants
   { path: 'afroshop/:id', component: ImageDetailComponent },
   { 
     path: 'add-afroshop', 

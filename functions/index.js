@@ -344,3 +344,110 @@ exports.createPortalLink = functions.https.onRequest((req, res) => {
     }
   });
 });
+
+/**
+ * Cloud Function: Définir un utilisateur comme administrateur
+ * SÉCURITÉ: Cette fonction doit être appelée manuellement depuis la console Firebase
+ * ou via Firebase CLI avec les bonnes permissions
+ * 
+ * Usage depuis Firebase CLI:
+ * firebase functions:call setAdminClaim --data='{"email":"your-email@example.com"}'
+ */
+exports.setAdminClaim = functions.https.onCall(async (data, context) => {
+  // Vérifier que l'appelant est un admin (pour les appels suivants)
+  if (context.auth && context.auth.token.admin !== true) {
+    throw new functions.https.HttpsError(
+      'permission-denied',
+      'Seuls les administrateurs peuvent définir des droits admin'
+    );
+  }
+
+  const { email, uid } = data;
+  
+  if (!email && !uid) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      'Email ou UID requis'
+    );
+  }
+
+  try {
+    // Récupérer l'utilisateur par email ou UID
+    let user;
+    if (uid) {
+      user = await admin.auth().getUser(uid);
+    } else {
+      user = await admin.auth().getUserByEmail(email);
+    }
+
+    // Définir le custom claim admin
+    await admin.auth().setCustomUserClaims(user.uid, {
+      admin: true
+    });
+
+    console.log(`✅ Admin claim défini pour: ${user.email} (${user.uid})`);
+
+    return {
+      success: true,
+      message: `Admin claim défini pour ${user.email}`,
+      uid: user.uid
+    };
+  } catch (error) {
+    console.error('❌ Erreur lors de la définition du claim admin:', error);
+    throw new functions.https.HttpsError(
+      'internal',
+      `Erreur: ${error.message}`
+    );
+  }
+});
+
+/**
+ * Cloud Function: Retirer les droits admin d'un utilisateur
+ */
+exports.removeAdminClaim = functions.https.onCall(async (data, context) => {
+  // Vérifier que l'appelant est un admin
+  if (!context.auth || context.auth.token.admin !== true) {
+    throw new functions.https.HttpsError(
+      'permission-denied',
+      'Seuls les administrateurs peuvent retirer des droits admin'
+    );
+  }
+
+  const { email, uid } = data;
+  
+  if (!email && !uid) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      'Email ou UID requis'
+    );
+  }
+
+  try {
+    // Récupérer l'utilisateur
+    let user;
+    if (uid) {
+      user = await admin.auth().getUser(uid);
+    } else {
+      user = await admin.auth().getUserByEmail(email);
+    }
+
+    // Retirer le custom claim admin
+    await admin.auth().setCustomUserClaims(user.uid, {
+      admin: false
+    });
+
+    console.log(`✅ Admin claim retiré pour: ${user.email} (${user.uid})`);
+
+    return {
+      success: true,
+      message: `Admin claim retiré pour ${user.email}`,
+      uid: user.uid
+    };
+  } catch (error) {
+    console.error('❌ Erreur lors du retrait du claim admin:', error);
+    throw new functions.https.HttpsError(
+      'internal',
+      `Erreur: ${error.message}`
+    );
+  }
+});

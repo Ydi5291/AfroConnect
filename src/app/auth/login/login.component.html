@@ -5,7 +5,39 @@
       <p>{{ texts.subtitle }}</p>
     </div>
 
-    <form (ngSubmit)="onSubmit()" class="auth-form">
+    <!-- Sélection de la méthode -->
+    <div class="auth-methods">
+      <p class="methods-label">{{ texts.chooseMethod }}</p>
+      <div class="method-tabs">
+        <button 
+          type="button"
+          class="method-tab"
+          [class.active]="activeMethod === 'email'"
+          (click)="switchMethod('email')"
+          [disabled]="isLoading">
+          📧 {{ texts.methodEmail }}
+        </button>
+        <button 
+          type="button"
+          class="method-tab"
+          [class.active]="activeMethod === 'phone'"
+          (click)="switchMethod('phone')"
+          [disabled]="isLoading">
+          📱 {{ texts.methodPhone }}
+        </button>
+        <button 
+          type="button"
+          class="method-tab"
+          [class.active]="activeMethod === 'google'"
+          (click)="switchMethod('google')"
+          [disabled]="isLoading">
+          🔍 {{ texts.methodGoogle }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulaire Email -->
+    <form *ngIf="activeMethod === 'email'" (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
         <label for="email">{{ texts.email }}</label>
         <input
@@ -13,7 +45,7 @@
           id="email"
           [(ngModel)]="email"
           name="email"
-          placeholder="ihre@email.com"
+          [placeholder]="texts.emailPlaceholder"
           required
           [disabled]="isLoading"
         />
@@ -26,7 +58,7 @@
           id="password"
           [(ngModel)]="password"
           name="password"
-          placeholder="••••••••"
+          [placeholder]="texts.passwordPlaceholder"
           required
           [disabled]="isLoading"
         />
@@ -45,17 +77,87 @@
       </button>
     </form>
 
-    <div class="divider">
-      <span>{{ texts.or }}</span>
+    <!-- Formulaire Téléphone -->
+    <div *ngIf="activeMethod === 'phone'" class="auth-form">
+      <div class="form-group" *ngIf="!isCodeSent">
+        <label for="phone">{{ texts.phone }}</label>
+        <input
+          type="tel"
+          id="phone"
+          [(ngModel)]="phoneNumber"
+          name="phone"
+          [placeholder]="texts.phonePlaceholder"
+          required
+          [disabled]="isLoading"
+        />
+        <small class="form-hint">{{ texts.phoneHint }}</small>
+      </div>
+
+      <div class="form-group" *ngIf="isCodeSent">
+        <label for="code">{{ texts.verificationCode }}</label>
+        <input
+          type="text"
+          id="code"
+          [(ngModel)]="verificationCode"
+          name="code"
+          [placeholder]="texts.codePlaceholder"
+          required
+          [disabled]="isLoading"
+          maxlength="6"
+        />
+      </div>
+
+      <!-- Container pour reCAPTCHA -->
+      <div id="recaptcha-container" *ngIf="!isCodeSent"></div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button 
+        *ngIf="!isCodeSent"
+        type="button"
+        (click)="sendVerificationCode()"
+        class="auth-btn"
+        [disabled]="isLoading || !phoneNumber">
+        <span *ngIf="!isLoading">{{ texts.sendCode }}</span>
+        <span *ngIf="isLoading">⏳ {{ texts.loading }}</span>
+      </button>
+
+      <button 
+        *ngIf="isCodeSent"
+        type="button"
+        (click)="verifyCode()"
+        class="auth-btn"
+        [disabled]="isLoading || !verificationCode">
+        <span *ngIf="!isLoading">{{ texts.verify }}</span>
+        <span *ngIf="isLoading">⏳ {{ texts.loading }}</span>
+      </button>
+
+      <button 
+        *ngIf="isCodeSent"
+        type="button"
+        (click)="resendCode()"
+        class="resend-btn"
+        [disabled]="isLoading">
+        🔄 {{ texts.resendCode }}
+      </button>
     </div>
 
-    <button 
-      (click)="loginWithGoogle()" 
-      class="google-btn"
-      [disabled]="isLoading">
-      <span *ngIf="!isLoading">🔍 {{ texts.googleBtn }}</span>
-      <span *ngIf="isLoading">⏳ {{ texts.googleLoading }}</span>
-    </button>
+    <!-- Connexion Google -->
+    <div *ngIf="activeMethod === 'google'" class="auth-form">
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button 
+        (click)="loginWithGoogle()" 
+        class="google-btn"
+        [disabled]="isLoading">
+        <span *ngIf="!isLoading">🔍 {{ texts.googleBtn }}</span>
+        <span *ngIf="isLoading">⏳ {{ texts.googleLoading }}</span>
+      </button>
+    </div>
 
     <div class="auth-footer">
       <p>{{ texts.noAccount }} 

@@ -199,7 +199,7 @@ import { LanguageService, Language } from '../services/language.service';
 export class LanguageSelectorComponent {
   private languageService = inject(LanguageService);
   
-  languages: Language[] = ['de', 'en', 'fr', 'it', 'es'];
+  languages: Language[] = ['de', 'en', 'fr', 'it', 'es', 'pt'];
   currentLanguage: Language = 'de';
   isOpen = false;
 
@@ -234,7 +234,8 @@ export class LanguageSelectorComponent {
       'en': 'English',
       'fr': 'Français',
       'it': 'Italiano',
-      'es': 'Español'
+      'es': 'Español',
+      'pt': 'Português'
     };
     return names[lang];
   }
@@ -245,7 +246,8 @@ export class LanguageSelectorComponent {
       'en': '🇬🇧',
       'fr': '🇫🇷',
       'it': '🇮🇹',
-      'es': '🇪🇸'
+      'es': '🇪🇸',
+      'pt': '🇵🇹'
     };
     return flags[lang];
   }

@@ -72,9 +72,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (!this.myShop) return;
 
       // 🔹 Récupérer les commandes de ce shop
-      this.orderService.getOrdersByShop(this.shopId).subscribe(orders => {
-        this.orders = orders;
-        this.groupOrdersByDay();
+      this.orderService.getOrdersByShop(this.shopId).subscribe({
+        next: (orders) => {
+          console.log(`✅ Dashboard Shop ${this.shopId} - Commandes chargées:`, orders.length);
+          this.orders = orders;
+          this.groupOrdersByDay();
+        },
+        error: (error) => {
+          console.error(`❌ Dashboard Shop ${this.shopId} - Erreur:`, error);
+        }
       });
     });
   }

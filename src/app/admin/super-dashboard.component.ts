@@ -42,10 +42,17 @@ export class SuperDashboardComponent implements OnInit {
     });
 
     // 🔹 Récupérer TOUTES les commandes
-    this.orderService.getAllOrders().subscribe(orders => {
-      this.allOrders = orders;
-      this.applyFilter();
-      this.isLoading = false;
+    this.orderService.getAllOrders().subscribe({
+      next: (orders) => {
+        console.log('✅ Super Dashboard - Commandes chargées:', orders.length);
+        this.allOrders = orders;
+        this.applyFilter();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('❌ Super Dashboard - Erreur chargement commandes:', error);
+        this.isLoading = false;
+      }
     });
   }
 

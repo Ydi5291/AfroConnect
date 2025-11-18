@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Willkommen bei AfroConnect</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #009639 0%, #00b347 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+            color: #333;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #009639;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .message {
+            margin-bottom: 25px;
+            font-size: 15px;
+            color: #555;
+        }
+        .benefits {
+            background: #f9f9f9;
+            border-left: 4px solid #009639;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .benefits h3 {
+            color: #009639;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .benefits ul {
+            list-style: none;
+            padding: 0;
+        }
+        .benefits li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 14px;
+        }
+        .benefits li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #009639;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #009639 0%, #00b347 100%);
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 16px;
+        }
+        .cta-button:hover {
+            opacity: 0.9;
+        }
+        .next-steps {
+            background: #fff8dc;
+            border: 2px solid #FFCD00;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        .next-steps h3 {
+            color: #d97706;
+            margin-bottom: 15px;
+        }
+        .next-steps ol {
+            padding-left: 20px;
+            color: #555;
+        }
+        .next-steps li {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .contact-info {
+            background: #f0f9ff;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+            border: 1px solid #bfdbfe;
+        }
+        .contact-info h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .contact-item {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        .contact-item strong {
+            color: #1e40af;
+            display: inline-block;
+            width: 100px;
+        }
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .footer a {
+            color: #FFCD00;
+            text-decoration: none;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 20px 15px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .cta-button {
+                display: block;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎉 Willkommen bei AfroConnect!</h1>
+            <p>Ihre Registrierung wurde erfolgreich empfangen</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p class="greeting">Hallo {{ownerName}},</p>
+            
+            <p class="message">
+                Vielen Dank für Ihr Interesse an AfroConnect! Wir freuen uns sehr, dass Sie <strong>{{shopName}}</strong> 
+                in {{city}} mit uns teilen möchten.
+            </p>
+
+            <p class="message">
+                Ihr Geschäft wurde erfolgreich in unsere Datenbank aufgenommen. Unser Team wird sich in den 
+                nächsten <strong>24-48 Stunden</strong> bei Ihnen melden, um die nächsten Schritte zu besprechen.
+            </p>
+
+            <!-- Benefits -->
+            <div class="benefits">
+                <h3>🌟 Was Sie mit AfroConnect erhalten:</h3>
+                <ul>
+                    <li><strong>Kostenlose Basis-Registrierung</strong> - Ihr Geschäft wird sofort sichtbar</li>
+                    <li><strong>Erweiterte Online-Präsenz</strong> - Über 50.000 potenzielle Kunden in Deutschland</li>
+                    <li><strong>Google Maps Integration</strong> - Automatische Standorterkennung</li>
+                    <li><strong>Mehrsprachige Plattform</strong> - Deutsch, Englisch, Französisch, Spanisch, Italienisch, Portugiesisch</li>
+                    <li><strong>Moderne Galerie</strong> - Präsentieren Sie Ihre Produkte professionell</li>
+                    <li><strong>Mobile-optimiert</strong> - Perfekt für Smartphone-Nutzer</li>
+                    <li><strong>SEO-optimiert</strong> - Bessere Auffindbarkeit bei Google</li>
+                </ul>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h3>📋 Nächste Schritte:</h3>
+                <ol>
+                    <li><strong>Wir überprüfen Ihre Angaben</strong> und erstellen Ihr Profil</li>
+                    <li><strong>Sie erhalten eine E-Mail</strong> mit Ihrem Login und Anweisungen</li>
+                    <li><strong>Sie laden Fotos hoch</strong> und vervollständigen Ihr Profil</li>
+                    <li><strong>Ihr Geschäft geht live</strong> auf AfroConnect.shop!</li>
+                </ol>
+            </div>
+
+            <!-- CTA Button -->
+            <center>
+                <a href="https://afroconnect.shop" class="cta-button">
+                    🌍 AfroConnect entdecken
+                </a>
+            </center>
+
+            <!-- Contact Info -->
+            <div class="contact-info">
+                <h3>📞 Haben Sie Fragen?</h3>
+                <div class="contact-item">
+                    <strong>WhatsApp:</strong> <a href="https://wa.me/4917841223151" style="color:#009639">+49 178 41223151</a>
+                </div>
+                <div class="contact-item">
+                    <strong>E-Mail:</strong> <a href="mailto:info@afroconnect.shop" style="color:#009639">info@afroconnect.shop</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Website:</strong> <a href="https://afroconnect.shop" style="color:#009639">afroconnect.shop</a>
+                </div>
+            </div>
+
+            <p class="message" style="margin-top:30px; font-size:14px; color:#888;">
+                Wir freuen uns darauf, Ihr Geschäft zu präsentieren und Ihnen zu helfen, mehr Kunden zu erreichen!
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="margin-bottom:15px;">
+                <strong>AfroConnect</strong> - Die afrikanische Community in Europa verbinden 🌍
+            </p>
+            
+            <div class="social-links">
+                <a href="https://afroconnect.shop/about">Über uns</a> •
+                <a href="https://afroconnect.shop/pricing">Preise</a> •
+                <a href="https://afroconnect.shop/kontakt">Kontakt</a>
+            </div>
+
+            <p style="font-size:11px; color:#9ca3af; margin-top:20px;">
+                Sie erhalten diese E-Mail, weil Sie sich über afroconnect.shop/join registriert haben.<br>
+                <a href="https://afroconnect.shop/privacy" style="color:#9ca3af;">Datenschutz</a> • 
+                <a href="https://afroconnect.shop/impressum" style="color:#9ca3af;">Impressum</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

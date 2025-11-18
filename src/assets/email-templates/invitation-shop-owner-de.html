@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kostenlose Online-Präsenz für Ihr Geschäft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #009639 0%, #00b347 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+        .content {
+            padding: 40px 30px;
+            color: #333;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #009639;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .message {
+            margin-bottom: 20px;
+            font-size: 15px;
+            color: #555;
+        }
+        .problem-box {
+            background: #fef2f2;
+            border-left: 4px solid #EF3340;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .problem-box h3 {
+            color: #EF3340;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .problem-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .problem-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 14px;
+        }
+        .problem-box li:before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #EF3340;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .solution-box {
+            background: #f0fdf4;
+            border-left: 4px solid #009639;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .solution-box h3 {
+            color: #009639;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .solution-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .solution-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 14px;
+        }
+        .solution-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #009639;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .stats-box {
+            background: linear-gradient(135deg, #FFCD00 0%, #ffd700 100%);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stats-box h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .stat-item {
+            display: inline-block;
+            margin: 10px 20px;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1f2937;
+            display: block;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: #374151;
+            margin-top: 5px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #009639 0%, #00b347 100%);
+            color: white;
+            padding: 18px 50px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0,150,57,0.3);
+        }
+        .cta-button:hover {
+            opacity: 0.9;
+        }
+        .urgency {
+            background: #fff8dc;
+            border: 2px dashed #d97706;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .urgency p {
+            color: #d97706;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .testimonial {
+            background: #f9fafb;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: #555;
+        }
+        .testimonial .author {
+            font-style: normal;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .contact-info {
+            background: #f0f9ff;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+            border: 1px solid #bfdbfe;
+        }
+        .contact-info h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .contact-item {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        .contact-item strong {
+            color: #1e40af;
+            display: inline-block;
+            width: 100px;
+        }
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .footer a {
+            color: #FFCD00;
+            text-decoration: none;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 20px 15px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .cta-button {
+                display: block;
+                padding: 15px 30px;
+                font-size: 16px;
+            }
+            .stat-item {
+                display: block;
+                margin: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 Erreichen Sie 50.000+ Kunden online!</h1>
+            <p>Kostenlose Registrierung • Keine Setup-Gebühren • Sofort sichtbar</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p class="greeting">Guten Tag,</p>
+            
+            <p class="message">
+                Wir haben Ihr Geschäft <strong>{{shopName}}</strong> in {{city}} entdeckt und möchten Ihnen 
+                eine <strong>exklusive Möglichkeit</strong> vorstellen, mehr Kunden zu erreichen – 
+                <strong>komplett kostenlos</strong>!
+            </p>
+
+            <!-- Problem -->
+            <div class="problem-box">
+                <h3>❌ Kennen Sie diese Herausforderungen?</h3>
+                <ul>
+                    <li>Kunden finden Ihr Geschäft nicht online</li>
+                    <li>Keine professionelle Website oder zu teuer</li>
+                    <li>Konkurrenz ist bei Google besser sichtbar</li>
+                    <li>Sie verlieren potenzielle Kunden an größere Ketten</li>
+                    <li>Schwierig, die afrikanische Community zu erreichen</li>
+                </ul>
+            </div>
+
+            <p class="message">
+                Genau hier setzt <strong>AfroConnect</strong> an! Wir sind die <strong>#1 Plattform</strong> 
+                für afrikanische Geschäfte in Deutschland, und wir helfen Ihnen, digital sichtbar zu werden.
+            </p>
+
+            <!-- Stats -->
+            <div class="stats-box">
+                <h3>📊 AfroConnect in Zahlen</h3>
+                <div class="stat-item">
+                    <span class="stat-number">50.000+</span>
+                    <span class="stat-label">Monatliche Besucher</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Registrierte Geschäfte</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Sprachen</span>
+                </div>
+            </div>
+
+            <!-- Solution -->
+            <div class="solution-box">
+                <h3>✅ Was Sie mit AfroConnect erhalten:</h3>
+                <ul>
+                    <li><strong>Kostenlose Registrierung</strong> – Keine versteckten Kosten</li>
+                    <li><strong>Professionelles Profil</strong> – Fotos, Beschreibung, Kontaktdaten</li>
+                    <li><strong>Google Maps Integration</strong> – Kunden finden Sie sofort</li>
+                    <li><strong>50.000+ potenzielle Kunden</strong> – Monatlich</li>
+                    <li><strong>Mehrsprachig</strong> – Deutsch, Englisch, Französisch, Spanisch, Italienisch, Portugiesisch</li>
+                    <li><strong>Mobile-optimiert</strong> – 80% unserer Besucher nutzen Smartphones</li>
+                    <li><strong>SEO-optimiert</strong> – Bessere Platzierung bei Google</li>
+                    <li><strong>Premium-Option</strong> – Für noch mehr Sichtbarkeit (optional)</li>
+                </ul>
+            </div>
+
+            <!-- Testimonial -->
+            <div class="testimonial">
+                <p>
+                    "Seit ich auf AfroConnect bin, kommen 30% mehr Kunden in meinen Laden. 
+                    Viele sagen: 'Ich habe euch auf AfroConnect gefunden!' Das ist unbezahlbar."
+                </p>
+                <p class="author">— Marie K., Afro Shop Berlin-Mitte</p>
+            </div>
+
+            <!-- Urgency -->
+            <div class="urgency">
+                <p>⏰ Limitiertes Angebot: Kostenlose Registrierung nur noch bis Ende des Monats!</p>
+            </div>
+
+            <!-- CTA Button -->
+            <center>
+                <a href="https://afroconnect.shop/join" class="cta-button">
+                    🎯 Jetzt kostenlos registrieren
+                </a>
+            </center>
+
+            <p class="message" style="text-align:center; margin-top:20px; font-size:14px; color:#888;">
+                Keine Kreditkarte erforderlich • Setup in 5 Minuten • Sofort sichtbar
+            </p>
+
+            <!-- Contact Info -->
+            <div class="contact-info">
+                <h3>📞 Fragen? Wir helfen gerne!</h3>
+                <div class="contact-item">
+                    <strong>WhatsApp:</strong> <a href="https://wa.me/4917841223151" style="color:#009639">+49 178 41223151</a>
+                </div>
+                <div class="contact-item">
+                    <strong>E-Mail:</strong> <a href="mailto:info@afroconnect.shop" style="color:#009639">info@afroconnect.shop</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Website:</strong> <a href="https://afroconnect.shop" style="color:#009639">afroconnect.shop</a>
+                </div>
+            </div>
+
+            <p class="message" style="margin-top:30px; font-size:14px; color:#888;">
+                Wir freuen uns darauf, Ihr Geschäft auf AfroConnect willkommen zu heißen!
+            </p>
+
+            <p class="message" style="font-size:13px; color:#888;">
+                Mit freundlichen Grüßen,<br>
+                <strong style="color:#009639;">Das AfroConnect Team</strong>
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="margin-bottom:15px;">
+                <strong>AfroConnect</strong> - Die afrikanische Community in Europa verbinden 🌍
+            </p>
+            
+            <p style="font-size:12px; margin:10px 0;">
+                <a href="https://afroconnect.shop/about">Über uns</a> •
+                <a href="https://afroconnect.shop/pricing">Preise</a> •
+                <a href="https://afroconnect.shop/kontakt">Kontakt</a>
+            </p>
+
+            <p style="font-size:11px; color:#9ca3af; margin-top:20px;">
+                AfroConnect GmbH • Deutschland<br>
+                <a href="https://afroconnect.shop/privacy" style="color:#9ca3af;">Datenschutz</a> • 
+                <a href="https://afroconnect.shop/impressum" style="color:#9ca3af;">Impressum</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

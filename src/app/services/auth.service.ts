@@ -5,6 +5,9 @@ import {
   signInWithEmailAndPassword, 
   signInWithPopup,
   GoogleAuthProvider,
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
+  ConfirmationResult,
   signOut, 
   User,
   authState,
@@ -26,6 +29,7 @@ export interface UserProfile {
 export class AuthService {
   // Observable de l'état d'authentification
   user$: Observable<User | null>;
+  private recaptchaVerifier: RecaptchaVerifier | null = null;
 
   constructor(private auth: Auth, private translationService: TranslationService) {
     this.user$ = authState(this.auth);
@@ -130,6 +134,82 @@ export class AuthService {
     }
   }
 
+  // Initialiser le vérificateur reCAPTCHA
+  initRecaptchaVerifier(containerId: string): void {
+    try {
+      if (!this.recaptchaVerifier) {
+        this.recaptchaVerifier = new RecaptchaVerifier(this.auth, containerId, {
+          size: 'normal',
+          callback: () => {
+            console.log('✅ reCAPTCHA vérifié avec succès');
+          },
+          'expired-callback': () => {
+            console.log('⏰ reCAPTCHA expiré');
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'initialisation du reCAPTCHA:', error);
+      throw new Error('Fehler beim Initialisieren der Sicherheitsüberprüfung');
+    }
+  }
+
+  // Envoyer le code de vérification par SMS
+  async sendPhoneVerificationCode(phoneNumber: string): Promise<ConfirmationResult> {
+    try {
+      if (!this.recaptchaVerifier) {
+        throw new Error('reCAPTCHA muss zuerst initialisiert werden');
+      }
+
+      console.log('📱 Envoi du code de vérification au:', phoneNumber);
+      const confirmationResult = await signInWithPhoneNumber(
+        this.auth, 
+        phoneNumber, 
+        this.recaptchaVerifier
+      );
+      
+      console.log('✅ Code de vérification envoyé avec succès');
+      return confirmationResult;
+    } catch (error: any) {
+      console.error('❌ Erreur lors de l\'envoi du code:', error);
+      
+      // Réinitialiser le reCAPTCHA en cas d'erreur
+      if (this.recaptchaVerifier) {
+        this.recaptchaVerifier.clear();
+        this.recaptchaVerifier = null;
+      }
+      
+      throw this.handleAuthError(error);
+    }
+  }
+
+  // Vérifier le code et se connecter
+  async verifyPhoneCode(confirmationResult: ConfirmationResult, code: string): Promise<UserProfile> {
+    try {
+      console.log('🔐 Vérification du code:', code);
+      const credential = await confirmationResult.confirm(code);
+      
+      console.log('✅ Connexion par téléphone réussie');
+      return {
+        uid: credential.user.uid,
+        email: credential.user.email,
+        displayName: credential.user.displayName,
+        photoURL: credential.user.photoURL
+      };
+    } catch (error) {
+      console.error('❌ Erreur lors de la vérification du code:', error);
+      throw this.handleAuthError(error);
+    }
+  }
+
+  // Nettoyer le reCAPTCHA
+  clearRecaptcha(): void {
+    if (this.recaptchaVerifier) {
+      this.recaptchaVerifier.clear();
+      this.recaptchaVerifier = null;
+    }
+  }
+
   // Déconnexion
   async logout(): Promise<void> {
     try {
@@ -191,6 +271,21 @@ export class AuthService {
           break;
         case 'auth/cancelled-popup-request':
           message = this.translationService.getErrorMessage('auth/cancelled-popup-request');
+          break;
+        case 'auth/invalid-phone-number':
+          message = 'Ungültige Telefonnummer. Bitte verwenden Sie das Format +49...';
+          break;
+        case 'auth/invalid-verification-code':
+          message = 'Ungültiger Bestätigungscode. Bitte überprüfen Sie den Code';
+          break;
+        case 'auth/code-expired':
+          message = 'Der Bestätigungscode ist abgelaufen. Bitte fordern Sie einen neuen an';
+          break;
+        case 'auth/missing-phone-number':
+          message = 'Bitte geben Sie eine Telefonnummer ein';
+          break;
+        case 'auth/quota-exceeded':
+          message = 'SMS-Limit erreicht. Bitte versuchen Sie es später erneut';
           break;
         default:
           message = this.translationService.getErrorMessage('general-error');

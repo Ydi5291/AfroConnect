@@ -8,6 +8,8 @@ import { AfroshopData } from '../services/image.service';
 import { TranslationService } from '../services/translation.service';
 import { AdminSecurityService } from '../services/admin-security.service';
 import { Router } from '@angular/router';
+import { ShopLeadService, ShopLead } from '../services/shop-lead.service';
+import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-admin',
@@ -28,13 +30,29 @@ export class AdminComponent {
   isDeleting = false;
   deleteMessage = '';
 
+  // Nouvelles propriétés pour la gestion des leads
+  leads: ShopLead[] = [];
+  leadsLoaded = false;
+  isLoadingLeads = false;
+  isCreatingAccount = false;
+  leadMessage = '';
+  leadsStats = {
+    total: 0,
+    new: 0,
+    contacted: 0,
+    interested: 0,
+    registered: 0
+  };
+
   constructor(
     private dataSeedingService: DataSeedingService,
     private authService: AuthService,
     private firebaseAfroshopService: FirebaseAfroshopService,
     private translationService: TranslationService,
     private adminSecurity: AdminSecurityService,
-    private router: Router
+    private router: Router,
+    private shopLeadService: ShopLeadService,
+    private auth: Auth
   ) {
     // Vérifier si l'utilisateur est connecté ET s'il est admin (par UID Firestore)
     this.authService.user$.subscribe(async user => {
@@ -240,5 +258,153 @@ export class AdminComponent {
   // 🔄 TrackBy function pour optimiser ngFor
   trackByAfroshop(index: number, afroshop: AfroshopData): any {
     return afroshop.id;
+  }
+
+  // ===== GESTION DES LEADS =====
+
+  async loadLeads() {
+    try {
+      this.isLoadingLeads = true;
+      this.leadMessage = '';
+      const allLeads = await this.shopLeadService.getAllLeads();
+      this.leads = allLeads.sort((a, b) => {
+        // Trier par date (plus récent en premier)
+        const dateA = (a.createdAt as any)?.seconds || 0;
+        const dateB = (b.createdAt as any)?.seconds || 0;
+        return dateB - dateA;
+      });
+      this.calculateLeadsStats();
+      this.leadsLoaded = true;
+    } catch (error) {
+      console.error('Error loading leads:', error);
+      this.leadMessage = '❌ Fehler beim Laden der Leads';
+    } finally {
+      this.isLoadingLeads = false;
+    }
+  }
+
+  calculateLeadsStats() {
+    this.leadsStats.total = this.leads.length;
+    this.leadsStats.new = this.leads.filter(l => l.status === 'new').length;
+    this.leadsStats.contacted = this.leads.filter(l => l.status === 'contacted').length;
+    this.leadsStats.interested = this.leads.filter(l => l.status === 'interested').length;
+    this.leadsStats.registered = this.leads.filter(l => l.status === 'registered').length;
+  }
+
+  async createFirebaseAccount(lead: ShopLead) {
+    if (!lead.email) {
+      this.leadMessage = '❌ Lead hat keine E-Mail-Adresse!';
+      return;
+    }
+
+    const confirmed = confirm(
+      `Firebase-Konto erstellen für:\n\n` +
+      `Name: ${lead.name}\n` +
+      `E-Mail: ${lead.email}\n\n` +
+      `Ein temporäres Passwort wird generiert und angezeigt.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      this.isCreatingAccount = true;
+      this.leadMessage = '';
+
+      // Generate temporary password
+      const tempPassword = this.generatePassword();
+
+      // Create Firebase Auth account
+      const userCredential = await createUserWithEmailAndPassword(
+        this.auth,
+        lead.email,
+        tempPassword
+      );
+
+      // Update lead status to 'registered'
+      if (lead.id) {
+        await this.shopLeadService.updateLeadStatus(
+          lead.id,
+          'registered',
+          `Firebase account created. UID: ${userCredential.user.uid}`
+        );
+      }
+
+      // Show credentials to admin
+      this.leadMessage = `✅ Konto erfolgreich erstellt!\n\nE-Mail: ${lead.email}\nPasswort: ${tempPassword}\n\n⚠️ WICHTIG: Notiere das Passwort und sende es dem Eigentümer!`;
+      
+      alert(
+        `✅ Konto erfolgreich erstellt!\n\n` +
+        `E-Mail: ${lead.email}\n` +
+        `Passwort: ${tempPassword}\n\n` +
+        `⚠️ WICHTIG: Notiere das Passwort und sende es dem Eigentümer per WhatsApp/E-Mail!`
+      );
+
+      // Reload leads
+      await this.loadLeads();
+
+    } catch (error: any) {
+      console.error('Error creating Firebase account:', error);
+      if (error.code === 'auth/email-already-in-use') {
+        this.leadMessage = '⚠️ E-Mail-Adresse wird bereits verwendet!';
+      } else {
+        this.leadMessage = `❌ Fehler beim Erstellen des Kontos: ${error.message}`;
+      }
+    } finally {
+      this.isCreatingAccount = false;
+    }
+  }
+
+  generatePassword(): string {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+    let password = 'AfroConnect';
+    for (let i = 0; i < 6; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+  }
+
+  openLeadWhatsApp(lead: ShopLead) {
+    const message = encodeURIComponent(
+      `Hallo ${lead.ownerName || 'dort'},\n\n` +
+      `Vielen Dank für Ihr Interesse an AfroConnect!\n\n` +
+      `Ich habe Ihre Registrierung für "${lead.name}" in ${lead.city} erhalten.\n\n` +
+      `Können wir kurz über die nächsten Schritte sprechen?\n\n` +
+      `Viele Grüße,\nAfroConnect Team`
+    );
+    const phoneNumber = lead.phone.replace(/[^0-9]/g, '');
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  }
+
+  async updateLeadStatus(lead: ShopLead, newStatus: string) {
+    if (!lead.id) return;
+
+    try {
+      await this.shopLeadService.updateLeadStatus(lead.id, newStatus as any);
+      this.leadMessage = `✅ Status aktualisiert: ${newStatus}`;
+      await this.loadLeads();
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+      this.leadMessage = '❌ Fehler beim Aktualisieren des Status';
+    }
+  }
+
+  getLeadCategoryIcon(category: string): string {
+    switch (category) {
+      case 'shop': return '🏪';
+      case 'restaurant': return '🍽️';
+      case 'salon': return '💇';
+      case 'other': return '🏢';
+      default: return '📦';
+    }
+  }
+
+  getLeadStatusText(status: string): string {
+    switch (status) {
+      case 'new': return 'Neu';
+      case 'contacted': return 'Kontaktiert';
+      case 'interested': return 'Interessiert';
+      case 'registered': return 'Registriert';
+      default: return status;
+    }
   }
 }

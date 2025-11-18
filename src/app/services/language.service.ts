@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-export type Language = 'de' | 'en' | 'fr' | 'it' | 'es';
+export type Language = 'de' | 'en' | 'fr' | 'it' | 'es' | 'pt';
 
 export interface Translation {
   [key: string]: string;
@@ -19,6 +19,7 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galerie',
       'nav.pricing': 'Premium',
+      'nav.join': 'Für Geschäfte',
       'nav.about': 'Über uns',
       'nav.contact': 'Kontakt',
       'nav.help': 'Hilfe',
@@ -391,6 +392,7 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Gallery',
       'nav.pricing': 'Premium',
+      'nav.join': 'For Businesses',
       'nav.about': 'About us',
       'nav.contact': 'Contact',
       'nav.help': 'Help',
@@ -763,6 +765,7 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galerie',
       'nav.pricing': 'Premium',
+      'nav.join': 'Pour commerces',
       'nav.about': 'À propos',
       'nav.contact': 'Contact',
       'nav.help': 'Aide',
@@ -1135,6 +1138,7 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galleria',
       'nav.pricing': 'Premium',
+      'nav.join': 'Per commerci',
       'nav.about': 'Chi siamo',
       'nav.contact': 'Contatti',
       'nav.help': 'Aiuto',
@@ -1507,6 +1511,7 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galería',
       'nav.pricing': 'Premium',
+      'nav.join': 'Para comercios',
       'nav.about': 'Sobre nosotros',
       'nav.contact': 'Contacto',
       'nav.help': 'Ayuda',
@@ -1873,13 +1878,221 @@ export class LanguageService {
       'payment.email': 'Email',
       'payment.confirm': 'Confirmar pedido',
       'payment.total': 'Total',
+    },
+    
+    pt: {
+      // Navigation
+      'nav.gallery': 'Galeria',
+      'nav.pricing': 'Premium',
+      'nav.join': 'Para comércios',
+      'nav.about': 'Sobre nós',
+      'nav.contact': 'Contato',
+      'nav.help': 'Ajuda',
+      'nav.login': 'Entrar',
+      'nav.register': 'Registrar',
+      'nav.logout': 'Sair',
+      'nav.addShop': 'Adicionar loja',
+      'nav.impressum': 'Aviso legal',
+      'nav.terms': 'Termos',
+      'nav.privacy': 'Privacidade',
+      'nav.openMenu': 'Abrir menu',
+      'nav.closeMenu': 'Fechar menu',
+      
+      // Gallery page
+      'gallery.discover': 'Descubra',
+      'gallery.shopsNearYou': 'lojas africanas perto de você',
+      'gallery.addShopBtn': 'Adicionar loja',
+      'gallery.filterByType': 'Filtrar por tipo:',
+      'gallery.allTypes': 'Todos os tipos',
+      'gallery.activateGPS': 'Ativar GPS',
+      'gallery.searchRadius': 'Buscar em um raio de 50km',
+      'gallery.around': 'ao redor de',
+      'gallery.yourLocation': 'sua localização',
+      'gallery.resultsCount': 'de',
+      'gallery.shopsDisplayed': 'Afroshops exibidas',
+      'gallery.yourCity': 'Sua cidade:',
+      'gallery.anyCityPlaceholder': 'Lisboa, Porto, Madrid, Paris...',
+      'gallery.search': 'Pesquisar',
+      'gallery.popularCities': 'Cidades populares...',
+      'gallery.confirm': 'Confirmar',
+      'gallery.viewDetails': 'Ver detalhes',
+      'gallery.showOnMap': 'Mostrar no mapa',
+      'gallery.route': 'Rota',
+      'gallery.edit': 'Editar',
+      'gallery.noResults': 'Nenhum comércio encontrado',
+      'gallery.noResultsMessage': 'Atualmente não há negócios africanos nesta região.',
+      'gallery.noResultsCity': 'Nenhum comércio encontrado em {{city}}.',
+      'gallery.noResultsGPS': 'Nenhum comércio encontrado em um raio de 50 km.',
+      'gallery.backToGallery': 'Voltar à galeria completa',
+      'gallery.tryAnother': 'Tentar outra cidade',
+      
+      // Shop detail page
+      'shop.openingHours': 'Horário de funcionamento',
+      'shop.contact': 'Contato',
+      'shop.location': 'Localização',
+      'shop.description': 'Descrição',
+      'shop.phone': 'Telefone',
+      'shop.email': 'E-mail',
+      'shop.website': 'Site',
+      'shop.facebook': 'Facebook',
+      'shop.instagram': 'Instagram',
+      'shop.products': 'Produtos disponíveis',
+      'shop.services': 'Serviços',
+      'shop.photos': 'Fotos',
+      'shop.reviews': 'Avaliações',
+      'shop.hours.monday': 'Segunda',
+      'shop.hours.tuesday': 'Terça',
+      'shop.hours.wednesday': 'Quarta',
+      'shop.hours.thursday': 'Quinta',
+      'shop.hours.friday': 'Sexta',
+      'shop.hours.saturday': 'Sábado',
+      'shop.hours.sunday': 'Domingo',
+      'shop.hours.closed': 'Fechado',
+      'shop.directions': 'Como chegar',
+      'shop.call': 'Ligar',
+      'shop.whatsapp': 'WhatsApp',
+      
+      // Add/Edit Shop
+      'addShop.title': 'Adicionar nova loja',
+      'addShop.editTitle': 'Editar loja',
+      'addShop.basicInfo': 'Informações básicas',
+      'addShop.name': 'Nome da loja',
+      'addShop.type': 'Tipo de negócio',
+      'addShop.description': 'Descrição',
+      'addShop.photos': 'Fotos',
+      'addShop.address': 'Endereço',
+      'addShop.street': 'Rua',
+      'addShop.houseNumber': 'Número',
+      'addShop.zip': 'CEP',
+      'addShop.city': 'Cidade',
+      'addShop.country': 'País',
+      'addShop.contactInfo': 'Informações de contato',
+      'addShop.phone': 'Telefone',
+      'addShop.email': 'E-mail',
+      'addShop.website': 'Site',
+      'addShop.facebook': 'Facebook',
+      'addShop.instagram': 'Instagram',
+      'addShop.openingHours': 'Horário de funcionamento',
+      'addShop.products': 'Produtos',
+      'addShop.services': 'Serviços',
+      'addShop.save': 'Salvar',
+      'addShop.cancel': 'Cancelar',
+      'addShop.delete': 'Excluir',
+      'addShop.deleteConfirm': 'Tem certeza de que deseja excluir esta loja?',
+      
+      // Pricing
+      'pricing.title': 'Planos e preços',
+      'pricing.subtitle': 'Escolha o plano perfeito para o seu negócio',
+      'pricing.free': 'Grátis',
+      'pricing.premium': 'Premium',
+      'pricing.perMonth': 'por mês',
+      'pricing.features': 'Recursos incluídos',
+      'pricing.chooseplan': 'Escolher plano',
+      'pricing.currentPlan': 'Plano atual',
+      
+      // About
+      'about.title': 'Sobre AfroConnect',
+      'about.mission': 'Nossa missão',
+      'about.story': 'Nossa história',
+      'about.team': 'Nossa equipe',
+      'about.values': 'Nossos valores',
+      
+      // Contact
+      'contact.title': 'Entre em contato',
+      'contact.name': 'Nome',
+      'contact.email': 'E-mail',
+      'contact.message': 'Mensagem',
+      'contact.send': 'Enviar',
+      'contact.success': 'Mensagem enviada com sucesso!',
+      'contact.error': 'Erro ao enviar mensagem',
+      
+      // Auth
+      'auth.login': 'Entrar',
+      'auth.register': 'Registrar',
+      'auth.logout': 'Sair',
+      'auth.email': 'E-mail',
+      'auth.password': 'Senha',
+      'auth.confirmPassword': 'Confirmar senha',
+      'auth.forgotPassword': 'Esqueceu a senha?',
+      'auth.noAccount': 'Não tem uma conta?',
+      'auth.hasAccount': 'Já tem uma conta?',
+      'auth.signInWithGoogle': 'Entrar com Google',
+      'auth.signInWithFacebook': 'Entrar com Facebook',
+      
+      // Common
+      'common.loading': 'Carregando...',
+      'common.error': 'Erro',
+      'common.success': 'Sucesso!',
+      'common.save': 'Salvar',
+      'common.cancel': 'Cancelar',
+      'common.delete': 'Excluir',
+      'common.edit': 'Editar',
+      'common.view': 'Visualizar',
+      'common.back': 'Voltar',
+      'common.next': 'Próximo',
+      'common.previous': 'Anterior',
+      'common.close': 'Fechar',
+      'common.open': 'Abrir',
+      'common.search': 'Pesquisar',
+      'common.filter': 'Filtrar',
+      'common.sort': 'Ordenar',
+      'common.yes': 'Sim',
+      'common.no': 'Não',
+      
+      // Footer
+      'footer.copyright': '© 2025 AfroConnect. Todos os direitos reservados.',
+      'footer.terms': 'Termos de serviço',
+      'footer.privacy': 'Política de privacidade',
+      'footer.impressum': 'Aviso legal',
+      'footer.contact': 'Contato',
+      
+      // Error messages
+      'error.required': 'Este campo é obrigatório',
+      'error.invalidEmail': 'E-mail inválido',
+      'error.minLength': 'Mínimo de {{min}} caracteres',
+      'error.maxLength': 'Máximo de {{max}} caracteres',
+      'error.network': 'Erro de rede. Verifique sua conexão.',
+      'error.unauthorized': 'Não autorizado',
+      'error.notFound': 'Não encontrado',
+      
+      // Login
+      'login.title': 'Entrar',
+      'login.subtitle': 'Acesse sua conta AfroConnect',
+      'login.success': 'Login realizado com sucesso!',
+      'login.error': 'Credenciais inválidas',
+      'login.fillFields': 'Por favor, preencha todos os campos',
+      
+      // Payment
+      'payment.title': 'Pagamento',
+      'payment.subtitle': 'Escolha seu método de pagamento preferido e confirme seu pedido.',
+      'payment.bankDetails': 'Dados bancários da loja:',
+      'payment.deliveryType': 'Tipo de entrega',
+      'payment.pickup': 'Retirada na loja',
+      'payment.delivery': 'Entrega em domicílio',
+      'payment.cash': 'Pagamento em dinheiro na retirada',
+      'payment.card': 'Cartão bancário no local',
+      'payment.paypal': 'PayPal',
+      'payment.sofort': 'Transferência instantânea (Klarna)',
+      'payment.transfer': 'Transferência bancária',
+      'payment.applePay': 'Apple Pay / Google Pay',
+      'payment.contactInfo': 'Seus dados de contato',
+      'payment.firstName': 'Nome',
+      'payment.lastName': 'Sobrenome',
+      'payment.street': 'Rua',
+      'payment.houseNumber': 'Número',
+      'payment.zip': 'CEP',
+      'payment.city': 'Cidade',
+      'payment.phone': 'Telefone',
+      'payment.email': 'E-mail',
+      'payment.confirm': 'Confirmar pedido',
+      'payment.total': 'Total',
     }
   };
 
   constructor() {
     // Charger la langue depuis localStorage ou utiliser 'de' par défaut
     const savedLang = localStorage.getItem('afroconnect_language') as Language;
-    if (savedLang && ['de', 'en', 'fr', 'it', 'es'].includes(savedLang)) {
+    if (savedLang && ['de', 'en', 'fr', 'it', 'es', 'pt'].includes(savedLang)) {
       this.currentLanguageSubject.next(savedLang);
     }
   }

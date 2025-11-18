@@ -88,8 +88,15 @@
             <td>
               <ng-container *ngIf="order.clientInfo; else noClientInfo">
                 <strong>{{ order.clientInfo.firstName }} {{ order.clientInfo.lastName }}</strong><br>
-                {{ order.clientInfo.street }} {{ order.clientInfo.number }}<br>
-                {{ order.clientInfo.plz }} {{ order.clientInfo.city }}<br>
+                <!-- Format nouveau: street + number -->
+                <ng-container *ngIf="order.clientInfo.street && order.clientInfo.number">
+                  {{ order.clientInfo.street }} {{ order.clientInfo.number }}<br>
+                  {{ order.clientInfo.plz }} {{ order.clientInfo.city }}<br>
+                </ng-container>
+                <!-- Format ancien: address complète -->
+                <ng-container *ngIf="!order.clientInfo.street && order.clientInfo.address">
+                  {{ order.clientInfo.address }}<br>
+                </ng-container>
                 Tel: {{ order.clientInfo.phone }}<br>
                 <span *ngIf="order.clientInfo.email">E-Mail: {{ order.clientInfo.email }}</span>
               </ng-container>

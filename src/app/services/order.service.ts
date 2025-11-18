@@ -9,10 +9,11 @@ export interface OrderData {
   clientInfo: {
     firstName: string;
     lastName: string;
-    street: string;
-    number: string;
-    plz: string;
-    city: string;
+    street?: string;       // Nouveau format
+    number?: string;       // Nouveau format
+    plz?: string;          // Nouveau format
+    city?: string;         // Peut être dans les deux formats
+    address?: string;      // Ancien format (addresse complète)
     phone: string;
     email?: string;
   };

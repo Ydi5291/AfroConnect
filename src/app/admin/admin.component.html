@@ -94,6 +94,127 @@
       </div>
     </div>
 
+    <!-- Section de gestion des leads -->
+    <div class="leads-section">
+      <div class="section-header">
+        <h2>📊 Lead-Verwaltung (/join Registrierungen)</h2>
+        <p>Geschäftsinhaber kontaktieren und Firebase-Konten erstellen</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="leads-stats" *ngIf="leadsLoaded">
+        <div class="stat-card">
+          <div class="stat-number">{{ leadsStats.total }}</div>
+          <div class="stat-label">Total Leads</div>
+        </div>
+        <div class="stat-card new">
+          <div class="stat-number">{{ leadsStats.new }}</div>
+          <div class="stat-label">Neu</div>
+        </div>
+        <div class="stat-card contacted">
+          <div class="stat-number">{{ leadsStats.contacted }}</div>
+          <div class="stat-label">Kontaktiert</div>
+        </div>
+        <div class="stat-card interested">
+          <div class="stat-number">{{ leadsStats.interested }}</div>
+          <div class="stat-label">Interessiert</div>
+        </div>
+        <div class="stat-card registered">
+          <div class="stat-number">{{ leadsStats.registered }}</div>
+          <div class="stat-label">Registriert</div>
+        </div>
+      </div>
+
+      <!-- Load Leads Button -->
+      <div class="load-button" *ngIf="!leadsLoaded">
+        <button (click)="loadLeads()" class="load-btn" [disabled]="isLoadingLeads">
+          <span *ngIf="!isLoadingLeads">📋 Leads anzeigen</span>
+          <span *ngIf="isLoadingLeads">⏳ Wird geladen...</span>
+        </button>
+      </div>
+
+      <!-- Leads List -->
+      <div class="leads-list" *ngIf="leadsLoaded && leads.length > 0">
+        <div class="list-header">
+          <h3>📋 Liste der Leads ({{ leads.length }})</h3>
+          <button (click)="loadLeads()" class="refresh-btn" [disabled]="isLoadingLeads">
+            🔄 Actualiser
+          </button>
+        </div>
+
+        <div class="lead-item" *ngFor="let lead of leads">
+          <div class="lead-header-section">
+            <div class="lead-title">
+              <span class="category-icon">{{ getLeadCategoryIcon(lead.category) }}</span>
+              <h4>{{ lead.name }}</h4>
+            </div>
+            <span class="status-badge" [ngClass]="'status-' + lead.status">
+              {{ getLeadStatusText(lead.status) }}
+            </span>
+          </div>
+
+          <div class="lead-info">
+            <div class="info-row" *ngIf="lead.ownerName">
+              <span class="info-label">👤 Inhaber:</span>
+              <span class="info-value">{{ lead.ownerName }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">📱 Telefon:</span>
+              <span class="info-value">{{ lead.phone }}</span>
+            </div>
+            <div class="info-row" *ngIf="lead.email">
+              <span class="info-label">📧 E-Mail:</span>
+              <span class="info-value">{{ lead.email }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">📍 Stadt:</span>
+              <span class="info-value">{{ lead.city }}</span>
+            </div>
+            <div class="info-row" *ngIf="lead.notes">
+              <span class="info-label">📝 Notizen:</span>
+              <span class="info-value">{{ lead.notes }}</span>
+            </div>
+          </div>
+
+          <div class="lead-actions">
+            <button
+              *ngIf="lead.status !== 'registered' && lead.email"
+              class="action-btn create-account-btn"
+              (click)="createFirebaseAccount(lead)"
+              [disabled]="isCreatingAccount"
+              title="Firebase-Konto erstellen">
+              🔐 Konto erstellen
+            </button>
+
+            <button
+              class="action-btn whatsapp-btn"
+              (click)="openLeadWhatsApp(lead)"
+              title="WhatsApp öffnen">
+              💬 WhatsApp
+            </button>
+
+            <select
+              class="status-select"
+              [value]="lead.status"
+              (change)="updateLeadStatus(lead, $any($event.target).value)">
+              <option value="new">Neu</option>
+              <option value="contacted">Kontaktiert</option>
+              <option value="interested">Interessiert</option>
+              <option value="registered">Registriert</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-leads" *ngIf="leadsLoaded && leads.length === 0">
+        <p>Keine Leads gefunden.</p>
+      </div>
+
+      <div class="message" [class]="leadMessage.includes('❌') ? 'error' : 'success'" *ngIf="leadMessage">
+        {{ leadMessage }}
+      </div>
+    </div>
+
     <!-- Section de diagnostic technique -->
     <div class="diagnostic-section">
       <div class="section-header">

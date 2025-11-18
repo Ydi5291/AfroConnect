@@ -114,7 +114,7 @@
 .header-welcome {
   /* Aligner le message de bienvenue au même niveau vertical que le logo mais plus bas visuellement */
   display: flex;
-  align-items: flex-end; /* place le texte vers le bas */
+  align-items: center;
   justify-content: center;
   height: 40px; /* même hauteur que l'espace du header pour alignement */
   margin-top: 0.25rem;
@@ -130,4 +130,164 @@
 
 .welcome-message {
   text-align: center;
+}
+
+/* ============================================
+   FOOTER DU HEADER - BOUTONS AUTH
+   ============================================ */
+.header-footer {
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  
+  /* MOBILE: Colonne (vertical) */
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+}
+
+.auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  width: 100%;
+  max-width: 250px;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+.btn-text {
+  font-size: 1rem;
+}
+
+/* Bouton Connexion (bleu) */
+.login-btn {
+  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #357ABD 0%, #2868A8 100%);
+  }
+}
+
+/* Bouton Inscription (vert) */
+.register-btn {
+  background: linear-gradient(135deg, #009639 0%, #007A2E 100%);
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #007A2E 0%, #006325 100%);
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* TABLET: Dépend de la largeur (600px - 900px) */
+@media (min-width: 600px) and (max-width: 900px) {
+  .auth-buttons {
+    /* Sur tablette moyenne, on reste en colonne */
+    flex-direction: column;
+    max-width: 350px;
+  }
+  
+  .auth-btn {
+    max-width: 280px;
+  }
+}
+
+/* TABLET LARGE: Passage en row (900px - 1024px) */
+@media (min-width: 900px) and (max-width: 1024px) {
+  .auth-buttons {
+    flex-direction: row;
+    max-width: 600px;
+  }
+  
+  .auth-btn {
+    max-width: 200px;
+    width: auto;
+    min-width: 180px;
+  }
+}
+
+/* DESKTOP: Row (horizontal) */
+@media (min-width: 1024px) {
+  .auth-buttons {
+    flex-direction: row;
+    max-width: 700px;
+    gap: 1.5rem;
+  }
+  
+  .auth-btn {
+    padding: 0.875rem 2.5rem;
+    font-size: 1.05rem;
+    max-width: 220px;
+    width: auto;
+    min-width: 200px;
+  }
+  
+  .btn-icon {
+    font-size: 1.3rem;
+  }
+}
+
+/* MOBILE SMALL: Ajustements pour petits écrans */
+@media (max-width: 400px) {
+  .header-footer {
+    padding: 0.75rem 1rem 1.25rem;
+  }
+  
+  .auth-buttons {
+    gap: 0.75rem;
+    max-width: 280px;
+  }
+  
+  .auth-btn {
+    padding: 0.65rem 1.5rem;
+    font-size: 0.95rem;
+    max-width: 220px;
+  }
+  
+  .btn-icon {
+    font-size: 1.1rem;
+  }
+  
+  .btn-text {
+    font-size: 0.95rem;
+  }
 }

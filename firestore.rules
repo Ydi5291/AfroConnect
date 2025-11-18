@@ -1,0 +1,101 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // SHOP LEADS COLLECTION (Landing Page Forms)
+    // ============================================
+    match /shop-leads/{leadId} {
+      // Anyone can create a lead (public form submission from /join)
+      allow create: if true;
+      
+      // ⚠️ TEMPORAIRE: Permettre à tous les utilisateurs authentifiés de lire les leads
+      // TODO: Remettre la règle stricte après avoir configuré le custom claim admin
+      // Règle stricte: if request.auth != null && request.auth.token.admin == true;
+      allow read: if request.auth != null;
+      
+      // Only admins can update/delete leads
+      allow update, delete: if request.auth != null && 
+                               request.auth.token.admin == true;
+    }
+    
+    // ============================================
+    // AFROSHOPS COLLECTION (Full Shop Profiles)
+    // ============================================
+    match /afroshops/{shopId} {
+      // Anyone can read published shops (for public directory)
+      allow read: if true;
+      
+      // Authenticated users can create their own shop
+      allow create: if request.auth != null;
+      
+      // Shop owners can update their own shop
+      // Admins can update any shop
+      allow update: if request.auth != null && (
+        request.auth.uid == resource.data.ownerId ||
+        request.auth.token.admin == true
+      );
+      
+      // Only admins can delete shops
+      allow delete: if request.auth != null && 
+                       request.auth.token.admin == true;
+    }
+    
+    // ============================================
+    // USER PROFILES COLLECTION (Optional)
+    // ============================================
+    match /users/{userId} {
+      // Users can read their own profile
+      // Admins can read any profile
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        request.auth.token.admin == true
+      );
+      
+      // Users can create/update their own profile
+      allow create, update: if request.auth != null && 
+                               request.auth.uid == userId;
+      
+      // Only admins can delete profiles
+      allow delete: if request.auth != null && 
+                       request.auth.token.admin == true;
+    }
+    
+    // ============================================
+    // ROLES COLLECTION (Admin UIDs)
+    // ============================================
+    match /roles/{document} {
+      // Anyone authenticated can read roles (to check if they're admin)
+      allow read: if request.auth != null;
+      
+      // Only admins can modify roles
+      allow write: if request.auth != null && 
+                      request.auth.token.admin == true;
+    }
+    
+    // ============================================
+    // ORDERS COLLECTION (Commandes)
+    // ============================================
+    match /orders/{orderId} {
+      // Users can create orders
+      allow create: if request.auth != null;
+      
+      // ⚠️ TEMPORAIRE: Permettre à tous les utilisateurs authentifiés de lire les commandes
+      // La restriction par shop sera gérée côté application
+      // TODO: Améliorer avec une règle plus stricte basée sur les shop owners
+      allow read: if request.auth != null;
+      
+      // Only admins can update/delete orders
+      allow update, delete: if request.auth != null && 
+                               request.auth.token.admin == true;
+    }
+    
+    // ============================================
+    // DEFAULT: Deny all other collections
+    // ============================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

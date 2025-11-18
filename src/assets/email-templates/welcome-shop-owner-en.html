@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to AfroConnect</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .email-container { max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #009639 0%, #00b347 100%); color: white; padding: 40px 20px; text-align: center; }
+        .header h1 { font-size: 28px; margin-bottom: 10px; }
+        .header p { font-size: 16px; opacity: 0.9; }
+        .content { padding: 40px 30px; color: #333; }
+        .greeting { font-size: 18px; color: #009639; margin-bottom: 20px; font-weight: 600; }
+        .message { margin-bottom: 25px; font-size: 15px; color: #555; }
+        .benefits { background: #f9f9f9; border-left: 4px solid #009639; padding: 20px; margin: 30px 0; }
+        .benefits h3 { color: #009639; margin-bottom: 15px; font-size: 18px; }
+        .benefits ul { list-style: none; padding: 0; }
+        .benefits li { padding: 8px 0; padding-left: 25px; position: relative; font-size: 14px; }
+        .benefits li:before { content: "✓"; position: absolute; left: 0; color: #009639; font-weight: bold; font-size: 18px; }
+        .cta-button { display: inline-block; background: linear-gradient(135deg, #009639 0%, #00b347 100%); color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: 600; margin: 20px 0; text-align: center; font-size: 16px; }
+        .next-steps { background: #fff8dc; border: 2px solid #FFCD00; padding: 20px; margin: 30px 0; border-radius: 5px; }
+        .next-steps h3 { color: #d97706; margin-bottom: 15px; }
+        .next-steps ol { padding-left: 20px; color: #555; }
+        .next-steps li { margin: 10px 0; font-size: 14px; }
+        .contact-info { background: #f0f9ff; padding: 20px; margin: 30px 0; border-radius: 5px; border: 1px solid #bfdbfe; }
+        .contact-info h3 { color: #1e40af; margin-bottom: 15px; font-size: 16px; }
+        .contact-item { margin: 10px 0; font-size: 14px; color: #555; }
+        .contact-item strong { color: #1e40af; display: inline-block; width: 100px; }
+        .footer { background: #1f2937; color: white; padding: 30px; text-align: center; font-size: 13px; }
+        .footer a { color: #FFCD00; text-decoration: none; }
+        @media only screen and (max-width: 600px) {
+            .content { padding: 20px 15px; }
+            .header h1 { font-size: 24px; }
+            .cta-button { display: block; padding: 12px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>🎉 Welcome to AfroConnect!</h1>
+            <p>Your registration has been successfully received</p>
+        </div>
+
+        <div class="content">
+            <p class="greeting">Hello {{ownerName}},</p>
+            
+            <p class="message">
+                Thank you for your interest in AfroConnect! We're thrilled that you want to share <strong>{{shopName}}</strong> 
+                in {{city}} with us.
+            </p>
+
+            <p class="message">
+                Your business has been successfully added to our database. Our team will contact you within the 
+                next <strong>24-48 hours</strong> to discuss the next steps.
+            </p>
+
+            <div class="benefits">
+                <h3>🌟 What you get with AfroConnect:</h3>
+                <ul>
+                    <li><strong>Free Basic Registration</strong> - Your business becomes visible immediately</li>
+                    <li><strong>Enhanced Online Presence</strong> - Over 50,000 potential customers in Germany</li>
+                    <li><strong>Google Maps Integration</strong> - Automatic location detection</li>
+                    <li><strong>Multilingual Platform</strong> - German, English, French, Spanish, Italian, Portuguese</li>
+                    <li><strong>Modern Gallery</strong> - Showcase your products professionally</li>
+                    <li><strong>Mobile-optimized</strong> - Perfect for smartphone users</li>
+                    <li><strong>SEO-optimized</strong> - Better visibility on Google</li>
+                </ul>
+            </div>
+
+            <div class="next-steps">
+                <h3>📋 Next Steps:</h3>
+                <ol>
+                    <li><strong>We review your information</strong> and create your profile</li>
+                    <li><strong>You receive an email</strong> with your login and instructions</li>
+                    <li><strong>You upload photos</strong> and complete your profile</li>
+                    <li><strong>Your business goes live</strong> on AfroConnect.shop!</li>
+                </ol>
+            </div>
+
+            <center>
+                <a href="https://afroconnect.shop" class="cta-button">
+                    🌍 Discover AfroConnect
+                </a>
+            </center>
+
+            <div class="contact-info">
+                <h3>📞 Have Questions?</h3>
+                <div class="contact-item">
+                    <strong>WhatsApp:</strong> <a href="https://wa.me/4917841223151" style="color:#009639">+49 178 41223151</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Email:</strong> <a href="mailto:info@afroconnect.shop" style="color:#009639">info@afroconnect.shop</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Website:</strong> <a href="https://afroconnect.shop" style="color:#009639">afroconnect.shop</a>
+                </div>
+            </div>
+
+            <p class="message" style="margin-top:30px; font-size:14px; color:#888;">
+                We look forward to showcasing your business and helping you reach more customers!
+            </p>
+        </div>
+
+        <div class="footer">
+            <p style="margin-bottom:15px;">
+                <strong>AfroConnect</strong> - Connecting the African community in Europe 🌍
+            </p>
+            
+            <p style="font-size:12px; margin:10px 0;">
+                <a href="https://afroconnect.shop/about">About us</a> •
+                <a href="https://afroconnect.shop/pricing">Pricing</a> •
+                <a href="https://afroconnect.shop/kontakt">Contact</a>
+            </p>
+
+            <p style="font-size:11px; color:#9ca3af; margin-top:20px;">
+                You are receiving this email because you registered at afroconnect.shop/join.<br>
+                <a href="https://afroconnect.shop/privacy" style="color:#9ca3af;">Privacy</a> • 
+                <a href="https://afroconnect.shop/impressum" style="color:#9ca3af;">Imprint</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

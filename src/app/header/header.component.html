@@ -21,4 +21,18 @@
       <ng-content></ng-content>
     </div>
   </div>
+  
+  <!-- Footer avec boutons Connexion/Inscription -->
+  <div class="header-footer" *ngIf="showAuthButtons && !isLoggedIn">
+    <div class="auth-buttons">
+      <button class="auth-btn login-btn" routerLink="/login">
+        <span class="btn-icon">🔐</span>
+        <span class="btn-text">Anmelden</span>
+      </button>
+      <button class="auth-btn register-btn" routerLink="/register">
+        <span class="btn-icon">✨</span>
+        <span class="btn-text">Registrieren</span>
+      </button>
+    </div>
+  </div>
 </header>
