@@ -211,14 +211,36 @@
     </div>
   </div>
 
-  <div class="no-results" *ngIf="filteredAfroshops.length === 0 && (searchTerm || selectedType)">
+  <!-- Message "Aucun résultat" - Affiché quand aucun commerce n'est trouvé -->
+  <div class="no-results" *ngIf="filteredAfroshops.length === 0 && (searchTerm || selectedType || hasGeoFilter())">
     <div class="no-results-content">
-      <div class="no-results-icon">🔍</div>
-      <h3>Kein Geschäft gefunden</h3>
-      <p>Kein Afroshop entspricht deinen Suchkriterien</p>
-      <button (click)="clearSearch()" class="btn-clear-search">
-        Alle Geschäfte anzeigen
-      </button>
+      <div class="no-results-icon">📍</div>
+      
+      <!-- Titre -->
+      <h3>{{ texts.noResults }}</h3>
+      
+      <!-- Message selon le contexte -->
+      <p *ngIf="userLocation && !selectedCity">
+        {{ texts.noResultsGPS }}
+      </p>
+      <p *ngIf="selectedCity && !userLocation">
+        {{ texts.noResultsCity.replace('{{city}}', getSearchedCityName()) }}
+      </p>
+      <p *ngIf="!userLocation && !selectedCity">
+        {{ texts.noResultsMessage }}
+      </p>
+      
+      <!-- Boutons d'action -->
+      <div class="no-results-actions">
+        <button (click)="clearSearch()" class="btn-back-gallery">
+          🏠 {{ texts.backToGallery }}
+        </button>
+      </div>
+      
+      <!-- Message encourageant -->
+      <p class="no-results-hint">
+        💡 {{ texts.tryAnother }}
+      </p>
     </div>
   </div>
 </section>

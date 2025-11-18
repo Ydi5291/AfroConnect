@@ -1622,31 +1622,93 @@
   align-items: center;
   min-height: 400px;
   padding: var(--spacing-xl);
+  animation: fadeIn 0.5s ease-in;
 }
 
 .no-results-content {
   text-align: center;
-  max-width: 400px;
+  max-width: 500px;
+  background: linear-gradient(135deg, rgba(26, 137, 23, 0.05), rgba(255, 193, 7, 0.05));
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  border: 2px dashed var(--primary-color);
 }
 
 .no-results-icon {
-  font-size: 4rem;
+  font-size: 5rem;
   margin-bottom: var(--spacing-lg);
-  opacity: 0.6;
+  animation: bounce 2s infinite;
 }
 
 .no-results h3 {
   color: var(--text-dark);
-  font-size: 1.5rem;
-  margin-bottom: var(--spacing-sm);
+  font-size: 1.8rem;
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
 }
 
 .no-results p {
   color: var(--text-light);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
   line-height: 1.6;
+  font-size: 1.1rem;
 }
 
+.no-results-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-lg) 0;
+}
+
+.btn-back-gallery {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-back-gallery:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.no-results-hint {
+  color: var(--primary-color);
+  font-size: 0.95rem;
+  font-style: italic;
+  margin-top: var(--spacing-md);
+  opacity: 0.8;
+}
+
+/* Animation pour l'icône */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Anciens styles - gardés pour compatibilité */
 .btn-clear-search {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: white;
@@ -1862,6 +1924,33 @@
   
   .image-overlay p {
     font-size: 0.85rem;
+  }
+  
+  /* Message no-results responsive */
+  .no-results {
+    min-height: 300px;
+    padding: var(--spacing-md);
+  }
+  
+  .no-results-content {
+    padding: var(--spacing-lg);
+  }
+  
+  .no-results-icon {
+    font-size: 3.5rem;
+  }
+  
+  .no-results h3 {
+    font-size: 1.4rem;
+  }
+  
+  .no-results p {
+    font-size: 0.95rem;
+  }
+  
+  .btn-back-gallery {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 1rem;
   }
 }
 

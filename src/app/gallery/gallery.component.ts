@@ -50,7 +50,13 @@ export class GalleryComponent implements OnInit, OnDestroy {
     epicerie: 'Lebensmittelgeschäft',
     coiffeur: 'Friseur',
     vetement: 'Bekleidung',
-    services: 'Dienstleistungen'
+    services: 'Dienstleistungen',
+    noResults: 'Kein Geschäft gefunden',
+    noResultsMessage: 'Es gibt derzeit keine afrikanischen Geschäfte in dieser Region.',
+    noResultsCity: 'Keine Geschäfte in {{city}} gefunden.',
+    noResultsGPS: 'Keine Geschäfte in einem Umkreis von 50 km gefunden.',
+    backToGallery: 'Zurück zur vollständigen Galerie',
+    tryAnother: 'Versuche eine andere Stadt'
   };
   
   getGoogleMapsUrl(address: string): string {
@@ -278,9 +284,23 @@ export class GalleryComponent implements OnInit, OnDestroy {
     this.searchTerm = '';
     this.selectedType = '';
     this.selectedCity = '';
+    this.customCityName = '';
     this.userLocation = null;
     this.filteredAfroshops = this.allAfroshops;
     this.applyFilters();
+  }
+
+  // Récupérer le nom de la ville actuellement recherchée
+  getSearchedCityName(): string {
+    if (this.selectedCity) {
+      return this.formatCityName(this.selectedCity);
+    }
+    return '';
+  }
+
+  // Vérifier si une recherche géographique est active (GPS ou ville)
+  hasGeoFilter(): boolean {
+    return this.userLocation !== null || this.selectedCity !== '';
   }
 
   viewAfroshopDetail(shopId: number | string): void {
@@ -992,7 +1012,13 @@ export class GalleryComponent implements OnInit, OnDestroy {
       epicerie: this.languageService.translate('type.epicerie'),
       coiffeur: this.languageService.translate('type.coiffeur'),
       vetement: this.languageService.translate('type.vetement'),
-      services: this.languageService.translate('type.services')
+      services: this.languageService.translate('type.services'),
+      noResults: this.languageService.translate('gallery.noResults'),
+      noResultsMessage: this.languageService.translate('gallery.noResultsMessage'),
+      noResultsCity: this.languageService.translate('gallery.noResultsCity'),
+      noResultsGPS: this.languageService.translate('gallery.noResultsGPS'),
+      backToGallery: this.languageService.translate('gallery.backToGallery'),
+      tryAnother: this.languageService.translate('gallery.tryAnother')
     };
   }
 

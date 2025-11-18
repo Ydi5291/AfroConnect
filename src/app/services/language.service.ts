@@ -53,6 +53,12 @@ export class LanguageService {
       'gallery.showOnMap': 'Karte anzeigen',
       'gallery.route': 'Route',
       'gallery.edit': 'Bearbeiten',
+      'gallery.noResults': 'Kein Geschäft gefunden',
+      'gallery.noResultsMessage': 'Es gibt derzeit keine afrikanischen Geschäfte in dieser Region.',
+      'gallery.noResultsCity': 'Keine Geschäfte in {{city}} gefunden.',
+      'gallery.noResultsGPS': 'Keine Geschäfte in einem Umkreis von 50 km gefunden.',
+      'gallery.backToGallery': 'Zurück zur vollständigen Galerie',
+      'gallery.tryAnother': 'Versuche eine andere Stadt',
       
       // Home/Gallery
       'home.title': 'Entdecke afrikanische Geschäfte in Europa',
@@ -419,6 +425,12 @@ export class LanguageService {
       'gallery.showOnMap': 'Show on map',
       'gallery.route': 'Route',
       'gallery.edit': 'Edit',
+      'gallery.noResults': 'No shop found',
+      'gallery.noResultsMessage': 'There are currently no African businesses in this region.',
+      'gallery.noResultsCity': 'No shops found in {{city}}.',
+      'gallery.noResultsGPS': 'No shops found within 50 km radius.',
+      'gallery.backToGallery': 'Back to full gallery',
+      'gallery.tryAnother': 'Try another city',
       
       // Home/Gallery
       'home.title': 'Discover African businesses in Europe',
@@ -785,6 +797,12 @@ export class LanguageService {
       'gallery.showOnMap': 'Afficher sur la carte',
       'gallery.route': 'Itinéraire',
       'gallery.edit': 'Modifier',
+      'gallery.noResults': 'Aucun commerce trouvé',
+      'gallery.noResultsMessage': 'Il n\'y a actuellement aucun commerce africain dans cette région.',
+      'gallery.noResultsCity': 'Aucun commerce trouvé à {{city}}.',
+      'gallery.noResultsGPS': 'Aucun commerce trouvé dans un rayon de 50 km.',
+      'gallery.backToGallery': 'Retour à la galerie complète',
+      'gallery.tryAnother': 'Essayer une autre ville',
       
       // Home/Gallery
       'home.title': 'Découvrez les commerces africains en Europe',
@@ -1151,6 +1169,12 @@ export class LanguageService {
       'gallery.showOnMap': 'Mostra sulla mappa',
       'gallery.route': 'Percorso',
       'gallery.edit': 'Modifica',
+      'gallery.noResults': 'Nessun negozio trovato',
+      'gallery.noResultsMessage': 'Al momento non ci sono attività africane in questa regione.',
+      'gallery.noResultsCity': 'Nessun negozio trovato a {{city}}.',
+      'gallery.noResultsGPS': 'Nessun negozio trovato nel raggio di 50 km.',
+      'gallery.backToGallery': 'Torna alla galleria completa',
+      'gallery.tryAnother': 'Prova un\'altra città',
       
       // Home/Gallery
       'home.title': 'Scopri i negozi africani in Europa',
@@ -1517,6 +1541,12 @@ export class LanguageService {
       'gallery.showOnMap': 'Mostrar en el mapa',
       'gallery.route': 'Ruta',
       'gallery.edit': 'Editar',
+      'gallery.noResults': 'No se encontraron comercios',
+      'gallery.noResultsMessage': 'Actualmente no hay negocios africanos en esta región.',
+      'gallery.noResultsCity': 'No se encontraron comercios en {{city}}.',
+      'gallery.noResultsGPS': 'No se encontraron comercios en un radio de 50 km.',
+      'gallery.backToGallery': 'Volver a la galería completa',
+      'gallery.tryAnother': 'Probar otra ciudad',
       
       // Home/Gallery
       'home.title': 'Descubre negocios africanos en Europa',
