@@ -48,7 +48,13 @@ Thumbs.db
 .env.local
 .env.prod
 .env.production
-*.env
+
+# 🔐 PROTECTION - Fichiers d'environnement Angular avec clés API
+src/environments/environment.ts
+src/environments/environment.prod.ts
+# Garder seulement les templates
+!src/environments/environment.template.ts
+!src/environments/environment.prod.template.ts
 
 # 🔒 Fichiers de configuration sensibles
 /src/environments/environment.local.ts

@@ -6,16 +6,47 @@
 <!-- Bulle du bot, mobile et desktop -->
 <div *ngIf="showChat" class="chatbot-bubble" [ngClass]="{ 'mobile': isMobile }">
   <div class="chatbot-header">
-    <span>🤖 Diamal</span>
-    <button class="close-btn" (click)="toggleChatHandler()">×</button>
+    <span>🤖 Diamal <span class="ai-badge" *ngIf="isAIMode">⚡ IA</span></span>
+    <div class="header-buttons">
+      <button class="ai-toggle-btn" (click)="toggleAIMode()" [title]="isAIMode ? 'Désactiver IA' : 'Activer IA'">
+        {{ isAIMode ? '🤖' : '📋' }}
+      </button>
+      <button class="reset-btn" (click)="resetConversation()" title="Réinitialiser">🔄</button>
+      <button class="close-btn" (click)="toggleChatHandler()">×</button>
+    </div>
   </div>
+  
   <div class="chatbot-messages">
-    <div *ngFor="let msg of messages" [class.user]="msg.from === 'user'" [class.bot]="msg.from === 'bot'">
-      <span *ngIf="!msg.isHtml">{{ msg.text }}</span>
-      <span *ngIf="msg.isHtml" [innerHTML]="msg.text"></span>
+    <div *ngFor="let msg of messages" [class.user]="msg.from === 'user'" [class.bot]="msg.from === 'bot'" [class.loading]="msg.isLoading">
+      <span *ngIf="!msg.isHtml && !msg.isLoading">{{ msg.text }}</span>
+      <span *ngIf="msg.isHtml && !msg.isLoading" [innerHTML]="msg.text"></span>
+      <span *ngIf="msg.isLoading" class="typing-indicator">
+        <span></span><span></span><span></span>
+      </span>
     </div>
     <div #messagesEnd></div>
   </div>
+  
+  <!-- Champ de saisie pour mode IA -->
+  <div class="chatbot-input" *ngIf="isAIMode">
+    <input 
+      type="text" 
+      [(ngModel)]="userInput" 
+      (keyup.enter)="sendUserMessage()"
+      placeholder="Posez votre question..."
+      [disabled]="isTyping"
+      class="message-input"
+    />
+    <button 
+      (click)="sendUserMessage()" 
+      [disabled]="!userInput.trim() || isTyping"
+      class="send-btn"
+    >
+      📤
+    </button>
+  </div>
+  
+  <!-- Boutons prédéfinis (toujours visibles) -->
   <div class="chatbot-topics">
     <button *ngFor="let topic of topics" (click)="selectTopic(topic)">{{ topic }}</button>
   </div>

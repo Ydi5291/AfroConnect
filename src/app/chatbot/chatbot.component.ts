@@ -1,21 +1,25 @@
-// ...existing code...
+// AfroConnect Chatbot avec intégration OpenAI
+
 import { Component, HostListener, OnInit, OnDestroy, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { LanguageService } from '../services/language.service';
+import { OpenAIService } from '../services/openai.service';
 import { Subscription } from 'rxjs';
 
 export interface ChatbotMessage {
   from: string;
   text: string;
   isHtml?: boolean;
+  isLoading?: boolean;
 }
 
 @Component({
   selector: 'app-chatbot',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.css']
 })
@@ -23,7 +27,7 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
   private langSub?: Subscription;
   
   texts = {
-    greeting: 'Hallo! Ich bin Diamal, dein Assistent. Ich erkläre dir, warum und wie du Popups aktivierst und warum Cookies wichtig sind.',
+    greeting: 'Hallo! Ich bin Diamal, dein intelligenter Assistent. Stelle mir jede Frage über AfroConnect!',
     prompt: 'Stelle mir eine Frage oder wähle ein Thema:',
     topic1: 'Warum Popups aktivieren?',
     topic2: 'Wie Popups aktivieren?',
@@ -36,21 +40,24 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
     linkText: 'Hier findest du eine Anleitung für Chrome und andere Browser (Google Support)'
   };
   
-  // ...existing code...
-  ngOnDestroy(): void {
-    console.log('[Chatbot] ngOnDestroy appelé, composant démonté. isMobile:', this.isMobile, 'showChat:', this.showChat);
-    this.langSub?.unsubscribe();
-  }
   @ViewChild('messagesEnd') messagesEnd!: ElementRef;
   isMobile = false;
   @Input() showChat = false;
   @Output() toggleChat = new EventEmitter<void>();
   messages: ChatbotMessage[] = [];
   topics: string[] = [];
+  userInput: string = '';
+  isAIMode: boolean = true; // Mode IA activé par défaut
+  isTyping: boolean = false;
 
-  constructor(private router: Router, private languageService: LanguageService) {
+  constructor(
+    private router: Router, 
+    private languageService: LanguageService,
+    private openaiService: OpenAIService
+  ) {
     this.isMobile = window.innerWidth < 600;
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['showChat']) {
       console.log('[Chatbot] ngOnChanges showChat:', changes['showChat'].currentValue);
@@ -66,6 +73,11 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
       this.updateTranslations();
     });
     this.updateTranslations();
+  }
+
+  ngOnDestroy(): void {
+    console.log('[Chatbot] ngOnDestroy appelé, composant démonté. isMobile:', this.isMobile, 'showChat:', this.showChat);
+    this.langSub?.unsubscribe();
   }
 
   updateTranslations() {
@@ -84,8 +96,12 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
     };
     
     // Reset messages with new translations
+    const greetingText = this.isAIMode ? 
+      this.texts.greeting + ' 🤖' : 
+      this.texts.greeting;
+    
     this.messages = [
-      { from: 'bot', text: this.texts.greeting },
+      { from: 'bot', text: greetingText },
       { from: 'bot', text: this.texts.prompt }
     ];
     
@@ -98,14 +114,100 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
     ];
   }
 
-
   @HostListener('window:resize')
   onResize() {
-  this.isMobile = window.innerWidth < 600;
-  // Ne pas forcer showChat sur resize, laisse le contrôle à l'utilisateur
+    this.isMobile = window.innerWidth < 600;
+    // Ne pas forcer showChat sur resize, laisse le contrôle à l'utilisateur
   }
 
   selectTopic(topic: string) {
+    if (this.isAIMode) {
+      // Mode IA : envoyer à OpenAI
+      this.sendMessageToAI(topic);
+    } else {
+      // Mode classique : réponses prédéfinies
+      this.handlePredefinedResponse(topic);
+    }
+  }
+
+  /**
+   * Envoyer un message personnalisé à l'IA
+   */
+  sendUserMessage() {
+    if (!this.userInput.trim()) return;
+
+    const message = this.userInput.trim();
+    this.userInput = '';
+
+    if (this.isAIMode) {
+      this.sendMessageToAI(message);
+    } else {
+      this.messages.push({ from: 'user', text: message });
+      this.messages.push({ 
+        from: 'bot', 
+        text: 'En mode manuel, seules les réponses prédéfinies sont disponibles. Activez le mode IA pour des réponses personnalisées.' 
+      });
+    }
+    setTimeout(() => this.scrollToBottom(), 100);
+  }
+
+  /**
+   * Envoyer un message à OpenAI
+   */
+  private sendMessageToAI(message: string) {
+    // Ajouter le message de l'utilisateur
+    this.messages.push({ from: 'user', text: message });
+    
+    // Afficher l'indicateur de chargement
+    this.isTyping = true;
+    this.messages.push({ from: 'bot', text: '...', isLoading: true });
+    
+    console.log('🤖 Sending to OpenAI:', message);
+
+    // Appeler OpenAI
+    this.openaiService.sendMessage(message).subscribe({
+      next: (response) => {
+        // Retirer l'indicateur de chargement
+        this.messages = this.messages.filter(m => !m.isLoading);
+        this.isTyping = false;
+
+        // Ajouter la réponse de l'IA
+        this.messages.push({ from: 'bot', text: response });
+        
+        setTimeout(() => this.scrollToBottom(), 100);
+      },
+      error: (error) => {
+        console.error('❌ OpenAI Error:', error);
+        
+        // Retirer l'indicateur de chargement
+        this.messages = this.messages.filter(m => !m.isLoading);
+        this.isTyping = false;
+
+        // Message d'erreur convivial
+        let errorMessage = 'Désolé, une erreur est survenue. ';
+        
+        if (error.message.includes('invalide')) {
+          errorMessage += 'La clé API est invalide. Veuillez contacter l\'administrateur.';
+        } else if (error.message.includes('Limite')) {
+          errorMessage += 'Trop de requêtes. Veuillez patienter quelques secondes.';
+        } else {
+          errorMessage += 'Veuillez réessayer ou utiliser les options prédéfinies ci-dessous.';
+        }
+
+        this.messages.push({ 
+          from: 'bot', 
+          text: errorMessage
+        });
+        
+        setTimeout(() => this.scrollToBottom(), 100);
+      }
+    });
+  }
+
+  /**
+   * Gérer les réponses prédéfinies (mode classique)
+   */
+  private handlePredefinedResponse(topic: string) {
     this.messages.push({ from: 'user', text: topic });
     let answer = '';
     
@@ -124,6 +226,34 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
       this.messages.push({ from: 'bot', text: answer, isHtml: topic === this.texts.topic2 });
     }
     setTimeout(() => this.scrollToBottom(), 100);
+  }
+
+  /**
+   * Basculer entre mode IA et mode manuel
+   */
+  toggleAIMode() {
+    this.isAIMode = !this.isAIMode;
+    const modeText = this.isAIMode ? 
+      '🤖 Mode IA activé ! Je peux maintenant répondre à toutes vos questions de manière personnalisée.' : 
+      '📋 Mode manuel activé. Utilisez les boutons ci-dessous pour les réponses prédéfinies.';
+    
+    this.messages.push({ from: 'bot', text: modeText });
+    
+    if (!this.isAIMode) {
+      // Reset OpenAI conversation en mode manuel
+      this.openaiService.resetConversation();
+    }
+    
+    setTimeout(() => this.scrollToBottom(), 100);
+  }
+
+  /**
+   * Réinitialiser la conversation
+   */
+  resetConversation() {
+    this.openaiService.resetConversation();
+    this.updateTranslations(); // Réinitialise les messages
+    this.userInput = '';
   }
 
   ngAfterViewChecked() {
