@@ -234,7 +234,7 @@ npm run deploy
 
 Pour toute question sur l'authentification :
 - Email : support@afroconnect.de
-- WhatsApp : +49 178 41223151
+- WhatsApp : +49 178 4123151
 
 ---
 

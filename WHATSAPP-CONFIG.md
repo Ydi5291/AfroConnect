@@ -2,7 +2,7 @@
 
 ## 📱 Numéro WhatsApp Business AfroConnect
 
-**Numéro configuré** : `+49 178 41223151`
+**Numéro configuré** : `+49 178 4123151`
 
 ---
 
@@ -17,7 +17,7 @@ const phoneNumber = '4915000000000'; // À MODIFIER
 
 ### Après :
 ```typescript
-const phoneNumber = '4917841223151'; // +49 178 41223151 ✅
+const phoneNumber = '49178412315'; // +49 178 4123151 ✅
 ```
 
 ---
@@ -29,7 +29,7 @@ const phoneNumber = '4917841223151'; // +49 178 41223151 ✅
 Quand un commerçant clique sur le bouton **"📱 Per WhatsApp anmelden"** (ou équivalent selon la langue) :
 
 1. **WhatsApp s'ouvre automatiquement** avec un message pré-rempli
-2. **Le destinataire** : +49 178 41223151 (ton numéro WhatsApp Business)
+2. **Le destinataire** : +49 178 4123151 (ton numéro WhatsApp Business)
 3. **Le message** : Adapté à la langue sélectionnée
 
 ---
@@ -81,7 +81,7 @@ http://localhost:4200/join
 
 ### Étape 3 : Vérifier
 1. **WhatsApp s'ouvre** (application ou web.whatsapp.com)
-2. **Numéro affiché** : +49 178 41223151 ✅
+2. **Numéro affiché** : +49 178 4123151 ✅
 3. **Message pré-rempli** dans la langue sélectionnée ✅
 
 ---
@@ -109,7 +109,7 @@ http://localhost:4200/join
 ┌────────────────────────────────────┐
 │ WhatsApp s'ouvre                   │
 │                                    │
-│ À : +49 178 41223151               │
+│ À : +49 178 4123151                │
 │                                    │
 │ Message :                          │
 │ Hallo AfroConnect! Ich möchte      │
@@ -125,20 +125,20 @@ http://localhost:4200/join
 ## 🔗 Format du lien WhatsApp
 
 ```
-https://wa.me/4917841223151?text=Hallo%20AfroConnect!%20Ich%20m%C3%B6chte%20mein%20Gesch%C3%A4ft%20kostenlos%20registrieren.
+https://wa.me/49178412315?text=Hallo%20AfroConnect!%20Ich%20m%C3%B6chte%20mein%20Gesch%C3%A4ft%20kostenlos%20registrieren.
 ```
 
 Décomposition :
 - **Base** : `https://wa.me/`
-- **Numéro** : `4917841223151` (format international sans +)
+- **Numéro** : `49178412315` (format international sans +)
 - **Paramètre** : `?text=` + message encodé URL
 
 ---
 
 ## ✅ Checklist de vérification
 
-- [X] Numéro WhatsApp Business configuré : `+49 178 41223151`
-- [X] Format international correct : `4917841223151` (sans +)
+- [X] Numéro WhatsApp Business configuré : `+49 178 4123151`
+- [X] Format international correct : `49178412315` (sans +)
 - [X] Messages traduits en 6 langues
 - [X] Bouton visible sur la page `/join`
 - [X] Style vert WhatsApp appliqué
@@ -249,4 +249,4 @@ Si tu as des questions sur la configuration WhatsApp Business, dis-le moi !
 
 **Créé le 18 novembre 2025 - AfroConnect** 🌍💚❤️💛
 
-**Numéro WhatsApp Business : +49 178 41223151** ✅
+**Numéro WhatsApp Business : +49 178 4123151** ✅

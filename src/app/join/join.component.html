@@ -114,6 +114,22 @@
         />
       </div>
 
+      <!-- PLZ -->
+      <div class="form-group">
+        <label for="plz">{{ texts.plz }} *</label>
+        <input
+          type="text"
+          id="plz"
+          name="plz"
+          [(ngModel)]="shopLead.plz"
+          [placeholder]="texts.plzPlaceholder"
+          required
+          class="form-input"
+          pattern="[0-9]{5}"
+          maxlength="5"
+        />
+      </div>
+
       <!-- City -->
       <div class="form-group">
         <label for="city">{{ texts.city }} *</label>

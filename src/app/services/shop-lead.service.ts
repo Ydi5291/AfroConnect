@@ -8,6 +8,7 @@ export interface ShopLead {
   phone: string;
   email?: string;
   address: string;
+  plz: string;
   city: string;
   category: 'shop' | 'restaurant' | 'salon' | 'other';
   status: 'new' | 'contacted' | 'interested' | 'registered';

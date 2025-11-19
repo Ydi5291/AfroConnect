@@ -13,6 +13,7 @@ export interface ShopLead {
   phone: string;
   email?: string;
   address: string;
+  plz: string;
   city: string;
   category: 'shop' | 'restaurant' | 'salon' | 'other';
   status: 'new' | 'contacted' | 'interested' | 'registered';
@@ -40,6 +41,7 @@ export class JoinComponent implements OnInit, OnDestroy {
     phone: '',
     email: '',
     address: '',
+    plz: '',
     city: '',
     category: 'shop',
     status: 'new',
@@ -85,6 +87,8 @@ export class JoinComponent implements OnInit, OnDestroy {
       emailPlaceholder: this.translationService.translate('JOIN.EMAIL_PLACEHOLDER'),
       address: this.translationService.translate('JOIN.ADDRESS'),
       addressPlaceholder: this.translationService.translate('JOIN.ADDRESS_PLACEHOLDER'),
+      plz: this.translationService.translate('JOIN.PLZ'),
+      plzPlaceholder: this.translationService.translate('JOIN.PLZ_PLACEHOLDER'),
       city: this.translationService.translate('JOIN.CITY'),
       cityPlaceholder: this.translationService.translate('JOIN.CITY_PLACEHOLDER'),
       category: this.translationService.translate('JOIN.CATEGORY'),
@@ -108,7 +112,7 @@ export class JoinComponent implements OnInit, OnDestroy {
 
   async onSubmit(): Promise<void> {
     // Validation basique
-    if (!this.shopLead.name || !this.shopLead.phone || !this.shopLead.address || !this.shopLead.city) {
+    if (!this.shopLead.name || !this.shopLead.phone || !this.shopLead.address || !this.shopLead.plz || !this.shopLead.city) {
       this.errorMessage = this.translationService.translate('JOIN.ERROR_REQUIRED_FIELDS');
       this.submitError = true;
       setTimeout(() => this.submitError = false, 5000);
@@ -171,7 +175,7 @@ export class JoinComponent implements OnInit, OnDestroy {
     }
 
     // Numéro WhatsApp Business AfroConnect
-    const phoneNumber = '4917841223151'; // +49 178 41223151
+    const phoneNumber = '49178412315'; // +49 178 4123151
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     

@@ -270,7 +270,7 @@
 
 ### Contact AfroConnect
 - **Email** : support@afroconnect.de
-- **WhatsApp Business** : +49 178 41223151
+- **WhatsApp Business** : +49 178 4123151
 - **Admin UID** : DY7I15aMxSgGth2cjj6TkxHAtzj2
 
 ### Documentation

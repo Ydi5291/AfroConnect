@@ -167,8 +167,8 @@
               <span class="info-value">{{ lead.email }}</span>
             </div>
             <div class="info-row">
-              <span class="info-label">📍 Stadt:</span>
-              <span class="info-value">{{ lead.city }}</span>
+              <span class="info-label">📍 Adresse:</span>
+              <span class="info-value">{{ lead.address }}, {{ lead.plz }} {{ lead.city }}</span>
             </div>
             <div class="info-row" *ngIf="lead.notes">
               <span class="info-label">📝 Notizen:</span>
