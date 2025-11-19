@@ -12,6 +12,7 @@ const firebaseApiKey = process.env.FIREBASE_API_KEY || process.env.NG_APP_FIREBA
 const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.NG_APP_GOOGLE_MAPS_API_KEY;
 const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
 const stripePremiumPriceId = process.env.STRIPE_PREMIUM_PRICE_ID;
+const openaiApiKey = process.env.OPENAI_KEY || process.env.OPENAI_API_KEY || '';
 
 if (!firebaseApiKey || !googleMapsApiKey) {
   console.error('❌ Die Umgebungsvariablen FIREBASE_API_KEY oder GOOGLE_MAPS_API_KEY fehlen.');
@@ -36,7 +37,8 @@ const envContent = `export const environment = {
   googleMapsApiKey: "${googleMapsApiKey}",
   stripePublishableKey: "${stripePublishableKey}",
   stripePremiumPriceId: "${stripePremiumPriceId}",
-  cloudFunctionsUrl: "https://us-central1-afroconnect-a53a5.cloudfunctions.net"
+  cloudFunctionsUrl: "https://us-central1-afroconnect-a53a5.cloudfunctions.net",
+  openaiApiKey: "${openaiApiKey}"
 };
 `;
 
