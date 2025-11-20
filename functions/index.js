@@ -573,6 +573,42 @@ exports.generateSitemap = functions.https.onRequest(async (req, res) => {
     <priority>0.6</priority>
   </url>
 
+  <!-- Pages ville SEO -->
+`;
+
+    // Ajouter les pages ville
+    const cities = [
+      // Allemagne
+      'berlin', 'hamburg', 'munchen', 'koln', 'frankfurt', 'stuttgart', 
+      'dusseldorf', 'dortmund', 'essen', 'leipzig', 'bremen', 'dresden', 
+      'hannover', 'nurnberg', 'duisburg', 'bochum', 'wuppertal', 'bielefeld', 
+      'bonn', 'mannheim',
+      // France
+      'paris', 'lyon', 'marseille', 'toulouse', 'strasbourg', 'bordeaux', 
+      'lille', 'nice', 'nantes',
+      // Belgique
+      'bruxelles', 'antwerpen', 'gent', 'charleroi', 'liege',
+      // Pays-Bas
+      'amsterdam', 'rotterdam', 'den-haag', 'utrecht', 'eindhoven',
+      // Suisse
+      'zurich', 'genf', 'basel', 'bern', 'lausanne',
+      // Luxembourg
+      'luxembourg',
+      // Autriche
+      'wien', 'graz', 'linz', 'salzburg', 'innsbruck'
+    ];
+
+    cities.forEach(citySlug => {
+      xml += `  <url>
+    <loc>${baseUrl}/city/${citySlug}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>${today}</lastmod>
+  </url>
+`;
+    });
+
+    xml += `
   <!-- Pages individuelles des commerces -->
 `;
 

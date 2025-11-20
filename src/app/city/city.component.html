@@ -1,0 +1,154 @@
+<div class="city-page">
+  <!-- Hero Section -->
+  <div class="city-hero">
+    <div class="hero-content">
+      <h1>Afroshop {{ cityName }}</h1>
+      <p class="subtitle">
+        <span *ngIf="!loading">{{ shops.length }}</span>
+        <span *ngIf="loading">...</span>
+        Afrikanische Geschäfte in {{ cityName }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Lädt Afroshops in {{ cityName }}...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading" class="city-content">
+    
+    <!-- No Results -->
+    <div *ngIf="shops.length === 0" class="no-results">
+      <h2>😔 Noch keine Geschäfte in {{ cityName }}</h2>
+      <p>Kennen Sie ein afrikanisches Geschäft in {{ cityName }}?</p>
+      <a href="/add-afroshop" class="btn-primary">Geschäft hinzufügen</a>
+    </div>
+
+    <!-- Results -->
+    <div *ngIf="shops.length > 0">
+      
+      <!-- Intro Section with SEO Content -->
+      <div class="city-intro">
+        <h2>Afrikanische Geschäfte in {{ cityName }} finden</h2>
+        <p>
+          Entdecken Sie <strong>{{ shops.length }} authentische afrikanische Geschäfte</strong> in {{ cityName }}. 
+          Von traditionellen <strong>afrikanischen Restaurants</strong> mit köstlichen Spezialitäten aus ganz Afrika, 
+          über <strong>Afroshops</strong> mit exotischen Lebensmitteln und Gewürzen, bis hin zu professionellen 
+          <strong>afrikanischen Friseursalons</strong> für Braids, Locs und Twists – finden Sie alles an einem Ort.
+        </p>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="categories-section">
+        <h3>Kategorien in {{ cityName }}</h3>
+        <div class="category-grid">
+          <div 
+            *ngFor="let type of getShopTypes()" 
+            class="category-card">
+            <div class="category-icon">{{ getTypeIcon(type) }}</div>
+            <h4>{{ getTypeName(type) }}</h4>
+            <p class="category-count">{{ getShopsByType(type).length }} Geschäfte</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shops Grid -->
+      <div class="shops-section">
+        <h3>Alle Afroshops in {{ cityName }}</h3>
+        <div class="shops-grid">
+          <div 
+            *ngFor="let shop of shops" 
+            class="shop-card"
+            (click)="goToShop(shop)">
+            <div class="shop-image">
+              <img [src]="shop.image" [alt]="shop.name + ' - ' + shop.type + ' in ' + cityName" loading="lazy">
+              <div class="shop-type-badge">{{ getTypeIcon(shop.type) }} {{ getTypeName(shop.type) }}</div>
+            </div>
+            <div class="shop-info">
+              <h4>{{ shop.name }}</h4>
+              <p class="shop-address">📍 {{ shop.address }}</p>
+              <p class="shop-description" *ngIf="shop.description">{{ shop.description }}</p>
+              <div class="shop-footer">
+                <div class="shop-rating" *ngIf="shop.rating">
+                  ⭐ {{ shop.rating }}
+                </div>
+                <div class="shop-price" *ngIf="shop.priceLevel">
+                  {{ '€'.repeat(shop.priceLevel) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEO Content Section -->
+      <div class="seo-content">
+        <h2>Warum AfroConnect für {{ cityName }}?</h2>
+        <p>
+          <strong>AfroConnect</strong> ist die größte Plattform für afrikanische Geschäfte in Europa. 
+          In {{ cityName }} finden Sie die besten Adressen für:
+        </p>
+        
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-icon">🍲</div>
+            <h4>Afrikanische Restaurants</h4>
+            <p>Authentische Küche aus Nigeria, Ghana, Kamerun, Senegal, Äthiopien und vielen weiteren Ländern</p>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">🛒</div>
+            <h4>Afroshops & Lebensmittel</h4>
+            <p>Exotische Gewürze, Yams, Maniok, Kochbananen, Palm Oil, Egusi und vieles mehr</p>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">💇</div>
+            <h4>Afrikanische Friseursalons</h4>
+            <p>Professionelle Braids, Locs, Twists, Cornrows, Weaves und traditionelle Frisuren</p>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">👗</div>
+            <h4>Afrikanische Mode</h4>
+            <p>Traditionelle und moderne Kleidung, Ankara, Kente, Dashiki, Schmuck und Accessoires</p>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">🎵</div>
+            <h4>Afrikanische Dienstleistungen</h4>
+            <p>Events, Musik, DJ-Services, Catering, Kunst und Kulturveranstaltungen</p>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">🌍</div>
+            <h4>Community Hub</h4>
+            <p>Verbinden Sie sich mit der afrikanischen Community in {{ cityName }}</p>
+          </div>
+        </div>
+
+        <h3>Beliebte Suchanfragen in {{ cityName }}</h3>
+        <div class="keywords-grid">
+          <span class="keyword-tag">Afroshop {{ cityName }}</span>
+          <span class="keyword-tag">African Restaurant {{ cityName }}</span>
+          <span class="keyword-tag">Afrikanisches Essen {{ cityName }}</span>
+          <span class="keyword-tag">African Hair Salon {{ cityName }}</span>
+          <span class="keyword-tag">Afrikanischer Friseur {{ cityName }}</span>
+          <span class="keyword-tag">African Food Store {{ cityName }}</span>
+          <span class="keyword-tag">Afroshop in meiner Nähe</span>
+          <span class="keyword-tag">Afrikanische Lebensmittel {{ cityName }}</span>
+        </div>
+
+        <div class="cta-section">
+          <h3>Sie besitzen ein afrikanisches Geschäft in {{ cityName }}?</h3>
+          <p>Registrieren Sie Ihr Geschäft kostenlos auf AfroConnect und erreichen Sie tausende potenzielle Kunden!</p>
+          <a href="/add-afroshop" class="btn-cta">Jetzt kostenlos registrieren</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

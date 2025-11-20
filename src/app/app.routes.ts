@@ -19,10 +19,12 @@ import { DashboardComponent } from './admin/dashboard.component';
 import { SuperDashboardComponent } from './admin/super-dashboard.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { JoinComponent } from './join/join.component';
+import { CityComponent } from './city/city.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/gallery', pathMatch: 'full' },
   { path: 'shop/:id', component: ShopComponent },
+  { path: 'city/:citySlug', component: CityComponent, title: 'Afroshops' },
   { path: 'about', loadComponent: () => import('./about/about.component').then(m => m.AboutComponent) },
   { path: 'kontakt', loadComponent: () => import('./kontakt.component').then(m => m.KontaktComponent) },
   { path: 'hilfe', loadComponent: () => import('./hilfe.component').then(m => m.HilfeComponent) },
