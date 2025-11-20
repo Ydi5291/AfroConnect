@@ -451,3 +451,163 @@ exports.removeAdminClaim = functions.https.onCall(async (data, context) => {
     );
   }
 });
+
+/**
+ * Cloud Function: Génère un sitemap.xml dynamique
+ * Inclut toutes les pages statiques + les URLs individuelles des shops
+ */
+exports.generateSitemap = functions.https.onRequest(async (req, res) => {
+  // Configuration CORS
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Content-Type', 'application/xml');
+  
+  try {
+    const db = admin.firestore();
+    const shopsSnapshot = await db.collection('afroshops').get();
+    
+    const baseUrl = 'https://afroconnect.shop';
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Fonction pour générer un slug SEO-friendly
+    const generateSlug = (shop) => {
+      const name = shop.name
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      
+      const city = shop.city
+        ?.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      
+      return city ? `${name}-${city}` : name;
+    };
+    
+    // Fonction pour échapper les caractères XML
+    const escapeXml = (text) => {
+      if (!text) return '';
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+    };
+    
+    // Début du XML
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Page d'accueil -->
+  <url>
+    <loc>${baseUrl}/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <lastmod>${today}</lastmod>
+  </url>
+
+  <!-- Pages principales -->
+  <url>
+    <loc>${baseUrl}/gallery</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>${today}</lastmod>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/shops</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <lastmod>${today}</lastmod>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/landing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/add-afroshop</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Pages secondaires -->
+  <url>
+    <loc>${baseUrl}/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/kontakt</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/impressum</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/hilfe</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Pages individuelles des commerces -->
+`;
+
+    // Ajouter chaque shop
+    shopsSnapshot.forEach(doc => {
+      const shop = doc.data();
+      const slug = generateSlug(shop);
+      const shopUrl = `${baseUrl}/shops/${slug}`;
+      
+      xml += `  <url>
+    <loc>${shopUrl}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${today}</lastmod>`;
+      
+      // Ajouter l'image si disponible
+      if (shop.image) {
+        xml += `
+    <image:image>
+      <image:loc>${escapeXml(shop.image)}</image:loc>
+      <image:title>${escapeXml(shop.name)}</image:title>
+      <image:caption>${escapeXml(shop.description || '')}</image:caption>
+    </image:image>`;
+      }
+      
+      xml += `
+  </url>
+`;
+    });
+
+    xml += `</urlset>`;
+    
+    res.status(200).send(xml);
+  } catch (error) {
+    console.error('❌ Erreur génération sitemap:', error);
+    res.status(500).send('Erreur lors de la génération du sitemap');
+  }
+});

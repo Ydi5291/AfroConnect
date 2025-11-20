@@ -1,0 +1,37 @@
+# Robots.txt pour AfroConnect
+# https://afroconnect.shop
+
+User-agent: *
+Allow: /
+
+# Bloquer les fichiers sensibles
+Disallow: /admin
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /firebase-config
+
+# Autoriser les ressources importantes pour le SEO
+Allow: /assets/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.jpg
+Allow: /*.png
+Allow: /*.svg
+Allow: /*.webp
+
+# Sitemap (Dynamique avec tous les shops)
+Sitemap: https://us-central1-afroconnect-a53a5.cloudfunctions.net/generateSitemap
+Sitemap: https://afroconnect.shop/sitemap.xml
+
+# Crawl-delay pour éviter la surcharge
+Crawl-delay: 1
+
+# Bots spécifiques
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
