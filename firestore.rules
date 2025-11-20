@@ -30,16 +30,21 @@ service cloud.firestore {
       // Authenticated users can create their own shop
       allow create: if request.auth != null;
       
-      // Shop owners can update their own shop
+      // Shop owners can update their own shop (support both ownerId and createdBy)
       // Admins can update any shop
       allow update: if request.auth != null && (
         request.auth.uid == resource.data.ownerId ||
+        request.auth.uid == resource.data.createdBy ||
         request.auth.token.admin == true
       );
       
-      // Only admins can delete shops
-      allow delete: if request.auth != null && 
-                       request.auth.token.admin == true;
+      // Shop owners can delete their own shop
+      // Admins can delete any shop
+      allow delete: if request.auth != null && (
+        request.auth.uid == resource.data.ownerId ||
+        request.auth.uid == resource.data.createdBy ||
+        request.auth.token.admin == true
+      );
     }
     
     // ============================================

@@ -4,29 +4,36 @@
 User-agent: *
 Allow: /
 
-# Bloquer les fichiers sensibles
-Disallow: /admin
+# 🔒 Bloquer les dossiers sensibles
+Disallow: /admin/
 Disallow: /api/
-Disallow: /*.json$
-Disallow: /firebase-config
+Disallow: /internal/
+Disallow: /private/
 
-# Autoriser les ressources importantes pour le SEO
+# 🔒 Bloquer uniquement certains JSON sensibles (mais PAS les i18n)
+Disallow: /firebase-config.json
+Disallow: /secret
+Disallow: /*.config.json$
+
+# ✔ Autoriser les ressources nécessaires au rendu Angular
 Allow: /assets/
-Allow: /*.css
-Allow: /*.js
-Allow: /*.jpg
-Allow: /*.png
-Allow: /*.svg
-Allow: /*.webp
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.svg$
+Allow: /*.webp$
+Allow: /i18n/
 
-# Sitemap (Dynamique avec tous les shops)
+# 🔗 Sitemap (Dynamique avec tous les shops)
 Sitemap: https://us-central1-afroconnect-a53a5.cloudfunctions.net/generateSitemap
 Sitemap: https://afroconnect.shop/sitemap.xml
 
-# Crawl-delay pour éviter la surcharge
+# Crawling optimisé (sert surtout à Bing/Yandex)
 Crawl-delay: 1
 
-# Bots spécifiques
+# Bots spécifiques (Google, Bing, Yahoo)
 User-agent: Googlebot
 Allow: /
 

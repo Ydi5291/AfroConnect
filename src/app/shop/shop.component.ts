@@ -167,22 +167,48 @@ export class ShopComponent implements OnInit, OnDestroy {
 		});
 	}
 
-			async deleteProduct(product: Product): Promise<void> {
-				if (!this.afroshop) return;
-				// Retirer le produit du tableau local
-				const updatedProducts = (this.afroshop.products || []).filter(p => p.id !== product.id);
-				// Mettre à jour dans Firebase
-				try {
-					await this.firebaseService.updateAfroshop(String(this.afroshop.id), { products: updatedProducts });
-					// Mettre à jour localement pour l'UI
-					this.afroshop.products = updatedProducts;
-				} catch (error) {
-					console.error('Erreur lors de la suppression du produit :', error);
-					alert('Fehler beim Löschen des Produkts.');
-				}
+	async deleteProduct(product: Product): Promise<void> {
+		if (!this.afroshop) return;
+		
+		// Confirmation avant suppression
+		if (!confirm(`Produkt "${product.name}" wirklich löschen?`)) {
+			return;
+		}
+		
+		try {
+			console.log('🗑️ Suppression du produit:', product.name);
+			console.log('📦 Produits avant:', this.afroshop.products?.length);
+			
+			// Retirer le produit du tableau local
+			const updatedProducts = (this.afroshop.products || []).filter(p => p.id !== product.id);
+			
+			console.log('📦 Produits après filtre:', updatedProducts.length);
+			console.log('🔥 Mise à jour Firebase pour shop:', this.afroshop.id);
+			
+			// Mettre à jour dans Firebase
+			await this.firebaseService.updateAfroshop(String(this.afroshop.id), { 
+				products: updatedProducts 
+			});
+			
+			console.log('✅ Produit supprimé avec succès');
+			
+			// Mettre à jour localement pour l'UI
+			this.afroshop.products = updatedProducts;
+			
+			alert(`Produkt "${product.name}" erfolgreich gelöscht!`);
+		} catch (error) {
+			console.error('❌ Erreur lors de la suppression du produit:', error);
+			console.error('❌ Type d\'erreur:', typeof error);
+			console.error('❌ Détails:', error);
+			
+			// Message d'erreur plus détaillé
+			if (error instanceof Error) {
+				alert(`Fehler beim Löschen des Produkts: ${error.message}`);
+			} else {
+				alert('Fehler beim Löschen des Produkts. Bitte überprüfen Sie die Konsole für Details.');
 			}
-
-			goToPayment(): void {
+		}
+	}			goToPayment(): void {
 				this.toggleCart();
 				this.router.navigate(['/payment'], { queryParams: { shopId: this.shopId } });
 			}
