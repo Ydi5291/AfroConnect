@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,8 @@ import { MapComponent } from '../map/map.component';
 import { GeolocationService } from '../services/geolocation.service';
 import { Observable, Subscription } from 'rxjs';
 import { User } from '@angular/fire/auth';
+import { SEOService } from '../services/seo.service';
+import { JsonLdService } from '../services/json-ld.service';
 
 @Component({
   selector: 'app-gallery',
@@ -23,6 +25,8 @@ import { User } from '@angular/fire/auth';
 })
 export class GalleryComponent implements OnInit, OnDestroy {
   private langSub?: Subscription;
+  private seoService = inject(SEOService);
+  private jsonLdService = inject(JsonLdService);
   
   // Translated texts
   texts = {
@@ -185,6 +189,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
+    // SEO pour la page Gallery
+    this.seoService.setGalleryPage();
+
     // Subscribe to language changes
     this.langSub = this.languageService.currentLanguage$.subscribe(() => {
       this.updateTranslations();
@@ -220,6 +227,16 @@ export class GalleryComponent implements OnInit, OnDestroy {
       next: (afroshops) => {
         this.allAfroshops = this.fixInvalidCoordinates(afroshops);
         this.filteredAfroshops = this.allAfroshops;
+        
+        // JSON-LD pour la collection de shops
+        const schema = this.jsonLdService.getCombinedSchema(
+          this.jsonLdService.getCollectionPageSchema(afroshops),
+          this.jsonLdService.getBreadcrumbSchema([
+            { name: 'Home', url: 'https://afroconnect.shop' },
+            { name: 'Gallery', url: 'https://afroconnect.shop/gallery' }
+          ])
+        );
+        this.jsonLdService.insertSchema(schema);
       },
       error: (error) => {
         console.error('Erreur lors du chargement Firebase:', error);

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SEOService } from '../services/seo.service';
 
 @Component({
   selector: 'app-terms',
@@ -156,6 +157,13 @@ import { Component } from '@angular/core';
     }
   `]
 })
-export class TermsComponent {
+export class TermsComponent implements OnInit {
   currentDate = new Date().toLocaleDateString('de-DE');
+
+  constructor(private seoService: SEOService) {}
+
+  ngOnInit() {
+    // SEO pour la page terms (noindex)
+    this.seoService.setTermsPage();
+  }
 }

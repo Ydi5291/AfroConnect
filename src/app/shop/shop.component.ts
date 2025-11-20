@@ -1,5 +1,5 @@
 // ...existing code...
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,8 @@ import { AuthService } from '../services/auth.service';
 import { LanguageService } from '../services/language.service';
 import { Subscription } from 'rxjs';
 import { Storage, ref, deleteObject } from '@angular/fire/storage';
+import { SEOService } from '../services/seo.service';
+import { JsonLdService } from '../services/json-ld.service';
 
 @Component({
 	selector: 'app-shop',
@@ -20,6 +22,8 @@ import { Storage, ref, deleteObject } from '@angular/fire/storage';
 })
 export class ShopComponent implements OnInit, OnDestroy {
 	private langSub?: Subscription;
+	private seoService = inject(SEOService);
+	private jsonLdService = inject(JsonLdService);
 
 	texts = {
 		toGallery: 'Zur Gallery',
@@ -123,18 +127,31 @@ export class ShopComponent implements OnInit, OnDestroy {
 			});
 			this.updateTranslations();
 
-			this.route.paramMap.subscribe(params => {
-				const id = params.get('id');
-				if (!id) return;
-				this.shopId = id;
-				this.loadCartFromLocalStorage();
-				this.firebaseService.getAllAfroshops().subscribe(afroshops => {
-					this.afroshop = afroshops.find(shop => shop.id === id || shop.id === +id || shop.id.toString() === id);
-				});
+		this.route.paramMap.subscribe(params => {
+			const id = params.get('id');
+			if (!id) return;
+			this.shopId = id;
+			this.loadCartFromLocalStorage();
+			this.firebaseService.getAllAfroshops().subscribe(afroshops => {
+				this.afroshop = afroshops.find(shop => shop.id === id || shop.id === +id || shop.id.toString() === id);
+				
+				// SEO et JSON-LD après chargement du shop
+				if (this.afroshop) {
+					this.seoService.setShopPage(this.afroshop);
+					
+					const schema = this.jsonLdService.getCombinedSchema(
+						this.jsonLdService.getLocalBusinessSchema(this.afroshop),
+						this.jsonLdService.getBreadcrumbSchema([
+							{ name: 'Home', url: 'https://afroconnect.shop' },
+							{ name: 'Shops', url: 'https://afroconnect.shop/shops' },
+							{ name: this.afroshop.name, url: `https://afroconnect.shop/shops/${this.afroshop.id}` }
+						])
+					);
+					this.jsonLdService.insertSchema(schema);
+				}
 			});
-		}
-
-	addToCart(product: Product): void {
+		});
+	}	addToCart(product: Product): void {
 		const item = this.cartItems.find(i => i.product.id === product.id);
 		if (item) {
 			item.quantity++;

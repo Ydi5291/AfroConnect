@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LanguageService } from './services/language.service';
 import { Subscription } from 'rxjs';
+import { SEOService } from './services/seo.service';
+import { JsonLdService } from './services/json-ld.service';
 
 @Component({
   selector: 'app-kontakt',
@@ -30,9 +32,23 @@ export class KontaktComponent implements OnInit, OnDestroy {
     otherOptions: 'Weitere Kontaktmöglichkeiten'
   };
 
-  constructor(private languageService: LanguageService) {}
+  constructor(
+    private languageService: LanguageService,
+    private seoService: SEOService,
+    private jsonLdService: JsonLdService
+  ) {}
 
   ngOnInit() {
+    // SEO pour la page contact
+    this.seoService.setContactPage();
+    
+    // JSON-LD breadcrumb
+    const schema = this.jsonLdService.getBreadcrumbSchema([
+      { name: 'Home', url: 'https://afroconnect.shop' },
+      { name: 'Kontakt', url: 'https://afroconnect.shop/kontakt' }
+    ]);
+    this.jsonLdService.insertSchema(schema);
+
     this.langSub = this.languageService.currentLanguage$.subscribe(() => {
       this.updateTranslations();
     });

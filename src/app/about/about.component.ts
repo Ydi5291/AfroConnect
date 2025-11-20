@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LanguageService } from '../services/language.service';
 import { Subscription } from 'rxjs';
+import { SEOService } from '../services/seo.service';
+import { JsonLdService } from '../services/json-ld.service';
 
 @Component({
   selector: 'app-about',
@@ -24,9 +26,26 @@ export class AboutComponent implements OnInit, OnDestroy {
     vision: ''
   };
 
-  constructor(private languageService: LanguageService) {}
+  constructor(
+    private languageService: LanguageService,
+    private seoService: SEOService,
+    private jsonLdService: JsonLdService
+  ) {}
 
   ngOnInit() {
+    // SEO pour la page About
+    this.seoService.setAboutPage();
+    
+    // JSON-LD avec organization et breadcrumb
+    const schema = this.jsonLdService.getCombinedSchema(
+      this.jsonLdService.getOrganizationSchema(),
+      this.jsonLdService.getBreadcrumbSchema([
+        { name: 'Home', url: 'https://afroconnect.shop' },
+        { name: 'Über uns', url: 'https://afroconnect.shop/about' }
+      ])
+    );
+    this.jsonLdService.insertSchema(schema);
+
     this.langSub = this.languageService.currentLanguage$.subscribe(() => {
       this.updateTranslations();
     });

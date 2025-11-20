@@ -11,6 +11,8 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
 import { HeaderComponent } from './header/header.component';
 import { BurgerMenuComponent } from './burger-menu/burger-menu.component';
 import { LanguageService } from './services/language.service';
+import { SEOService } from './services/seo.service';
+import { JsonLdService } from './services/json-ld.service';
 
 @Component({
   selector: 'app-root',
@@ -64,7 +66,9 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private seoService: SEOService,
+    private jsonLdService: JsonLdService
   ) {
     this.user$ = this.authService.user$;
     this.isMobile = window.innerWidth <= 768;
@@ -88,6 +92,16 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // SEO pour la page d'accueil
+    this.seoService.setHomePage();
+    
+    // JSON-LD pour l'organisation et le site web
+    const combinedSchema = this.jsonLdService.getCombinedSchema(
+      this.jsonLdService.getOrganizationSchema(),
+      this.jsonLdService.getWebSiteSchema()
+    );
+    this.jsonLdService.insertSchema(combinedSchema);
+
     this.langSub = this.languageService.currentLanguage$.subscribe(() => {
       this.updateTranslations();
     });

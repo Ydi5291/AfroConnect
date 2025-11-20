@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { AfroshopData } from '../services/image.service';
 import { GeocodingService, GeocodeResult } from '../services/geocoding.service';
 import { LanguageService } from '../services/language.service';
 import { Subscription } from 'rxjs';
+import { SEOService } from '../services/seo.service';
 
 @Component({
   selector: 'app-add-afroshop',
@@ -19,6 +20,7 @@ import { Subscription } from 'rxjs';
 })
 export class AddAfroshopComponent implements OnInit, OnDestroy {
   private langSub?: Subscription;
+  private seoService = inject(SEOService);
   
   texts: any = {};
   
@@ -141,6 +143,9 @@ export class AddAfroshopComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    // SEO pour la page d'ajout de shop
+    this.seoService.setLandingPage();
+
     // Subscribe to language changes
     this.langSub = this.languageService.currentLanguage$.subscribe(() => {
       this.updateTranslations();
