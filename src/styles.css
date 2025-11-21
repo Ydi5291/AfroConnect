@@ -15,6 +15,17 @@
   box-sizing: border-box;
 }
 
+/* Scroll smooth global pour toute l'application */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Espace pour le header fixe */
+}
+
+/* Scroll margin pour les éléments ciblés (ancres) */
+:target {
+  scroll-margin-top: 100px;
+}
+
 /* Variables CSS globales */
 :root {
   /* Couleurs principales - Bleu ciel apaisant avec accents africains */

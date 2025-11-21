@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
@@ -69,9 +69,131 @@ Réponds toujours dans la langue de l'utilisateur. Si tu ne comprends pas, deman
   }
 
   /**
+   * Réponses locales intelligentes (fallback si OpenAI ne marche pas)
+   */
+  private getLocalResponse(message: string): string | null {
+    const lowerMsg = message.toLowerCase();
+    
+    // Questions sur les statistiques/visiteurs
+    if (lowerMsg.includes('visiteur') || lowerMsg.includes('visitor') || lowerMsg.includes('besucher') || 
+        lowerMsg.includes('trafic') || lowerMsg.includes('traffic') || lowerMsg.includes('statistique') ||
+        lowerMsg.includes('analytics') || lowerMsg.includes('par jour')) {
+      return `📊 Pour consulter les statistiques de visiteurs d'AfroConnect :
+
+1. **Google Analytics** - Connecte-toi à analytics.google.com avec ton compte Google
+2. **Google Search Console** - Vérifie les impressions et clics sur search.google.com/search-console
+
+🔍 Tu peux aussi voir :
+- Nombre de shops inscrits dans Firebase Console
+- Activité des utilisateurs dans l'admin AfroConnect
+
+📱 Besoin d'aide pour configurer ? Contacte-nous sur WhatsApp : +49 178 4123151`;
+    }
+    
+    // Questions sur l'inscription
+    if (lowerMsg.includes('inscrire') || lowerMsg.includes('inscription') || lowerMsg.includes('register') ||
+        lowerMsg.includes('join') || lowerMsg.includes('ajouter') || lowerMsg.includes('add shop')) {
+      return `✨ Pour ajouter ton commerce sur AfroConnect :
+
+1. 📝 **Inscription gratuite** : Va sur /join
+2. 📸 Ajoute photos et infos de ton commerce
+3. 🗺️ Géolocalisation automatique
+4. ✅ Valide et publie !
+
+💎 **Upgrade Premium** disponible pour :
+- Priorité dans les résultats
+- Badge "Vérifié"
+- Plus de visibilité
+
+🏪 Types de commerces : Restaurants, salons de coiffure, épiceries, boutiques, services...`;
+    }
+    
+    // Questions sur les cookies/RGPD
+    if (lowerMsg.includes('cookie') || lowerMsg.includes('rgpd') || lowerMsg.includes('gdpr') ||
+        lowerMsg.includes('données') || lowerMsg.includes('privacy')) {
+      return `🍪 **Cookies et confidentialité sur AfroConnect :**
+
+✅ **Cookies essentiels** (obligatoires) :
+- Authentification utilisateur
+- Préférences de langue
+- Sécurité du site
+
+📊 **Cookies analytiques** (optionnels) :
+- Google Analytics pour améliorer le site
+- Statistiques anonymisées
+
+🔒 Tu peux gérer tes préférences dans la bannière de cookies ou via /privacy
+
+💡 Les cookies aident à personnaliser ton expérience et sont sécurisés selon le RGPD.`;
+    }
+    
+    // Questions sur le contact
+    if (lowerMsg.includes('contact') || lowerMsg.includes('kontakt') || lowerMsg.includes('whatsapp') ||
+        lowerMsg.includes('aide') || lowerMsg.includes('help') || lowerMsg.includes('support')) {
+      return `📞 **Contacte l'équipe AfroConnect :**
+
+💬 **WhatsApp** : +49 178 4123151 (recommandé)
+📧 **Email** : Via le formulaire sur /kontakt
+🌍 **Réseaux sociaux** : Retrouve-nous sur nos pages
+
+⏰ **Disponibilité** : Lun-Ven 9h-18h (CET)
+
+🚀 Pour les questions urgentes, WhatsApp est le plus rapide !`;
+    }
+    
+    // Questions sur les commandes/paiements
+    if (lowerMsg.includes('commander') || lowerMsg.includes('order') || lowerMsg.includes('bestellen') ||
+        lowerMsg.includes('paiement') || lowerMsg.includes('payment') || lowerMsg.includes('payer')) {
+      return `💳 **Commandes sur AfroConnect :**
+
+🛒 **Comment commander ?**
+1. Parcours les shops dans /gallery
+2. Clique sur un commerce
+3. Ajoute des produits au panier
+4. Valide ta commande
+
+💰 **Paiements sécurisés via Stripe**
+- Cartes bancaires (Visa, Mastercard)
+- Paiement instantané
+
+📦 **Livraison** selon le commerce (à domicile ou retrait)
+
+🔐 Toutes les transactions sont sécurisées et conformes PCI-DSS.`;
+    }
+    
+    // Questions sur les langues
+    if (lowerMsg.includes('langue') || lowerMsg.includes('language') || lowerMsg.includes('sprache') ||
+        lowerMsg.includes('traduire') || lowerMsg.includes('translate')) {
+      return `🌍 **AfroConnect est multilingue !**
+
+Langues disponibles :
+- 🇩🇪 Allemand (Deutsch)
+- 🇬🇧 Anglais (English)
+- 🇫🇷 Français
+- 🇮🇹 Italien (Italiano)
+- 🇪🇸 Espagnol (Español)
+- 🇵🇹 Portugais (Português)
+
+🔄 Change la langue dans le sélecteur en haut à droite !
+
+Le contenu du site s'adapte automatiquement à ta langue préférée.`;
+    }
+    
+    return null; // Aucune réponse locale trouvée
+  }
+
+  /**
    * Envoyer un message à ChatGPT et obtenir une réponse
    */
   sendMessage(userMessage: string): Observable<string> {
+    // 1️⃣ D'abord, essayer de répondre localement
+    const localResponse = this.getLocalResponse(userMessage);
+    if (localResponse) {
+      console.log('💡 Réponse locale utilisée (pas d\'appel OpenAI)');
+      return of(localResponse);
+    }
+
+    // 2️⃣ Si pas de réponse locale, utiliser OpenAI
     if (!this.apiKey) {
       console.error('❌ OpenAI API Key missing in environment');
       return throwError(() => new Error('OpenAI API Key not configured'));
@@ -120,16 +242,21 @@ Réponds toujours dans la langue de l'utilisateur. Si tu ne comprends pas, deman
       catchError(error => {
         console.error('❌ OpenAI API Error:', error);
         
-        // Gérer les erreurs courantes
-        if (error.status === 401) {
-          return throwError(() => new Error('Clé API OpenAI invalide'));
-        } else if (error.status === 429) {
-          return throwError(() => new Error('Limite de requêtes atteinte. Réessayez dans quelques secondes.'));
-        } else if (error.status === 500) {
-          return throwError(() => new Error('Erreur serveur OpenAI. Réessayez plus tard.'));
-        }
-        
-        return throwError(() => new Error('Erreur de connexion à OpenAI'));
+        // 3️⃣ EN CAS D'ERREUR : Réponse générique utile
+        const fallbackResponse = `🤖 Je rencontre un petit problème technique avec mon IA.
+
+Mais je peux quand même t'aider ! Voici ce que je peux faire :
+
+📊 **Statistiques** : Connecte-toi à Google Analytics
+🏪 **Ajouter un commerce** : Va sur /join
+💬 **Contacter l'équipe** : WhatsApp +49 178 4123151
+🛒 **Commander** : Parcours /gallery
+🍪 **Cookies/RGPD** : Infos sur /privacy
+
+💡 Reformule ta question ou utilise les boutons ci-dessous !`;
+
+        // Retourner une réponse au lieu d'une erreur
+        return of(fallbackResponse);
       })
     );
   }

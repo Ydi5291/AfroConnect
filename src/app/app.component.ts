@@ -79,7 +79,12 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.isHilfePage = event.urlAfterRedirects === '/hilfe';
-     
+        
+        // Scroll smooth vers le top à chaque navigation
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       });
    
     const env = require('../environments/environment');
