@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Deutschland",
+    "slug": "deutschland",
+    "country": "Germany"
+  },
+  {
+    "name": "France",
+    "slug": "france",
+    "country": "France"
+  },
+  {
+    "name": "España",
+    "slug": "espaa",
+    "country": "Spain"
+  },
+  {
+    "name": "Italia",
+    "slug": "italia",
+    "country": "Italy"
+  },
+  {
+    "name": "Nederland",
+    "slug": "nederland",
+    "country": "Netherlands"
+  },
+  {
+    "name": "België / Belgique / Belgien",
+    "slug": "belgi--belgique--belgien",
+    "country": "Belgium"
+  },
+  {
+    "name": "Schweiz/Suisse/Svizzera/Svizra",
+    "slug": "schweizsuissesvizzerasvizra",
+    "country": "Switzerland"
+  },
+  {
+    "name": "Österreich",
+    "slug": "sterreich",
+    "country": "Austria"
+  },
+  {
+    "name": "Portugal",
+    "slug": "portugal",
+    "country": "Portugal"
+  },
+  {
+    "name": "Lëtzebuerg",
+    "slug": "ltzebuerg",
+    "country": "Luxembourg"
+  },
+  {
+    "name": "Polska",
+    "slug": "polska",
+    "country": "Poland"
+  },
+  {
+    "name": "Česko",
+    "slug": "esko",
+    "country": "Czech Republic"
+  },
+  {
+    "name": "Danmark",
+    "slug": "danmark",
+    "country": "Denmark"
+  },
+  {
+    "name": "Sverige",
+    "slug": "sverige",
+    "country": "Sweden"
+  },
+  {
+    "name": "Suomi / Finland",
+    "slug": "suomi--finland",
+    "country": "Finland"
+  },
+  {
+    "name": "Norge",
+    "slug": "norge",
+    "country": "Norway"
+  },
+  {
+    "name": "Éire / Ireland",
+    "slug": "ire--ireland",
+    "country": "Ireland"
+  },
+  {
+    "name": "Ελλάς",
+    "slug": "",
+    "country": "Greece"
+  },
+  {
+    "name": "Magyarország",
+    "slug": "magyarorszg",
+    "country": "Hungary"
+  },
+  {
+    "name": "România",
+    "slug": "romnia",
+    "country": "Romania"
+  },
+  {
+    "name": "България",
+    "slug": "",
+    "country": "Bulgaria"
+  },
+  {
+    "name": "Slovensko",
+    "slug": "slovensko",
+    "country": "Slovakia"
+  },
+  {
+    "name": "Slovenija",
+    "slug": "slovenija",
+    "country": "Slovenia"
+  },
+  {
+    "name": "Hrvatska",
+    "slug": "hrvatska",
+    "country": "Croatia"
+  },
+  {
+    "name": "Eesti",
+    "slug": "eesti",
+    "country": "Estonia"
+  },
+  {
+    "name": "Latvija",
+    "slug": "latvija",
+    "country": "Latvia"
+  },
+  {
+    "name": "Lietuva",
+    "slug": "lietuva",
+    "country": "Lithuania"
+  },
+  {
+    "name": "United Kingdom",
+    "slug": "united-kingdom",
+    "country": "United Kingdom"
+  }
+]

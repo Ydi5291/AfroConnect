@@ -118,6 +118,10 @@ export class GalleryComponent implements OnInit, OnDestroy {
     'dresden': { lat: 51.0504, lng: 13.7373 },
     'hannover': { lat: 52.3759, lng: 9.7320 },
     'nürnberg': { lat: 49.4521, lng: 11.0767 },
+
+    // NRW
+    'hamm': { lat: 51.6781, lng: 7.8209 },
+    'siegen': { lat: 50.8748, lng: 8.0243 },
     
     // 🇫🇷 France
     'paris': { lat: 48.8566, lng: 2.3522 },
