@@ -1,171 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    <url>
-      <loc>https://afroconnect.shop/city/deutschland</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/france</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/espaa</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/italia</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/nederland</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/belgi--belgique--belgien</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/schweizsuissesvizzerasvizra</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/sterreich</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/portugal</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/ltzebuerg</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/polska</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/esko</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/danmark</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/sverige</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/suomi--finland</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/norge</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/ire--ireland</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/magyarorszg</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/romnia</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/slovensko</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/slovenija</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/hrvatska</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/eesti</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/latvija</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/lietuva</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
-    <url>
-      <loc>https://afroconnect.shop/city/united-kingdom</loc>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  </urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://afroconnect.shop/sitemap-1.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://afroconnect.shop/sitemap-2.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://afroconnect.shop/sitemap-3.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://afroconnect.shop/sitemap-4.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://afroconnect.shop/sitemap-5.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://afroconnect.shop/sitemap-6.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://afroconnect.shop/sitemap-7.xml</loc>
+  </sitemap>
+</sitemapindex>
