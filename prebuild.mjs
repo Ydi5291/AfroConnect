@@ -44,3 +44,8 @@ const envContent = `export const environment = {
 
 fs.writeFileSync('./src/environments/environment.ts', envContent);
 console.log('✅ environment.ts généré depuis .env');
+
+// Génération de environment.prod.ts pour Netlify/Angular
+const prodEnvContent = envContent.replace('production: false', 'production: true');
+fs.writeFileSync('./src/environments/environment.prod.ts', prodEnvContent);
+console.log('✅ environment.prod.ts généré pour build prod');
