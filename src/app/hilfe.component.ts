@@ -14,7 +14,16 @@ import { JsonLdService } from './services/json-ld.service';
   styleUrls: ['./hilfe.component.css']
 })
 export class HilfeComponent implements OnInit, OnDestroy {
+    installPWA() {
+      if ((window as any).installPWA) {
+        (window as any).installPWA();
+      }
+    }
   showChat = false;
+  showPwaButtonInHilfe = false;
+    onRequestPwaButton() {
+      this.showPwaButtonInHilfe = true;
+    }
   private langSub?: Subscription;
 
   texts = {
@@ -43,6 +52,11 @@ export class HilfeComponent implements OnInit, OnDestroy {
       question: 'Wie kann ich mein Geschäft bearbeiten?',
       answer: 'Melden Sie sich mit Ihrem Account an und gehen Sie zu "Meine Geschäfte". Dort können Sie alle Informationen bearbeiten.'
     }
+      ,
+      {
+        question: 'Wie funktioniert der Chatbot Diamal?',
+        answer: 'Der Chatbot Diamal beantwortet Ihre Fragen rund um AfroConnect und hilft Ihnen bei der Navigation auf der Website. Stellen Sie einfach Ihre Frage im Chatfenster.'
+      }
   ];
 
   constructor(
