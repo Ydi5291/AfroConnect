@@ -13,6 +13,7 @@ import { BurgerMenuComponent } from './burger-menu/burger-menu.component';
 import { LanguageService } from './services/language.service';
 import { SEOService } from './services/seo.service';
 import { JsonLdService } from './services/json-ld.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -87,8 +88,7 @@ export class AppComponent implements OnInit, OnDestroy {
         });
       });
    
-    const env = require('../environments/environment');
-    console.log('Firebase config utilisée:', env.environment.firebase);
+    console.log('Firebase config utilisée:', environment.firebase);
   }
 
   toggleChatFromParent(): void {

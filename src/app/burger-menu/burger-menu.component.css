@@ -248,5 +248,41 @@
   .logout-icon {
     font-size: 1.3rem;
   }
-}
 
+  /* 📲 Section installation PWA */
+  .menu-install {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+  }
+
+  .install-btn {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.15));
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .install-btn:hover,
+  .install-btn:focus {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(37, 99, 235, 0.25));
+    border-color: rgba(59, 130, 246, 0.6);
+    transform: translateY(-2px);
+  }
+
+  .install-icon {
+    font-size: 1.3rem;
+  }
+}

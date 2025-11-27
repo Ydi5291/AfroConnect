@@ -5,6 +5,13 @@ import { LanguageService } from '../services/language.service';
 import { Subscription } from 'rxjs';
 import { Auth, signOut } from '@angular/fire/auth';
 
+// Interface pour le prompt d'installation PWA
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+  prompt(): Promise<void>;
+}
+
 @Component({
   selector: 'app-burger-menu',
   standalone: true,
@@ -15,6 +22,10 @@ import { Auth, signOut } from '@angular/fire/auth';
 export class BurgerMenuComponent implements OnInit, OnDestroy {
   menuOpen = false;
   private langSub?: Subscription;
+
+  // PWA Install
+  deferredPrompt: BeforeInstallPromptEvent | null = null;
+  canInstallPWA = false;
 
   menuItems = {
     about: 'Über uns',
@@ -29,7 +40,8 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     help: 'Hilfe',
     logout: 'Abmelden',
     closeMenu: 'Menü schließen',
-    openMenu: 'Menü öffnen'
+    openMenu: 'Menü öffnen',
+    installApp: 'App installieren'
   };
 
   isLoggedIn = false;
@@ -54,6 +66,21 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     this.auth.onAuthStateChanged(user => {
       this.isLoggedIn = !!user;
     });
+
+    // PWA Install - Écouter l'événement beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', (e: Event) => {
+      e.preventDefault();
+      this.deferredPrompt = e as BeforeInstallPromptEvent;
+      this.canInstallPWA = true;
+      console.log('PWA: Installation disponible');
+    });
+
+    // Écouter si l'app est installée
+    window.addEventListener('appinstalled', () => {
+      this.canInstallPWA = false;
+      this.deferredPrompt = null;
+      console.log('PWA: Application installée avec succès');
+    });
   }
 
   ngOnDestroy() {
@@ -74,7 +101,8 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
       help: this.languageService.translate('nav.help'),
       logout: this.languageService.translate('nav.logout'),
       closeMenu: this.languageService.translate('nav.closeMenu'),
-      openMenu: this.languageService.translate('nav.openMenu')
+      openMenu: this.languageService.translate('nav.openMenu'),
+      installApp: this.languageService.translate('nav.installApp')
     };
   }
 
@@ -166,6 +194,30 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
       console.log('Déconnexion réussie');
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
+    }
+  }
+
+  // Installation PWA
+  async installPWA() {
+    if (!this.deferredPrompt) {
+      console.log('PWA: Prompt non disponible');
+      return;
+    }
+
+    try {
+      // Afficher le prompt d'installation
+      await this.deferredPrompt.prompt();
+
+      // Attendre la réponse de l'utilisateur
+      const { outcome } = await this.deferredPrompt.userChoice;
+      console.log('PWA: Choix utilisateur:', outcome);
+    } catch (error) {
+      console.error('PWA: Erreur lors de l\'installation:', error);
+    } finally {
+      // Réinitialiser le prompt
+      this.deferredPrompt = null;
+      this.canInstallPWA = false;
+      this.closeMenu();
     }
   }
 }
