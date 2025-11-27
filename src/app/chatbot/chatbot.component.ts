@@ -33,10 +33,12 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
     topic2: 'Wie Popups aktivieren?',
     topic3: 'Warum Cookies akzeptieren?',
     topic4: 'Möchten Sie uns kontaktieren?',
+    topic5: 'Wie installiere ich die App?',
     answer1: 'Popups ermöglichen wichtige Benachrichtigungen, Angebote und Infos. Sie sind nötig für Funktionen wie Login, Warnungen und mehr.',
     answer2: 'Um Popups zu aktivieren, prüfe die Einstellungen deines Browsers oder Geräts. Erlaube Benachrichtigungen für AfroConnect.',
     answer3: 'Cookies helfen, deine Erfahrung zu personalisieren, Einstellungen zu speichern und die Sicherheit zu gewährleisten. Sie sind für die Funktion der Seite wichtig.',
     answer4: 'Super! Ich leite Sie direkt zum Kontaktformular weiter.',
+    answer5: 'Du kannst AfroConnect als App auf deinem Gerät installieren! Öffne das Menü (☰) oben links und klicke auf "App installieren". Auf iOS: Tippe auf das Teilen-Symbol und wähle "Zum Home-Bildschirm hinzufügen".',
     linkText: 'Hier findest du eine Anleitung für Chrome und andere Browser (Google Support)'
   };
   
@@ -88,10 +90,12 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
       topic2: this.languageService.translate('chatbot.topic2'),
       topic3: this.languageService.translate('chatbot.topic3'),
       topic4: this.languageService.translate('chatbot.topic4'),
+      topic5: this.languageService.translate('chatbot.topic5'),
       answer1: this.languageService.translate('chatbot.answer1'),
       answer2: this.languageService.translate('chatbot.answer2'),
       answer3: this.languageService.translate('chatbot.answer3'),
       answer4: this.languageService.translate('chatbot.answer4'),
+      answer5: this.languageService.translate('chatbot.answer5'),
       linkText: this.languageService.translate('chatbot.linkText')
     };
     
@@ -110,7 +114,8 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
       this.texts.topic1,
       this.texts.topic2,
       this.texts.topic3,
-      this.texts.topic4
+      this.texts.topic4,
+      this.texts.topic5
     ];
   }
 
@@ -220,6 +225,8 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
     } else if (topic === this.texts.topic4) {
       answer = this.texts.answer4;
       this.router.navigate(['/kontakt']);
+    } else if (topic === this.texts.topic5) {
+      answer = this.texts.answer5;
     }
     
     if (answer) {

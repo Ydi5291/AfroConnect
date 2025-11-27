@@ -20,6 +20,14 @@
             <li><a routerLink="/hilfe" (click)="closeMenu()" tabindex="0">{{ menuItems.help }}</a></li>
         </ul>
         
+        <!-- Bouton d'installation PWA -->
+        <div class="menu-install" *ngIf="canInstallPWA">
+            <button class="install-btn" (click)="installPWA()" tabindex="0">
+                <span class="install-icon">📲</span>
+                {{ menuItems.installApp }}
+            </button>
+        </div>
+        
         <!-- Bouton de déconnexion en bas -->
         <div class="menu-logout" *ngIf="isLoggedIn">
             <button class="logout-btn" (click)="logout()" tabindex="0">

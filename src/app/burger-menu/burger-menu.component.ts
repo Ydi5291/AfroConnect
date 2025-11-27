@@ -16,6 +16,10 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
   menuOpen = false;
   private langSub?: Subscription;
 
+  // PWA Install
+  deferredPrompt: any = null;
+  canInstallPWA = false;
+
   menuItems = {
     about: 'Über uns',
     addShop: 'Geschäft hinzufügen',
@@ -29,7 +33,8 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     help: 'Hilfe',
     logout: 'Abmelden',
     closeMenu: 'Menü schließen',
-    openMenu: 'Menü öffnen'
+    openMenu: 'Menü öffnen',
+    installApp: 'App installieren'
   };
 
   isLoggedIn = false;
@@ -54,6 +59,21 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     this.auth.onAuthStateChanged(user => {
       this.isLoggedIn = !!user;
     });
+
+    // PWA Install - Écouter l'événement beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', (e: Event) => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+      this.canInstallPWA = true;
+      console.log('PWA: Installation disponible');
+    });
+
+    // Écouter si l'app est installée
+    window.addEventListener('appinstalled', () => {
+      this.canInstallPWA = false;
+      this.deferredPrompt = null;
+      console.log('PWA: Application installée avec succès');
+    });
   }
 
   ngOnDestroy() {
@@ -74,7 +94,8 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
       help: this.languageService.translate('nav.help'),
       logout: this.languageService.translate('nav.logout'),
       closeMenu: this.languageService.translate('nav.closeMenu'),
-      openMenu: this.languageService.translate('nav.openMenu')
+      openMenu: this.languageService.translate('nav.openMenu'),
+      installApp: this.languageService.translate('nav.installApp')
     };
   }
 
@@ -167,5 +188,25 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
     }
+  }
+
+  // Installation PWA
+  async installPWA() {
+    if (!this.deferredPrompt) {
+      console.log('PWA: Prompt non disponible');
+      return;
+    }
+
+    // Afficher le prompt d'installation
+    this.deferredPrompt.prompt();
+
+    // Attendre la réponse de l'utilisateur
+    const { outcome } = await this.deferredPrompt.userChoice;
+    console.log('PWA: Choix utilisateur:', outcome);
+
+    // Réinitialiser le prompt
+    this.deferredPrompt = null;
+    this.canInstallPWA = false;
+    this.closeMenu();
   }
 }

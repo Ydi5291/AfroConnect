@@ -32,6 +32,7 @@ export class LanguageService {
       'nav.privacy': 'Datenschutz',
       'nav.openMenu': 'Menü öffnen',
       'nav.closeMenu': 'Menü schließen',
+      'nav.installApp': 'App installieren',
       
       // Gallery page
       'gallery.discover': 'Entdecke',
@@ -313,10 +314,12 @@ export class LanguageService {
       'chatbot.topic2': 'Wie Popups aktivieren?',
       'chatbot.topic3': 'Warum Cookies akzeptieren?',
       'chatbot.topic4': 'Möchten Sie uns kontaktieren?',
+      'chatbot.topic5': 'Wie installiere ich die App?',
       'chatbot.answer1': 'Popups ermöglichen wichtige Benachrichtigungen, Angebote und Infos. Sie sind nötig für Funktionen wie Login, Warnungen und mehr.',
       'chatbot.answer2': 'Um Popups zu aktivieren, prüfe die Einstellungen deines Browsers oder Geräts. Erlaube Benachrichtigungen für AfroConnect.',
       'chatbot.answer3': 'Cookies helfen, deine Erfahrung zu personalisieren, Einstellungen zu speichern und die Sicherheit zu gewährleisten. Sie sind für die Funktion der Seite wichtig.',
       'chatbot.answer4': 'Super! Ich leite Sie direkt zum Kontaktformular weiter.',
+      'chatbot.answer5': 'Du kannst AfroConnect als App auf deinem Gerät installieren! Öffne das Menü (☰) oben links und klicke auf "App installieren". Auf iOS: Tippe auf das Teilen-Symbol und wähle "Zum Home-Bildschirm hinzufügen".',
       'chatbot.linkText': 'Hier findest du eine Anleitung für Chrome und andere Browser (Google Support)',
       
       // Footer
@@ -405,6 +408,7 @@ export class LanguageService {
       'nav.privacy': 'Privacy',
       'nav.openMenu': 'Open menu',
       'nav.closeMenu': 'Close menu',
+      'nav.installApp': 'Install App',
       
       // Gallery page
       'gallery.discover': 'Discover',
@@ -686,10 +690,12 @@ export class LanguageService {
       'chatbot.topic2': 'How to enable popups?',
       'chatbot.topic3': 'Why accept cookies?',
       'chatbot.topic4': 'Would you like to contact us?',
+      'chatbot.topic5': 'How do I install the app?',
       'chatbot.answer1': 'Popups allow important notifications, offers, and information. They are necessary for features like login, warnings, and more.',
       'chatbot.answer2': 'To enable popups, check your browser or device settings. Allow notifications for AfroConnect.',
       'chatbot.answer3': 'Cookies help personalize your experience, save settings, and ensure security. They are important for the site to function.',
       'chatbot.answer4': 'Great! I\'ll redirect you directly to the contact form.',
+      'chatbot.answer5': 'You can install AfroConnect as an app on your device! Open the menu (☰) at the top left and click "Install App". On iOS: Tap the share icon and select "Add to Home Screen".',
       'chatbot.linkText': 'Here you can find a guide for Chrome and other browsers (Google Support)',
       
       // Footer
@@ -778,6 +784,7 @@ export class LanguageService {
       'nav.privacy': 'Confidentialité',
       'nav.openMenu': 'Ouvrir le menu',
       'nav.closeMenu': 'Fermer le menu',
+      'nav.installApp': 'Installer l\'app',
       
       // Gallery page
       'gallery.discover': 'Découvrez',
@@ -1059,10 +1066,12 @@ export class LanguageService {
       'chatbot.topic2': 'Comment activer les popups ?',
       'chatbot.topic3': 'Pourquoi accepter les cookies ?',
       'chatbot.topic4': 'Souhaitez-vous nous contacter ?',
+      'chatbot.topic5': 'Comment installer l\'application ?',
       'chatbot.answer1': 'Les popups permettent des notifications importantes, des offres et des informations. Ils sont nécessaires pour des fonctions comme la connexion, les avertissements et plus encore.',
       'chatbot.answer2': 'Pour activer les popups, vérifiez les paramètres de votre navigateur ou de votre appareil. Autorisez les notifications pour AfroConnect.',
       'chatbot.answer3': 'Les cookies aident à personnaliser votre expérience, à enregistrer les paramètres et à assurer la sécurité. Ils sont importants pour le fonctionnement du site.',
       'chatbot.answer4': 'Super ! Je vous redirige directement vers le formulaire de contact.',
+      'chatbot.answer5': 'Vous pouvez installer AfroConnect comme application sur votre appareil ! Ouvrez le menu (☰) en haut à gauche et cliquez sur "Installer l\'app". Sur iOS : Appuyez sur l\'icône de partage et sélectionnez "Ajouter à l\'écran d\'accueil".',
       'chatbot.linkText': 'Vous trouverez ici un guide pour Chrome et autres navigateurs (Google Support)',
       
       // Footer
@@ -1151,6 +1160,7 @@ export class LanguageService {
       'nav.privacy': 'Privacy',
       'nav.openMenu': 'Apri menu',
       'nav.closeMenu': 'Chiudi menu',
+      'nav.installApp': 'Installa App',
       
       // Gallery page
       'gallery.discover': 'Scopri',
@@ -1432,10 +1442,12 @@ export class LanguageService {
       'chatbot.topic2': 'Come attivare i popup?',
       'chatbot.topic3': 'Perché accettare i cookie?',
       'chatbot.topic4': 'Vuoi contattarci?',
+      'chatbot.topic5': 'Come installo l\'app?',
       'chatbot.answer1': 'I popup consentono notifiche importanti, offerte e informazioni. Sono necessari per funzioni come login, avvisi e altro.',
       'chatbot.answer2': 'Per attivare i popup, controlla le impostazioni del tuo browser o dispositivo. Consenti le notifiche per AfroConnect.',
       'chatbot.answer3': 'I cookie aiutano a personalizzare la tua esperienza, salvare le impostazioni e garantire la sicurezza. Sono importanti per il funzionamento del sito.',
       'chatbot.answer4': 'Fantastico! Ti reindirizzerò direttamente al modulo di contatto.',
+      'chatbot.answer5': 'Puoi installare AfroConnect come app sul tuo dispositivo! Apri il menu (☰) in alto a sinistra e clicca su "Installa App". Su iOS: Tocca l\'icona di condivisione e seleziona "Aggiungi a schermata Home".',
       'chatbot.linkText': 'Qui puoi trovare una guida per Chrome e altri browser (Google Support)',
       
       // Footer
@@ -1524,6 +1536,7 @@ export class LanguageService {
       'nav.privacy': 'Privacidad',
       'nav.openMenu': 'Abrir menú',
       'nav.closeMenu': 'Cerrar menú',
+      'nav.installApp': 'Instalar App',
       
       // Gallery page
       'gallery.discover': 'Descubre',
@@ -1805,10 +1818,12 @@ export class LanguageService {
       'chatbot.topic2': '¿Cómo activar los popups?',
       'chatbot.topic3': '¿Por qué aceptar las cookies?',
       'chatbot.topic4': '¿Quieres contactarnos?',
+      'chatbot.topic5': '¿Cómo instalo la aplicación?',
       'chatbot.answer1': 'Los popups permiten notificaciones importantes, ofertas e información. Son necesarios para funciones como inicio de sesión, advertencias y más.',
       'chatbot.answer2': 'Para activar los popups, revisa la configuración de tu navegador o dispositivo. Permite las notificaciones para AfroConnect.',
       'chatbot.answer3': 'Las cookies ayudan a personalizar tu experiencia, guardar configuraciones y garantizar la seguridad. Son importantes para el funcionamiento del sitio.',
       'chatbot.answer4': '¡Genial! Te redigiré directamente al formulario de contacto.',
+      'chatbot.answer5': '¡Puedes instalar AfroConnect como aplicación en tu dispositivo! Abre el menú (☰) arriba a la izquierda y haz clic en "Instalar App". En iOS: Toca el icono de compartir y selecciona "Añadir a pantalla de inicio".',
       'chatbot.linkText': 'Aquí puedes encontrar una guía para Chrome y otros navegadores (Google Support)',
       
       // Footer
@@ -1897,6 +1912,7 @@ export class LanguageService {
       'nav.privacy': 'Privacidade',
       'nav.openMenu': 'Abrir menu',
       'nav.closeMenu': 'Fechar menu',
+      'nav.installApp': 'Instalar App',
       
       // Gallery page
       'gallery.discover': 'Descubra',
@@ -2038,6 +2054,21 @@ export class LanguageService {
       'common.sort': 'Ordenar',
       'common.yes': 'Sim',
       'common.no': 'Não',
+      
+      // Chatbot
+      'chatbot.greeting': 'Olá! Sou Diamal, seu assistente. Vou explicar por que e como ativar os popups e por que os cookies são importantes.',
+      'chatbot.prompt': 'Faça-me uma pergunta ou escolha um tema:',
+      'chatbot.topic1': 'Por que ativar os popups?',
+      'chatbot.topic2': 'Como ativar os popups?',
+      'chatbot.topic3': 'Por que aceitar os cookies?',
+      'chatbot.topic4': 'Quer nos contatar?',
+      'chatbot.topic5': 'Como instalo o aplicativo?',
+      'chatbot.answer1': 'Os popups permitem notificações importantes, ofertas e informações. São necessários para funções como login, avisos e mais.',
+      'chatbot.answer2': 'Para ativar os popups, verifique as configurações do seu navegador ou dispositivo. Permita as notificações para o AfroConnect.',
+      'chatbot.answer3': 'Os cookies ajudam a personalizar sua experiência, salvar configurações e garantir a segurança. São importantes para o funcionamento do site.',
+      'chatbot.answer4': 'Ótimo! Vou redirecioná-lo diretamente para o formulário de contato.',
+      'chatbot.answer5': 'Você pode instalar o AfroConnect como aplicativo no seu dispositivo! Abra o menu (☰) no canto superior esquerdo e clique em "Instalar App". No iOS: Toque no ícone de compartilhar e selecione "Adicionar à Tela de Início".',
+      'chatbot.linkText': 'Aqui você encontra um guia para Chrome e outros navegadores (Google Support)',
       
       // Footer
       'footer.copyright': '© 2025 AfroConnect. Todos os direitos reservados.',
