@@ -5,6 +5,13 @@ import { LanguageService } from '../services/language.service';
 import { Subscription } from 'rxjs';
 import { Auth, signOut } from '@angular/fire/auth';
 
+// Interface pour le prompt d'installation PWA
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+  prompt(): Promise<void>;
+}
+
 @Component({
   selector: 'app-burger-menu',
   standalone: true,
@@ -17,7 +24,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
   private langSub?: Subscription;
 
   // PWA Install
-  deferredPrompt: any = null;
+  deferredPrompt: BeforeInstallPromptEvent | null = null;
   canInstallPWA = false;
 
   menuItems = {
@@ -63,7 +70,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     // PWA Install - Écouter l'événement beforeinstallprompt
     window.addEventListener('beforeinstallprompt', (e: Event) => {
       e.preventDefault();
-      this.deferredPrompt = e;
+      this.deferredPrompt = e as BeforeInstallPromptEvent;
       this.canInstallPWA = true;
       console.log('PWA: Installation disponible');
     });
@@ -197,16 +204,20 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Afficher le prompt d'installation
-    this.deferredPrompt.prompt();
+    try {
+      // Afficher le prompt d'installation
+      await this.deferredPrompt.prompt();
 
-    // Attendre la réponse de l'utilisateur
-    const { outcome } = await this.deferredPrompt.userChoice;
-    console.log('PWA: Choix utilisateur:', outcome);
-
-    // Réinitialiser le prompt
-    this.deferredPrompt = null;
-    this.canInstallPWA = false;
-    this.closeMenu();
+      // Attendre la réponse de l'utilisateur
+      const { outcome } = await this.deferredPrompt.userChoice;
+      console.log('PWA: Choix utilisateur:', outcome);
+    } catch (error) {
+      console.error('PWA: Erreur lors de l\'installation:', error);
+    } finally {
+      // Réinitialiser le prompt
+      this.deferredPrompt = null;
+      this.canInstallPWA = false;
+      this.closeMenu();
+    }
   }
 }
