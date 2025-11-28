@@ -13,19 +13,9 @@ import { Auth, signOut } from '@angular/fire/auth';
   styleUrls: ['./burger-menu.component.css']
 })
 export class BurgerMenuComponent implements OnInit, OnDestroy {
-          installPWA() {
-            if (this.deferredPrompt) {
-              this.deferredPrompt.prompt();
-              this.deferredPrompt.userChoice.then((choiceResult: any) => {
-                if (choiceResult.outcome === 'accepted') {
-                  console.log('PWA install accepted');
-                } else {
-                  console.log('PWA install dismissed');
-                }
-                this.deferredPrompt = null;
-              });
-            }
-          }
+            // Correction Netlify : propriété requise pour TS
+            deferredPrompt: any | null = null;
+          // Méthode installPWA supprimée car deferredPrompt n'existe plus
           isLoggedIn = false; // Variable isLoggedIn unchanged
 
         updateTranslations() {
@@ -35,7 +25,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
             gallery: this.languageService.translate('nav.gallery'),
             pricing: this.languageService.translate('nav.pricing'),
             join: this.languageService.translate('nav.join'),
-              // installPWA supprimé
+            installPWA: this.languageService.translate('nav.installPWA'), // clé restaurée pour TS
             contact: this.languageService.translate('nav.contact'),
             impressum: this.languageService.translate('nav.impressum'),
             terms: this.languageService.translate('nav.terms'),
@@ -80,7 +70,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     gallery: 'Galerie',
     pricing: 'Premium',
     join: 'Beitreten',
-    installPWA: 'App installieren',
+    installPWA: 'App installieren', // clé restaurée pour TS
     contact: 'Kontakt',
     impressum: 'Impressum',
     terms: 'AGB',
