@@ -13,11 +13,7 @@
             <li><a routerLink="/gallery" (click)="closeMenu()" tabindex="0">{{ menuItems.gallery }}</a></li>
             <li><a routerLink="/pricing" (click)="closeMenu()" tabindex="0" class="pricing-link">💎 {{ menuItems.pricing }}</a></li>
                         <li><a routerLink="/join" (click)="closeMenu()" tabindex="0" class="join-link">🏪 {{ menuItems.join }}</a></li>
-                        <li>
-                            <button class="pwa-install-btn" (click)="installPWA()" tabindex="0">
-                                📲 {{ menuItems.installPWA }}
-                            </button>
-                        </li>
+                        <!-- Bouton 'App installieren' et lien d'aide supprimés -->
             <li><a routerLink="/kontakt" (click)="closeMenu()" tabindex="0">{{ menuItems.contact }}</a></li>
             <li><a routerLink="/impressum" (click)="closeMenu()" tabindex="0">{{ menuItems.impressum }}</a></li>
             <li><a routerLink="/terms" (click)="closeMenu()" tabindex="0">{{ menuItems.terms }}</a></li>

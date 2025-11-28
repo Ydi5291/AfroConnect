@@ -26,7 +26,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
               });
             }
           }
-        isLoggedIn = false;
+          isLoggedIn = false; // Variable isLoggedIn unchanged
 
         updateTranslations() {
           this.menuItems = {
@@ -35,7 +35,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
             gallery: this.languageService.translate('nav.gallery'),
             pricing: this.languageService.translate('nav.pricing'),
             join: this.languageService.translate('nav.join'),
-            installPWA: this.languageService.translate('nav.installPWA'),
+              // installPWA supprimé
             contact: this.languageService.translate('nav.contact'),
             impressum: this.languageService.translate('nav.impressum'),
             terms: this.languageService.translate('nav.terms'),
@@ -55,10 +55,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
         this.auth.onAuthStateChanged(user => {
           this.isLoggedIn = !!user;
         });
-        window.addEventListener('beforeinstallprompt', (e: any) => {
-          e.preventDefault();
-          this.deferredPrompt = e;
-        });
+          // Event listener beforeinstallprompt supprimé
       }
 
       ngOnDestroy() {
@@ -73,7 +70,7 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
       private auth: Auth,
       private router: Router
     ) {}
-  deferredPrompt: any = null;
+  // deferredPrompt supprimé
   menuOpen = false;
   private langSub?: Subscription;
 
