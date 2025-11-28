@@ -1,5 +1,6 @@
 <section class="hilfe-section">
   <h1>{{ texts.title }}</h1>
   <p>{{ texts.intro }}</p>
+  <!-- Bouton PWA supprimé -->
 </section>
-<app-chatbot [showChat]="showChat" (toggleChat)="toggleChatFromChild()"></app-chatbot>
+<app-chatbot [showChat]="showChat" (toggleChat)="toggleChatFromChild()" (requestPwaButton)="onRequestPwaButton()"></app-chatbot>

@@ -1,3 +1,7 @@
+<!-- Bouton d'installation PWA -->
+<button *ngIf="showInstallButton" (click)="installPWA()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:#1a1a1a;color:#fff;padding:12px 24px;border-radius:8px;border:none;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+  Installer AfroConnect
+</button>
 <!-- Main container -->
 <div class="app-container">
   <!-- Burger menu au niveau le plus haut pour z-index correct -->

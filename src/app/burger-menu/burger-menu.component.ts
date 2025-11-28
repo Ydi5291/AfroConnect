@@ -13,6 +13,67 @@ import { Auth, signOut } from '@angular/fire/auth';
   styleUrls: ['./burger-menu.component.css']
 })
 export class BurgerMenuComponent implements OnInit, OnDestroy {
+          installPWA() {
+            if (this.deferredPrompt) {
+              this.deferredPrompt.prompt();
+              this.deferredPrompt.userChoice.then((choiceResult: any) => {
+                if (choiceResult.outcome === 'accepted') {
+                  console.log('PWA install accepted');
+                } else {
+                  console.log('PWA install dismissed');
+                }
+                this.deferredPrompt = null;
+              });
+            }
+          }
+        isLoggedIn = false;
+
+        updateTranslations() {
+          this.menuItems = {
+            about: this.languageService.translate('nav.about'),
+            addShop: this.languageService.translate('nav.addShop'),
+            gallery: this.languageService.translate('nav.gallery'),
+            pricing: this.languageService.translate('nav.pricing'),
+            join: this.languageService.translate('nav.join'),
+            installPWA: this.languageService.translate('nav.installPWA'),
+            contact: this.languageService.translate('nav.contact'),
+            impressum: this.languageService.translate('nav.impressum'),
+            terms: this.languageService.translate('nav.terms'),
+            privacy: this.languageService.translate('nav.privacy'),
+            help: this.languageService.translate('nav.help'),
+            logout: this.languageService.translate('nav.logout'),
+            closeMenu: this.languageService.translate('nav.closeMenu'),
+            openMenu: this.languageService.translate('nav.openMenu')
+          };
+        }
+      ngOnInit() {
+        this.langSub = this.languageService.currentLanguage$.subscribe(() => {
+          this.updateTranslations();
+        });
+        this.updateTranslations();
+        // Vérifier l'état de connexion
+        this.auth.onAuthStateChanged(user => {
+          this.isLoggedIn = !!user;
+        });
+        window.addEventListener('beforeinstallprompt', (e: any) => {
+          e.preventDefault();
+          this.deferredPrompt = e;
+        });
+      }
+
+      ngOnDestroy() {
+        this.langSub?.unsubscribe();
+      }
+    @ViewChild('burgerBtn', { static: false }) burgerBtn!: ElementRef<HTMLButtonElement>;
+    @ViewChild('menuPanel', { static: false }) menuPanel!: ElementRef<HTMLElement>;
+    @ViewChild('closeBtn', { static: false }) closeBtn!: ElementRef<HTMLButtonElement>;
+
+    constructor(
+      private languageService: LanguageService,
+      private auth: Auth,
+      private router: Router
+    ) {}
+  deferredPrompt: any = null;
   menuOpen = false;
   private langSub?: Subscription;
 
@@ -21,7 +82,8 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     addShop: 'Geschäft hinzufügen',
     gallery: 'Galerie',
     pricing: 'Premium',
-    join: 'Für Geschäfte',
+    join: 'Beitreten',
+    installPWA: 'App installieren',
     contact: 'Kontakt',
     impressum: 'Impressum',
     terms: 'AGB',
@@ -31,52 +93,6 @@ export class BurgerMenuComponent implements OnInit, OnDestroy {
     closeMenu: 'Menü schließen',
     openMenu: 'Menü öffnen'
   };
-
-  isLoggedIn = false;
-
-  @ViewChild('burgerBtn', { static: false }) burgerBtn!: ElementRef<HTMLButtonElement>;
-  @ViewChild('menuPanel', { static: false }) menuPanel!: ElementRef<HTMLElement>;
-  @ViewChild('closeBtn', { static: false }) closeBtn!: ElementRef<HTMLButtonElement>;
-
-  constructor(
-    private languageService: LanguageService,
-    private auth: Auth,
-    private router: Router
-  ) {}
-
-  ngOnInit() {
-    this.langSub = this.languageService.currentLanguage$.subscribe(() => {
-      this.updateTranslations();
-    });
-    this.updateTranslations();
-    
-    // Vérifier l'état de connexion
-    this.auth.onAuthStateChanged(user => {
-      this.isLoggedIn = !!user;
-    });
-  }
-
-  ngOnDestroy() {
-    this.langSub?.unsubscribe();
-  }
-
-  updateTranslations() {
-    this.menuItems = {
-      about: this.languageService.translate('nav.about'),
-      addShop: this.languageService.translate('nav.addShop'),
-      gallery: this.languageService.translate('nav.gallery'),
-      pricing: this.languageService.translate('nav.pricing'),
-      join: this.languageService.translate('nav.join'),
-      contact: this.languageService.translate('nav.contact'),
-      impressum: this.languageService.translate('nav.impressum'),
-      terms: this.languageService.translate('nav.terms'),
-      privacy: this.languageService.translate('nav.privacy'),
-      help: this.languageService.translate('nav.help'),
-      logout: this.languageService.translate('nav.logout'),
-      closeMenu: this.languageService.translate('nav.closeMenu'),
-      openMenu: this.languageService.translate('nav.openMenu')
-    };
-  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

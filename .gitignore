@@ -48,6 +48,7 @@ Thumbs.db
 .env.local
 .env.prod
 .env.production
+public/city/*.html
 
 # 🔐 PROTECTION - Fichiers d'environnement Angular avec clés API
 src/environments/environment.ts

@@ -1,3 +1,4 @@
+// (Removed duplicate AppComponent and its imports. The valid AppComponent definition remains below.)
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -22,6 +23,19 @@ import { JsonLdService } from './services/json-ld.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
+      installPWA(): void {
+        if ((window as any).deferredPrompt) {
+          (window as any).deferredPrompt.prompt();
+          (window as any).deferredPrompt.userChoice.then((choiceResult: any) => {
+            (window as any).deferredPrompt = null;
+            this.showInstallButton = false;
+          });
+        } else {
+          // Fallback: simple log
+          console.log('Aucun prompt d\'installation disponible');
+        }
+      }
+    showInstallButton: boolean = false;
   private langSub?: Subscription;
   
   showChat: boolean = false;

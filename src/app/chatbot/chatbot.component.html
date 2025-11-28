@@ -50,4 +50,11 @@
   <div class="chatbot-topics">
     <button *ngFor="let topic of topics" (click)="selectTopic(topic)">{{ topic }}</button>
   </div>
+
+  <!-- Bouton d'installation PWA dans la réponse -->
+  <div *ngIf="showPwaButtonInAnswer" class="pwa-answer-btn-container">
+    <button class="pwa-install-btn" (click)="installPWA()">
+      AfroConnect installieren
+    </button>
+  </div>
 </div>

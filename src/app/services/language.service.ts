@@ -19,7 +19,8 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galerie',
       'nav.pricing': 'Premium',
-      'nav.join': 'Für Geschäfte',
+      'nav.join': 'Beitreten',
+      'nav.installPWA': 'App installieren',
       'nav.about': 'Über uns',
       'nav.contact': 'Kontakt',
       'nav.help': 'Hilfe',
@@ -392,7 +393,8 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Gallery',
       'nav.pricing': 'Premium',
-      'nav.join': 'For Businesses',
+      'nav.join': 'Join',
+      'nav.installPWA': 'Install App',
       'nav.about': 'About us',
       'nav.contact': 'Contact',
       'nav.help': 'Help',
@@ -765,7 +767,8 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galerie',
       'nav.pricing': 'Premium',
-      'nav.join': 'Pour commerces',
+      'nav.join': 'Rejoindre',
+      'nav.installPWA': "Installer l'application",
       'nav.about': 'À propos',
       'nav.contact': 'Contact',
       'nav.help': 'Aide',
@@ -1138,7 +1141,8 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galleria',
       'nav.pricing': 'Premium',
-      'nav.join': 'Per commerci',
+      'nav.join': 'Unisciti',
+      'nav.installPWA': "Installa l'app",
       'nav.about': 'Chi siamo',
       'nav.contact': 'Contatti',
       'nav.help': 'Aiuto',
@@ -1511,7 +1515,8 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galería',
       'nav.pricing': 'Premium',
-      'nav.join': 'Para comercios',
+      'nav.join': 'Unirse',
+      'nav.installPWA': 'Instalar la app',
       'nav.about': 'Sobre nosotros',
       'nav.contact': 'Contacto',
       'nav.help': 'Ayuda',
@@ -1884,7 +1889,8 @@ export class LanguageService {
       // Navigation
       'nav.gallery': 'Galeria',
       'nav.pricing': 'Premium',
-      'nav.join': 'Para comércios',
+      'nav.join': 'Juntar-se',
+      'nav.installPWA': 'Instalar app',
       'nav.about': 'Sobre nós',
       'nav.contact': 'Contato',
       'nav.help': 'Ajuda',

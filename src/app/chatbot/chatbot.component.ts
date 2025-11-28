@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+// ...existing code...
 import { LanguageService } from '../services/language.service';
 import { OpenAIService } from '../services/openai.service';
 import { Subscription } from 'rxjs';
@@ -14,17 +16,39 @@ export interface ChatbotMessage {
   text: string;
   isHtml?: boolean;
   isLoading?: boolean;
+  isPwaButton?: boolean;
 }
 
 @Component({
   selector: 'app-chatbot',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.css']
 })
 export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, OnChanges {
+        @Output() requestPwaButton = new EventEmitter<void>();
+      /**
+       * Affiche le prompt d'installation PWA
+       */
+      installPWA() {
+        if (this.deferredPrompt) {
+          this.deferredPrompt.prompt();
+          this.deferredPrompt.userChoice.then((choiceResult: any) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('PWA installation accepted');
+            } else {
+              console.log('PWA installation dismissed');
+            }
+            this.deferredPrompt = null;
+            this.showInstallButton = false;
+          });
+        }
+      }
+    deferredPrompt: any = null;
+    showInstallButton: boolean = false;
   private langSub?: Subscription;
+  showPwaButtonInAnswer: boolean = false;
   
   texts = {
     greeting: 'Hallo! Ich bin Diamal, dein intelligenter Assistent. Stelle mir jede Frage über AfroConnect!',
@@ -32,11 +56,13 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
     topic1: 'Warum Popups aktivieren?',
     topic2: 'Wie Popups aktivieren?',
     topic3: 'Warum Cookies akzeptieren?',
-    topic4: 'Möchten Sie uns kontaktieren?',
+    topic4: "Möchten Sie AfroConnect auf Ihrem Gerät installieren? AfroConnect ist als App installierbar!",
+    topic5: 'Kontakt & Support',
     answer1: 'Popups ermöglichen wichtige Benachrichtigungen, Angebote und Infos. Sie sind nötig für Funktionen wie Login, Warnungen und mehr.',
-    answer2: 'Um Popups zu aktivieren, prüfe die Einstellungen deines Browsers oder Geräts. Erlaube Benachrichtigungen für AfroConnect.',
-    answer3: 'Cookies helfen, deine Erfahrung zu personalisieren, Einstellungen zu speichern und die Sicherheit zu gewährleisten. Sie sind für die Funktion der Seite wichtig.',
-    answer4: 'Super! Ich leite Sie direkt zum Kontaktformular weiter.',
+    answer2: 'Um Popups zu aktivieren, prüfen Sie die Einstellungen Ihres Browsers oder Geräts und erlauben Sie Benachrichtigungen für AfroConnect.',
+    answer3: 'Cookies helfen, Ihre Erfahrung zu personalisieren, Einstellungen zu speichern und die Sicherheit zu gewährleisten. Sie sind für die Funktion der Seite wichtig.',
+    answer4: "AfroConnect ist als App installierbar!\n\nSo geht's:\n1. Klicke unten auf den Button <b>'AfroConnect installieren'</b> (falls sichtbar).\n2. Falls der Button nicht erscheint, folge diesen Schritten:\n- Auf Android: Öffne das Chrome-Menü (⋮) > 'Zum Startbildschirm hinzufügen'.\n- Auf iPhone: Tippe auf das Teilen-Symbol (Quadrat mit Pfeil) > 'Zum Home-Bildschirm'.\n3. Nach der Installation findest du AfroConnect direkt auf deinem Handy oder Desktop!\n\nVorteile: Schneller Zugriff, offline nutzbar, wie eine echte App!\n\nBesuche einfach www.afroconnect.shop für alle Funktionen.",
+    answer5: 'Super! Ich leite Sie direkt zum Kontaktformular oder Support weiter.',
     linkText: 'Hier findest du eine Anleitung für Chrome und andere Browser (Google Support)'
   };
   
@@ -65,10 +91,20 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
   }
 
   ngOnInit() {
+    // Gestion de l'événement PWA
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+      this.showInstallButton = true;
+    });
+
+    // Expose installPWA sur window pour le bouton HTML
+    (window as any).installPWA = () => this.installPWA();
     this.isMobile = window.innerWidth < 600;
     console.log('[Chatbot] ngOnInit, isMobile:', this.isMobile, 'showChat:', this.showChat);
-    
-    // Language subscription
+
+    // Force la langue par défaut à 'de' une seule fois au démarrage
+    this.languageService['currentLanguageSubject'].next('de');
     this.langSub = this.languageService.currentLanguage$.subscribe(() => {
       this.updateTranslations();
     });
@@ -76,23 +112,26 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
   }
 
   ngOnDestroy(): void {
+    window.removeEventListener('beforeinstallprompt', () => {});
     console.log('[Chatbot] ngOnDestroy appelé, composant démonté. isMobile:', this.isMobile, 'showChat:', this.showChat);
     this.langSub?.unsubscribe();
   }
 
   updateTranslations() {
     this.texts = {
-      greeting: this.languageService.translate('chatbot.greeting'),
-      prompt: this.languageService.translate('chatbot.prompt'),
-      topic1: this.languageService.translate('chatbot.topic1'),
-      topic2: this.languageService.translate('chatbot.topic2'),
-      topic3: this.languageService.translate('chatbot.topic3'),
-      topic4: this.languageService.translate('chatbot.topic4'),
-      answer1: this.languageService.translate('chatbot.answer1'),
-      answer2: this.languageService.translate('chatbot.answer2'),
-      answer3: this.languageService.translate('chatbot.answer3'),
-      answer4: this.languageService.translate('chatbot.answer4'),
-      linkText: this.languageService.translate('chatbot.linkText')
+      greeting: 'Hallo! Ich bin Diamal, dein intelligenter Assistent. Stelle mir jede Frage über AfroConnect!',
+      prompt: 'Stelle mir eine Frage oder wähle ein Thema:',
+      topic1: 'Warum Popups aktivieren?',
+      topic2: 'Wie Popups aktivieren?',
+      topic3: 'Warum Cookies akzeptieren?',
+      topic4: "Möchten Sie AfroConnect auf Ihrem Gerät installieren? ",
+      topic5: 'Kontakt & Support',
+      answer1: 'Popups ermöglichen wichtige Benachrichtigungen, Angebote und Infos. Sie sind nötig für Funktionen wie Login, Warnungen und mehr.',
+      answer2: 'Um Popups zu aktivieren, prüfen Sie die Einstellungen Ihres Browsers oder Geräts und erlauben Sie Benachrichtigungen für AfroConnect.',
+      answer3: 'Cookies helfen, Ihre Erfahrung zu personalisieren, Einstellungen zu speichern und die Sicherheit zu gewährleisten. Sie sind für die Funktion der Seite wichtig.',
+      answer4: "So installierst du AfroConnect als App:\n\n1. Klicke unten rechts auf den Button 'AfroConnect installieren'.\n2. Auf Android: Öffne das Chrome-Menü (⋮) > 'Zum Startbildschirm hinzufügen'.\n3. Auf iPhone: Tippe auf das Teilen-Symbol (Quadrat mit Pfeil) > 'Zum Home-Bildschirm'.\n4. Die App erscheint dann direkt auf deinem Handy oder Desktop!\n\nVorteile: Schneller Zugriff, offline nutzbar, wie eine echte App!",
+      answer5: 'Super! Ich leite Sie direkt zum Kontaktformular oder Support weiter.',
+      linkText: 'Hier findest du eine Anleitung für Chrome und andere Browser (Google Support)'
     };
     
     // Reset messages with new translations
@@ -110,7 +149,8 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
       this.texts.topic1,
       this.texts.topic2,
       this.texts.topic3,
-      this.texts.topic4
+      this.texts.topic4,
+      this.texts.topic5
     ];
   }
 
@@ -121,7 +161,10 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
   }
 
   selectTopic(topic: string) {
-    if (this.isAIMode) {
+    // Pour topic4, toujours réponse prédéfinie
+    if (topic === this.texts.topic4) {
+      this.handlePredefinedResponse(topic);
+    } else if (this.isAIMode) {
       // Mode IA : envoyer à OpenAI
       this.sendMessageToAI(topic);
     } else {
@@ -210,7 +253,7 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
   private handlePredefinedResponse(topic: string) {
     this.messages.push({ from: 'user', text: topic });
     let answer = '';
-    
+    this.showPwaButtonInAnswer = false;
     if (topic === this.texts.topic1) {
       answer = this.texts.answer1;
     } else if (topic === this.texts.topic2) {
@@ -219,9 +262,9 @@ export class ChatbotComponent implements AfterViewChecked, OnInit, OnDestroy, On
       answer = this.texts.answer3;
     } else if (topic === this.texts.topic4) {
       answer = this.texts.answer4;
-      this.router.navigate(['/kontakt']);
+      this.showPwaButtonInAnswer = false;
+      this.requestPwaButton.emit();
     }
-    
     if (answer) {
       this.messages.push({ from: 'bot', text: answer, isHtml: topic === this.texts.topic2 });
     }
