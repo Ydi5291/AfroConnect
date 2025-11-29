@@ -1,15 +1,16 @@
 // AfroConnect Chatbot avec intégration OpenAI
 
 import { Component, HostListener, OnInit, OnDestroy, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-// ...existing code...
+import { RouterLink } from '@angular/router';
 import { LanguageService } from '../services/language.service';
 import { OpenAIService } from '../services/openai.service';
 import { Subscription } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { RouterOutlet } from '@angular/router';
 
 export interface ChatbotMessage {
   from: string;

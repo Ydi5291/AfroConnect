@@ -7,7 +7,6 @@
   color: white;
   box-shadow: 0 2px 8px rgba(49, 130, 206, 0.13);
   padding-top: env(safe-area-inset-top, 20px);
-}
 
 /* Spécifique Safari/iOS : sticky, z-index, pas d'overflow:hidden */
 @supports (-webkit-touch-callout: none) {
