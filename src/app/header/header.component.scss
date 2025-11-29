@@ -1,12 +1,24 @@
 /* Styles du header déplacés ici */
 
+/* Par défaut (tous navigateurs) */
 .app-header {
   position: relative;
   height: 320px;
   color: white;
-  overflow: hidden;
   box-shadow: 0 2px 8px rgba(49, 130, 206, 0.13);
-  padding-top: env(safe-area-inset-top, 20px); /* Fix iOS header */
+  padding-top: env(safe-area-inset-top, 20px);
+}
+
+/* Spécifique Safari/iOS : sticky, z-index, pas d'overflow:hidden */
+@supports (-webkit-touch-callout: none) {
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 99999 !important;
+    background: #fff;
+    /* overflow: visible; */
+  }
+}
 }
 
 /* Conteneur des images */
